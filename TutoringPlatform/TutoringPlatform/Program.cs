@@ -1,21 +1,40 @@
 using TutoringPlatform.Client.Pages;
 using TutoringPlatform.Components;
+using TutoringPlatform.Components.Account;
+using TutoringPlatform.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TutoringPlatform.Data;
-using TutoringPlatform.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("TutoringPlatformContextConnection") ?? throw new InvalidOperationException("Connection string 'TutoringPlatformContextConnection' not found.");
-
-builder.Services.AddDbContext<TutoringPlatformContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
-builder.Services.AddDefaultIdentity<TutoringPlatformUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TutoringPlatformContext>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddCascadingAuthenticationState();
+builder.Services.AddScoped<IdentityUserAccessor>();
+builder.Services.AddScoped<IdentityRedirectManager>();
+builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
+    .AddIdentityCookies();
+
+var connectionString = builder.Configuration.GetConnectionString("TutoringPlatformContextConnection") ?? throw new InvalidOperationException("Connection string 'TutoringPlatformContextConnection' not found.");
+
+builder.Services.AddDbContext<TutoringPlatformContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddIdentityCore<TutoringPlatformUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<TutoringPlatformContext>()
+    .AddSignInManager()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddSingleton<IEmailSender<TutoringPlatformUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
 
@@ -40,5 +59,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(TutoringPlatform.Client._Imports).Assembly);
+
+app.MapAdditionalIdentityEndpoints();
 
 app.Run();
