@@ -10,5 +10,7 @@ namespace TutoringPlatform.Data;
 // Add profile data for application users by adding properties to the TutoringPlatformUser class
 public class TutoringPlatformUser : IdentityUser
 {
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
 }
 

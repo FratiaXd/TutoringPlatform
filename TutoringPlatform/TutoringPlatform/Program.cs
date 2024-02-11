@@ -18,18 +18,11 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-})
-    .AddIdentityCookies();
-
 var connectionString = builder.Configuration.GetConnectionString("TutoringPlatformContextConnection") ?? throw new InvalidOperationException("Connection string 'TutoringPlatformContextConnection' not found.");
 
 builder.Services.AddDbContext<TutoringPlatformContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-builder.Services.AddIdentityCore<TutoringPlatformUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<TutoringPlatformUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<TutoringPlatformContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
