@@ -82,6 +82,8 @@
 
         Logger.LogInformation("User created a new account with password.");
 
+        await AssignRolesToUser(user);
+
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -100,6 +102,19 @@
 
         await SignInManager.SignInAsync(user, isPersistent: false);
         RedirectManager.RedirectTo(ReturnUrl);
+    }
+
+    private async Task AssignRolesToUser(TutoringPlatformUser user)
+    {
+        // Check if user's email contains a specific domain, and assign roles accordingly
+        if (user.Email.EndsWith("@admin.com", StringComparison.OrdinalIgnoreCase))
+        {
+            await UserManager.AddToRoleAsync(user, "Admin");
+        }
+        else if (user.Email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
+        {
+            await UserManager.AddToRoleAsync(user, "Student");
+        }
     }
 
     private TutoringPlatformUser CreateUser()
