@@ -10,7 +10,7 @@
 
 <Modal @ref="modal" IsVerticallyCentered="true"/>
 
-<Button Color="ButtonColor.Primary" @onclick="ShowStudentDetails">Show Student Details</Button>
+<Button Color="ButtonColor.Primary" @onclick="ShowStudentDetails">Edit Details</Button>
 
 @code {
     [Parameter]
@@ -31,6 +31,19 @@
     {
         var parameters = new Dictionary<string, object>();
         parameters.Add("Id", Id);
+        parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnStudentDetailsUpdated));
         await modal.ShowAsync<EditStudentDetails>(title: "Student details", parameters: parameters);
+    }
+
+    private async Task OnStudentDetailsUpdated()
+    {
+        // This method is called when the EditStudentDetails modal is closed
+        // Update user details here
+        if (!string.IsNullOrEmpty(Id))
+        {
+            await modal.HideAsync();
+            user = await UserManager.FindByIdAsync(Id);
+            StateHasChanged(); // Make sure to refresh the UI after updating the user details
+        }
     }
 }

@@ -23,6 +23,9 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
 
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
     private TutoringPlatformUser editUser;
 
     protected override async Task OnInitializedAsync()
@@ -44,7 +47,7 @@
         var updateResult = await UserManager.UpdateAsync(editUser);
         if (updateResult.Succeeded)
         {
-            
+            await OnClosed.InvokeAsync(null);
         }
     }
 
