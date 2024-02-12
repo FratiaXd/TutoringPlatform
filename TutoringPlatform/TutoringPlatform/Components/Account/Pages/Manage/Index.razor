@@ -76,7 +76,6 @@
         {
             RedirectManager.RedirectToCurrentPageWithStatus("Error: Failed to update the user.", HttpContext);
         }
-
         await SignInManager.RefreshSignInAsync(user);
         RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
     }

@@ -1,0 +1,57 @@
+﻿@inject UserManager<TutoringPlatformUser> UserManager
+
+<EditForm Model="Input" FormName="editprofile" OnValidSubmit="OnValidSubmitAsync" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.FirstName" class="form-control" placeholder="Please enter your first name." />
+        <label for="first-name" class="form-label">First Name</label>
+        <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.LastName" class="form-control" placeholder="Please enter your last name." />
+        <label for="last-name" class="form-label">Last Name</label>
+        <ValidationMessage For="() => Input.LastName" class="text-danger" />
+    </div>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    private TutoringPlatformUser editUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            editUser = await UserManager.FindByIdAsync(Id);
+            Input.FirstName ??= editUser.FirstName;
+            Input.LastName ??= editUser.LastName;
+        }
+        base.OnInitialized();
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        editUser.FirstName = Input.FirstName;
+        editUser.LastName = Input.LastName;
+
+        var updateResult = await UserManager.UpdateAsync(editUser);
+        if (updateResult.Succeeded)
+        {
+            
+        }
+    }
+
+    private sealed class InputModel
+    {
+        public string? FirstName { get; set; }
+
+        public string? LastName { get; set; }
+    }
+}

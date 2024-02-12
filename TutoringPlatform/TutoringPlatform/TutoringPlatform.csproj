@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TutoringPlatform.Client\TutoringPlatform.Client.csproj" />
+    <PackageReference Include="Blazor.Bootstrap" Version="1.11.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />

@@ -1,0 +1,36 @@
+﻿@page "/shared/studentdetails"
+@page "/shared/studentdetails/{Id}"
+@rendermode InteractiveServer
+@inject UserManager<TutoringPlatformUser> UserManager
+<h3>Student Details</h3>
+
+<p>Student id: @Id?</p>
+<p>Student First Name: @user?.FirstName</p>
+<p>Student Last Name: @user?.LastName</p>
+
+<Modal @ref="modal" IsVerticallyCentered="true"/>
+
+<Button Color="ButtonColor.Primary" @onclick="ShowStudentDetails">Show Student Details</Button>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private Modal modal = default!;
+
+    private TutoringPlatformUser user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            user = await UserManager.FindByIdAsync(Id);
+        }
+    }
+
+    private async Task ShowStudentDetails()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("Id", Id);
+        await modal.ShowAsync<EditStudentDetails>(title: "Student details", parameters: parameters);
+    }
+}
