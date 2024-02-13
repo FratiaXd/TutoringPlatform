@@ -1,4 +1,4 @@
-﻿@page "/adminpages/dashboard"
+﻿@page "/admin/adminpages/dashboard"
 @attribute [Authorize(Roles = "Admin")]
 @attribute [StreamRendering]
 @rendermode InteractiveServer
@@ -45,6 +45,6 @@
 
     void OpenStudentDetails(string id)
     {
-        NavigationManager.NavigateTo($"/shared/studentdetails/{id}");
+        NavigationManager.NavigateTo($"profile/profilepages/studentdetails/{id}");
     }
 }
