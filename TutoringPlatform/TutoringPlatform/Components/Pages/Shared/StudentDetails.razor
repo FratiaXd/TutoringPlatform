@@ -1,12 +1,14 @@
 ﻿@page "/shared/studentdetails"
 @page "/shared/studentdetails/{Id}"
 @rendermode InteractiveServer
+@attribute [Authorize]
 @inject UserManager<TutoringPlatformUser> UserManager
 <h3>Student Details</h3>
 
 <p>Student id: @Id?</p>
 <p>Student First Name: @user?.FirstName</p>
 <p>Student Last Name: @user?.LastName</p>
+<p>Role: @user?.RoleName</p>
 
 <Modal @ref="modal" IsVerticallyCentered="true"/>
 

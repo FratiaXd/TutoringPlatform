@@ -1,4 +1,8 @@
-﻿@inject UserManager<TutoringPlatformUser> UserManager
+﻿@using System.ComponentModel.DataAnnotations
+@using TutoringPlatform.Components.Pages.AdminPages
+@inject UserManager<TutoringPlatformUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <EditForm Model="Input" FormName="editprofile" OnValidSubmit="OnValidSubmitAsync" method="post">
     <DataAnnotationsValidator />
@@ -13,6 +17,18 @@
         <label for="last-name" class="form-label">Last Name</label>
         <ValidationMessage For="() => Input.LastName" class="text-danger" />
     </div>
+    @if (IsUserAdmin)
+    {
+        <div class="form-floating mb-3">
+            <label for="user-role" class="form-label">User Role</label>
+            <select class="form-select" @bind="Input.RoleName">
+                @foreach (var role in Roles)
+                {
+                    <option value="@role">@role</option>
+                }
+            </select>
+        </div>
+    }
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
 
@@ -28,14 +44,23 @@
 
     private TutoringPlatformUser editUser;
 
+    private bool IsUserAdmin = false;
+
+    private List<string> Roles { get; set; } = new List<string>();
+
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        IsUserAdmin = user.IsInRole("Admin");
+
         if (!string.IsNullOrEmpty(Id))
         {
             editUser = await UserManager.FindByIdAsync(Id);
             Input.FirstName ??= editUser.FirstName;
             Input.LastName ??= editUser.LastName;
         }
+        Roles = RoleManager.Roles.Select(r => r.Name).ToList();
         base.OnInitialized();
     }
 
@@ -43,7 +68,11 @@
     {
         editUser.FirstName = Input.FirstName;
         editUser.LastName = Input.LastName;
+        editUser.RoleName = Input.RoleName;
 
+        var currentRoles = await UserManager.GetRolesAsync(editUser);
+        await UserManager.RemoveFromRolesAsync(editUser, currentRoles);
+        await UserManager.AddToRoleAsync(editUser, Input.RoleName);
         var updateResult = await UserManager.UpdateAsync(editUser);
         if (updateResult.Succeeded)
         {
@@ -53,8 +82,10 @@
 
     private sealed class InputModel
     {
+        [Required, MaxLength(20), RegularExpression(@"^[a-zA-Z]+$")]
         public string? FirstName { get; set; }
-
+        [Required, MaxLength(20), RegularExpression(@"^[a-zA-Z]+$")]
         public string? LastName { get; set; }
+        public string RoleName { get; set; }
     }
 }

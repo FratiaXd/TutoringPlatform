@@ -85,6 +85,7 @@
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        AssignRolesToUserModel(user);
         var result = await UserManager.CreateAsync(user, Input.Password);
 
         if (!result.Succeeded)
@@ -150,6 +151,18 @@
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
         return (IUserEmailStore<TutoringPlatformUser>)UserStore;
+    }
+
+    private void AssignRolesToUserModel(TutoringPlatformUser user)
+    {
+        if (user.Email.EndsWith("@admin.com", StringComparison.OrdinalIgnoreCase))
+        {
+            user.RoleName = "Admin";
+        }
+        else if (user.Email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
+        {
+            user.RoleName = "Student";
+        }
     }
 
     private sealed class InputModel
