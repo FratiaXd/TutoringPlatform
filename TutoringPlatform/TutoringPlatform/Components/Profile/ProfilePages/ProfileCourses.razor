@@ -1,6 +1,8 @@
 ﻿@page "/profile/profilepages/profilecourses"
+@page "/profile/profilepages/profilecourses/{Id}"
 <h3>ProfileCourses</h3>
 
 @code {
-
+    [Parameter]
+    public string Id { get; set; }
 }

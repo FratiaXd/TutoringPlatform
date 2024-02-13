@@ -2,6 +2,7 @@
 @page "/profile/profilepages/studentdetails/{Id}"
 @rendermode InteractiveServer
 @attribute [Authorize]
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<TutoringPlatformUser> UserManager
 <h3>Student Details</h3>
 
@@ -27,6 +28,20 @@
         if (!string.IsNullOrEmpty(Id))
         {
             user = await UserManager.FindByIdAsync(Id);
+        }
+        else
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var userPrincipal = authState.User;
+            if (userPrincipal.Identity?.IsAuthenticated ?? false)
+            {
+                var userId = UserManager.GetUserId(userPrincipal);
+                user = await UserManager.FindByIdAsync(userId);
+            }
+        }
+        if (user != null)
+        {
+            Id = user.Id;
         }
     }
 
