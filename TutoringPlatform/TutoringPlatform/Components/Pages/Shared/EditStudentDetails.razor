@@ -19,14 +19,8 @@
     </div>
     @if (IsUserAdmin)
     {
-        <div class="form-floating mb-3">
-            <label for="user-role" class="form-label">User Role</label>
-            <select class="form-select" @bind="Input.RoleName">
-                @foreach (var role in Roles)
-                {
-                    <option value="@role">@role</option>
-                }
-            </select>
+        <div class="mb-3">
+            <Switch @bind-Value="Input.IsAdmin" Label="Admin" />
         </div>
     }
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
@@ -59,6 +53,8 @@
             editUser = await UserManager.FindByIdAsync(Id);
             Input.FirstName ??= editUser.FirstName;
             Input.LastName ??= editUser.LastName;
+            var userRoles = await UserManager.GetRolesAsync(editUser);
+            Input.IsAdmin = userRoles.Contains("Admin");
         }
         Roles = RoleManager.Roles.Select(r => r.Name).ToList();
         base.OnInitialized();
@@ -68,11 +64,21 @@
     {
         editUser.FirstName = Input.FirstName;
         editUser.LastName = Input.LastName;
-        editUser.RoleName = Input.RoleName;
 
         var currentRoles = await UserManager.GetRolesAsync(editUser);
-        await UserManager.RemoveFromRolesAsync(editUser, currentRoles);
-        await UserManager.AddToRoleAsync(editUser, Input.RoleName);
+        bool isAdminCurrently = currentRoles.Contains("Admin");
+
+        string targetRole = Input.IsAdmin ? "Admin" : "Student";
+        string oppositeRole = Input.IsAdmin ? "Student" : "Admin";
+
+        if ((Input.IsAdmin && !isAdminCurrently) || (!Input.IsAdmin && isAdminCurrently))
+        {
+            // Remove the user from their current role(s)
+            await UserManager.RemoveFromRolesAsync(editUser, currentRoles);
+            // Add the user to the target role
+            await UserManager.AddToRoleAsync(editUser, targetRole);
+            editUser.RoleName = targetRole;
+        }
         var updateResult = await UserManager.UpdateAsync(editUser);
         if (updateResult.Succeeded)
         {
@@ -86,6 +92,6 @@
         public string? FirstName { get; set; }
         [Required, MaxLength(20), RegularExpression(@"^[a-zA-Z]+$")]
         public string? LastName { get; set; }
-        public string RoleName { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }
