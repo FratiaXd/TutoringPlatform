@@ -1,0 +1,69 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inject UserManager<TutoringPlatformUser> UserManager
+@inject IEmailSender<TutoringPlatformUser> EmailSender
+@inject NavigationManager NavigationManager
+
+<EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
+        <label for="new-email" class="form-label">New email</label>
+        <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
+    </div>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Change email</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public bool IsUserAdmin { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    [SupplyParameterFromForm(FormName = "change-email")]
+    private InputModel Input { get; set; } = new();
+
+    private TutoringPlatformUser editUser;
+    private string? email;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            editUser = await UserManager.FindByIdAsync(Id);
+            email = await UserManager.GetEmailAsync(editUser);
+
+            Input.NewEmail ??= email;
+        }
+        base.OnInitialized();
+    }
+
+
+    private async Task OnValidSubmitAsync()
+    {
+        if (Input.NewEmail is null || Input.NewEmail == email)
+        {
+            return;
+        }
+        var result = await UserManager.SetEmailAsync(editUser, Input.NewEmail);
+        editUser.Email = Input.NewEmail;
+        var resultUsername = await UserManager.SetUserNameAsync(editUser, Input.NewEmail);
+        if (result.Succeeded && resultUsername.Succeeded)
+        {
+            await OnClosed.InvokeAsync(null);
+        }
+    }
+
+
+    private sealed class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "New email")]
+        public string? NewEmail { get; set; }
+    }
+}

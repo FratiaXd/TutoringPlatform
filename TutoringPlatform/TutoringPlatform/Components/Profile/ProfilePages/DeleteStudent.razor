@@ -1,0 +1,10 @@
+﻿@using System.ComponentModel.DataAnnotations
+<h3>Delete Student</h3>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+}

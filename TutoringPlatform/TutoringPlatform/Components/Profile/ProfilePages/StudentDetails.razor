@@ -1,5 +1,6 @@
 ﻿@page "/profile/profilepages"
 @page "/admin/profilepages/{Id}"
+@using TutoringPlatform.Components.Account.Shared
 @rendermode InteractiveServer
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -12,27 +13,37 @@
 <p>Student Email: @user?.Email</p>
 <p>Role: @user?.RoleName</p>
 
-<Modal @ref="modal" IsVerticallyCentered="true" />
+<Modal @ref="detailsModal" IsVerticallyCentered="true" />
+<Modal @ref="emailModal" IsVerticallyCentered="true" />
+<Modal @ref="passwordModal" IsVerticallyCentered="true" />
+<Modal @ref="deleteModal" IsVerticallyCentered="true" />
 
 <Button Color="ButtonColor.Primary" @onclick="ShowStudentDetails">Edit Details</Button>
+<Button Color="ButtonColor.Primary" @onclick="ShowStudentEmail">Update Email</Button>
+<Button Color="ButtonColor.Primary" @onclick="ShowStudentPassword">Change Password</Button>
+<Button Color="ButtonColor.Danger" @onclick="ShowStudentDelete">Delete Account</Button>
 
 @code {
     [Parameter]
     public string Id { get; set; }
-    private Modal modal = default!;
-
+    private Modal detailsModal = default!;
+    private Modal emailModal = default!;
+    private Modal passwordModal = default!;
+    private Modal deleteModal = default!;
+    private bool IsUserAdmin = false;
     private TutoringPlatformUser user;
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userPrincipal = authState.User;
+        IsUserAdmin = userPrincipal.IsInRole("Admin");
         if (!string.IsNullOrEmpty(Id))
         {
             user = await UserManager.FindByIdAsync(Id);
         }
         else
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var userPrincipal = authState.User;
             if (userPrincipal.Identity?.IsAuthenticated ?? false)
             {
                 var userId = UserManager.GetUserId(userPrincipal);
@@ -49,8 +60,9 @@
     {
         var parameters = new Dictionary<string, object>();
         parameters.Add("Id", Id);
+        parameters.Add("IsUserAdmin", IsUserAdmin);
         parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnStudentDetailsUpdated));
-        await modal.ShowAsync<EditStudentDetails>(title: "Student details", parameters: parameters);
+        await detailsModal.ShowAsync<EditStudentDetails>(title: "Student details", parameters: parameters);
     }
 
     private async Task OnStudentDetailsUpdated()
@@ -59,7 +71,68 @@
         // Update user details here
         if (!string.IsNullOrEmpty(Id))
         {
-            await modal.HideAsync();
+            await detailsModal.HideAsync();
+            user = await UserManager.FindByIdAsync(Id);
+            StateHasChanged(); // Make sure to refresh the UI after updating the user details
+        }
+    }
+
+    private async Task ShowStudentEmail()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("Id", Id);
+        parameters.Add("IsUserAdmin", IsUserAdmin);
+        parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnStudentEmailUpdated));
+        await emailModal.ShowAsync<EditStudentEmail>(title: "Update Email", parameters: parameters);
+    }
+
+    private async Task OnStudentEmailUpdated()
+    {
+        // This method is called when the OnStudentEmailUpdate modal is closed
+        // Update user details here
+        if (!string.IsNullOrEmpty(Id))
+        {
+            await emailModal.HideAsync();
+            user = await UserManager.FindByIdAsync(Id);
+            StateHasChanged(); // Make sure to refresh the UI after updating the user details
+        }
+    }
+
+    private async Task ShowStudentPassword()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("Id", Id);
+        parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnStudentPasswordUpdated));
+        await passwordModal.ShowAsync<EditStudentPassword>(title: "Change Password", parameters: parameters);
+    }
+
+    private async Task OnStudentPasswordUpdated()
+    {
+        // This method is called when the OnStudentPasswordUpdated modal is closed
+        // Update user details here
+        if (!string.IsNullOrEmpty(Id))
+        {
+            await passwordModal.HideAsync();
+            user = await UserManager.FindByIdAsync(Id);
+            StateHasChanged(); // Make sure to refresh the UI after updating the user details
+        }
+    }
+
+    private async Task ShowStudentDelete()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("Id", Id);
+        parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnStudentDeleteUpdated));
+        await deleteModal.ShowAsync<DeleteStudent>(title: "Delete Account", parameters: parameters);
+    }
+
+    private async Task OnStudentDeleteUpdated()
+    {
+        // This method is called when the OnStudentDeleteUpdated modal is closed
+        // Update user details here
+        if (!string.IsNullOrEmpty(Id))
+        {
+            await deleteModal.HideAsync();
             user = await UserManager.FindByIdAsync(Id);
             StateHasChanged(); // Make sure to refresh the UI after updating the user details
         }

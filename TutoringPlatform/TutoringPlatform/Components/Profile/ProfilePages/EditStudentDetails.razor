@@ -29,6 +29,8 @@
 @code {
     [Parameter]
     public string Id { get; set; }
+    [Parameter]
+    public bool IsUserAdmin { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -38,16 +40,10 @@
 
     private TutoringPlatformUser editUser;
 
-    private bool IsUserAdmin = false;
-
     private List<string> Roles { get; set; } = new List<string>();
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        IsUserAdmin = user.IsInRole("Admin");
-
         if (!string.IsNullOrEmpty(Id))
         {
             editUser = await UserManager.FindByIdAsync(Id);
