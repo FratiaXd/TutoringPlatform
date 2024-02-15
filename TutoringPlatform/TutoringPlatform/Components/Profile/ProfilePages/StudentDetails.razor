@@ -5,6 +5,7 @@
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<TutoringPlatformUser> UserManager
+@inject NavigationManager NavigationManager
 <h3>Student Details</h3>
 
 <p>Student id: @Id</p>
@@ -38,6 +39,17 @@
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userPrincipal = authState.User;
         IsUserAdmin = userPrincipal.IsInRole("Admin");
+
+        // Determine if the current route is an admin route
+        bool isAdminRoute = NavigationManager.Uri.Contains("/admin/profilepages/");
+
+        // If it's an admin route and the user is not an admin, redirect them
+        if (isAdminRoute && !IsUserAdmin)
+        {
+            NavigationManager.NavigateTo("/Account/AccessDenied", replace: true);
+            return;
+        }
+
         if (!string.IsNullOrEmpty(Id))
         {
             user = await UserManager.FindByIdAsync(Id);
