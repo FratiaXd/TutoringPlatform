@@ -102,6 +102,7 @@
     {
         var parameters = new Dictionary<string, object>();
         parameters.Add("Id", Id);
+        parameters.Add("IsUserAdmin", IsUserAdmin);
         parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnStudentPasswordUpdated));
         await passwordModal.ShowAsync<EditStudentPassword>(title: "Change Password", parameters: parameters);
     }

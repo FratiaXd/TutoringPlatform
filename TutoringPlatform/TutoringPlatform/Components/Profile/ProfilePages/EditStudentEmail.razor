@@ -51,6 +51,9 @@
         }
         var result = await UserManager.SetEmailAsync(editUser, Input.NewEmail);
         editUser.Email = Input.NewEmail;
+        //Placeholder for email confirmation
+        var code = await UserManager.GenerateEmailConfirmationTokenAsync(editUser);
+        await UserManager.ConfirmEmailAsync(editUser, code);
         var resultUsername = await UserManager.SetUserNameAsync(editUser, Input.NewEmail);
         if (result.Succeeded && resultUsername.Succeeded)
         {
