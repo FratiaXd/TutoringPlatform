@@ -1,12 +1,12 @@
 ﻿@page "/profile/profilepages/studentdetails"
-@page "/profile/profilepages/studentdetails/{Id}"
+@page "/admin/profilepages/studentdetails/{Id}"
 @rendermode InteractiveServer
 @attribute [Authorize]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserManager<TutoringPlatformUser> UserManager
 <h3>Student Details</h3>
 
-<p>Student id: @Id?</p>
+<p>Student id: @Id</p>
 <p>Student First Name: @user?.FirstName</p>
 <p>Student Last Name: @user?.LastName</p>
 <p>Student Email: @user?.Email</p>

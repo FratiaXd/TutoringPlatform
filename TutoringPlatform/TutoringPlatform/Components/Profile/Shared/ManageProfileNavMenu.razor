@@ -1,16 +1,70 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@implements IDisposable
+@using Microsoft.AspNetCore.Identity
 @using TutoringPlatform.Data
-
+@inject NavigationManager NavigationManager
 @inject SignInManager<TutoringPlatformUser> SignInManager
 
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
-        <NavLink class="nav-link" href="Profile/ProfilePages/StudentDetails" Match="NavLinkMatch.All">Profile</NavLink>
+        <NavLink class="nav-link" href="@GetProfileLink()" Match="NavLinkMatch.All">Profile</NavLink>
     </li>
     <li class="nav-item">
-        <NavLink class="nav-link" href="Profile/ProfilePages/ProfileCourses">Courses</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/ChangePassword">Password</NavLink>
+        <NavLink class="nav-link" href="@GetCoursesLink()">Courses</NavLink>
     </li>
 </ul>
+
+@code {
+    private string? selectedUserId;
+
+    private void DetermineContextAndUserId()
+    {
+        selectedUserId = null; // Reset at the beginning
+
+        if (IsAdminViewingAnotherUserProfile())
+        {
+            var uri = new Uri(NavigationManager.Uri);
+            var segments = uri.Segments;
+            // Assuming the ID is the last segment following "/admin/profilepages/studentdetails/"
+            if (segments.Length > 0 && segments[^1] != "studentdetails/")
+            {
+                selectedUserId = segments[^1].TrimEnd('/');
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += HandleLocationChanged;
+        DetermineContextAndUserId();
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        DetermineContextAndUserId();
+        StateHasChanged(); // Re-render the component with the updated links
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= HandleLocationChanged;
+    }
+
+    private bool IsAdminViewingAnotherUserProfile()
+    {
+        // This method checks if the current URL belongs to the admin viewing route
+        // Adjust the condition based on your actual admin route
+        return NavigationManager.Uri.Contains("/admin/profilepages/", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private string GetProfileLink()
+    {
+        // Generate the link based on whether an admin is viewing another user's profile
+        return IsAdminViewingAnotherUserProfile() ? $"Admin/ProfilePages/StudentDetails/{selectedUserId}" : "Profile/ProfilePages/StudentDetails";
+    }
+
+    private string GetCoursesLink()
+    {
+        // Similarly, adjust for courses link
+        return IsAdminViewingAnotherUserProfile() ? $"Admin/ProfilePages/ProfileCourses/{selectedUserId}" : "Profile/ProfilePages/ProfileCourses";
+    }
+}

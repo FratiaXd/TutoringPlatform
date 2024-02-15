@@ -19,6 +19,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<UserContextService>();
 
 var connectionString = builder.Configuration.GetConnectionString("TutoringPlatformContextConnection") ?? throw new InvalidOperationException("Connection string 'TutoringPlatformContextConnection' not found.");
 
