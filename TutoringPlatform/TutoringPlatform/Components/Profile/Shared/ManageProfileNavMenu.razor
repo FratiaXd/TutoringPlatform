@@ -59,7 +59,7 @@
     private string GetProfileLink()
     {
         // Generate the link based on whether an admin is viewing another user's profile
-        return IsAdminViewingAnotherUserProfile() ? $"Admin/ProfilePages/StudentDetails/{selectedUserId}" : "Profile/ProfilePages/StudentDetails";
+        return IsAdminViewingAnotherUserProfile() ? $"Admin/ProfilePages/{selectedUserId}" : "Profile/ProfilePages";
     }
 
     private string GetCoursesLink()
