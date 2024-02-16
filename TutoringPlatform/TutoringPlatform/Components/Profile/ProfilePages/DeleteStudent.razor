@@ -4,6 +4,7 @@
 @inject SignInManager<TutoringPlatformUser> SignInManager
 @inject ILogger<DeleteStudent> Logger
 @inject IdentityRedirectManager RedirectManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div class="mt-3 bg-danger text-white bg-opacity-75">
     @message
@@ -18,6 +19,14 @@
             <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
             <label for="password" class="form-label">Password</label>
             <ValidationMessage For="() => Input.Password" class="text-danger" />
+        </div>
+    } 
+    else
+    {
+        <div class="form-floating mb-3">
+            <InputText type="password" @bind-Value="Input.AdminPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter admin password." />
+            <label for="password" class="form-label">Admin Password</label>
+            <ValidationMessage For="() => Input.AdminPassword" class="text-danger" />
         </div>
     }
     <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close account</button>
@@ -38,16 +47,27 @@
 
     private TutoringPlatformUser user = default!;
     public string? message;
+    private TutoringPlatformUser userAdmin = default;
 
     protected override async Task OnInitializedAsync()
     {
         Input ??= new();
         user = await UserManager.FindByIdAsync(Id);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userPrincipal = authState.User;
+        var userId = UserManager.GetUserId(userPrincipal);
+        userAdmin = await UserManager.FindByIdAsync(userId);
     }
 
     private async Task OnValidSubmitAsync()
     {
         if (!IsUserAdmin && !await UserManager.CheckPasswordAsync(user, Input.Password))
+        {
+            message = "Error: Incorrect password.";
+            return;
+        }
+
+        if (IsUserAdmin && !await UserManager.CheckPasswordAsync(userAdmin, Input.AdminPassword))
         {
             message = "Error: Incorrect password.";
             return;
@@ -76,5 +96,8 @@
     {
         [DataType(DataType.Password)]
         public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        public string AdminPassword { get; set; } = "";
     }
 }
