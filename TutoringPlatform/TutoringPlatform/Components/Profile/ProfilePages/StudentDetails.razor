@@ -135,6 +135,7 @@
     {
         var parameters = new Dictionary<string, object>();
         parameters.Add("Id", Id);
+        parameters.Add("IsUserAdmin", IsUserAdmin);
         parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnStudentDeleteUpdated));
         await deleteModal.ShowAsync<DeleteStudent>(title: "Delete Account", parameters: parameters);
     }
@@ -146,8 +147,8 @@
         if (!string.IsNullOrEmpty(Id))
         {
             await deleteModal.HideAsync();
-            user = await UserManager.FindByIdAsync(Id);
             StateHasChanged(); // Make sure to refresh the UI after updating the user details
+            NavigationManager.NavigateTo("/admin/adminpages/dashboard", replace: true);
         }
     }
 }

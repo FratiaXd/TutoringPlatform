@@ -55,5 +55,11 @@ namespace TutoringPlatform.Components.Account
         [DoesNotReturn]
         public void RedirectToCurrentPageWithStatus(string message, HttpContext context)
             => RedirectToWithStatus(CurrentPath, message, context);
+
+        public void RedirectToSignOut()
+        {
+            // Navigate to a page or controller action designed to handle sign-out
+            navigationManager.NavigateTo("/profile/shared/signout", forceLoad: true);
+        }
     }
 }
