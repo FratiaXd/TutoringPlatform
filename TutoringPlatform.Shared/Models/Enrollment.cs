@@ -11,13 +11,14 @@ namespace TutoringPlatform.Shared.Models
         //Foreign keys
         public string UserId { get; set; }
         public int CourseId { get; set; }
-        public int? LastestLessonKey { get; set; }
+        public int? LatestLessonId { get; set; }
 
-        //Enrollment data
+        //Properties
         public string EnrollmentStatus { get; set; }
 
-        //Navigation properties
+        //Relationships
+        public TutoringPlatformUser User { get; set; }
         public Course Course {  get; set; }
-        public Lesson Lesson { get; set; }
+        public Lesson? LatestLesson { get; set; }
     }
 }

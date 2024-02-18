@@ -6,6 +6,8 @@ namespace TutoringPlatform.Shared.Models
     {
         [Key]
         public int CourseId { get; set; }
+
+        //Properties
         [Required]
         public string Title { get; set; }
         public decimal Price { get; set; }
@@ -15,7 +17,8 @@ namespace TutoringPlatform.Shared.Models
         public string? ImageUrl { get; set; }
         public bool IsActive { get; set; }
 
-        //Relationship
-        public ICollection<Lesson> Lessons { get; } = new List<Lesson>();
+        //Relationships
+        public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
+        public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     }
 }

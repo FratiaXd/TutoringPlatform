@@ -6,6 +6,8 @@ namespace TutoringPlatform.Shared.Models
     {
         [Key]
         public int LessonId { get; set; }
+
+        //Properties
         [Required]
         public string LessonTitle { get; set; }
         public string? LessonDescription { get; set; }
@@ -16,8 +18,11 @@ namespace TutoringPlatform.Shared.Models
         public string? LessonContent { get; set; }
         public bool IsAssessed { get; set; }
 
-        //Relationship
-        public int CourseKey { get; set; }
+        //Relationships
+        public int CourseId { get; set; }
         public Course Course { get; set; }
+        public Quiz? Quiz { get; set; }
+        public Assignment? Assignment { get; set; }
+        public ICollection<LessonProgress> LessonProgresses { get; set; } = new List<LessonProgress>();
     }
 }
