@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace TutoringPlatform.Data;
+namespace TutoringPlatform.Shared.Models;
 
 // Add profile data for application users by adding properties to the TutoringPlatformUser class
 public class TutoringPlatformUser : IdentityUser

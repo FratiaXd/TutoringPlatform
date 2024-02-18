@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Security.Claims;
+using TutoringPlatform.Shared.Models;
 
 namespace TutoringPlatform.Components.Account
 {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
+using TutoringPlatform.Shared.Models;
 
 namespace TutoringPlatform.Components.Account
 {

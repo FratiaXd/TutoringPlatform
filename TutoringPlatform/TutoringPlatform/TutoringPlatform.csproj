@@ -8,12 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TutoringPlatform.Shared\TutoringPlatform.Shared.csproj" />
     <ProjectReference Include="..\TutoringPlatform.Client\TutoringPlatform.Client.csproj" />
     <PackageReference Include="Blazor.Bootstrap" Version="1.11.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>

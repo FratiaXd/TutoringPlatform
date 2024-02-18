@@ -1,6 +1,7 @@
 using TutoringPlatform.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using TutoringPlatform.Shared.Models;
 
 namespace TutoringPlatform.Components.Account
 {
