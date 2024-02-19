@@ -1,0 +1,85 @@
+﻿@layout ManageCourseBuilderLayout
+@inject ICourseService CourseService
+@rendermode InteractiveServer
+@page "/admin/adminpages/coursebuilder"
+@using System.ComponentModel.DataAnnotations
+<h3>Add Course Details</h3>
+<br />
+<h4>@message</h4>
+
+<EditForm Model="Input" FormName="editcourse" OnValidSubmit="UpdateCourse" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.Title" class="form-control" placeholder="Please enter course title." />
+        <label for="title" class="form-label">Course Title</label>
+        <ValidationMessage For="() => Input.Title" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputNumber @bind-Value="Input.Price" class="form-control" placeholder="Please enter course price." />
+        <label for="price" class="form-label">Course Price</label>
+        <ValidationMessage For="() => Input.Price" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.Description" class="form-control" placeholder="Please enter course description." />
+        <label for="description" class="form-label">Course Description</label>
+        <ValidationMessage For="() => Input.Description" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.AccessLevel" class="form-control" placeholder="Please enter access level." />
+        <label for="access-level" class="form-label">Course Access Level</label>
+        <ValidationMessage For="() => Input.AccessLevel" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.ImageUrl" class="form-control" placeholder="Please add course image." />
+        <label for="image-url" class="form-label">Course Image</label>
+        <ValidationMessage For="() => Input.ImageUrl" class="text-danger" />
+    </div>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+</EditForm>
+
+@code {
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new InputModel();
+    private string? message;
+
+    private async Task UpdateCourse()
+    {
+        Course newCourse = new Course
+        {
+            Title = Input.Title,
+            Price = Input.Price,
+            Description = Input.Description,
+            AccessLevel = Input.AccessLevel,
+            Duration = 0,
+            ImageUrl = Input.ImageUrl,
+            IsActive = false,
+            Status = "Draft initialized"
+        };
+
+        var updateResult = await CourseService.AddCourseAsync(newCourse);
+        if (updateResult == null)
+        {
+            message = "Unexpected error when adding course.";
+        }
+        else
+        {
+            message = "Course added successfully";
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required, MaxLength(80)]
+        public string Title { get; set; }
+        [Required, Range(1, double.MaxValue)]
+        public decimal Price { get; set; }
+        [Required]
+        public string? Description { get; set; }
+        [Required]
+        public string? AccessLevel { get; set; }
+        [Required]
+        public string? ImageUrl { get; set; }
+    }
+}

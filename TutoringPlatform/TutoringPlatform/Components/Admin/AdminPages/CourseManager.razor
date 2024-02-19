@@ -2,9 +2,15 @@
 @attribute [Authorize(Roles = "Admin")]
 @attribute [StreamRendering]
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 @inject ICourseService CourseService
 
 <h3>CourseManager</h3>
+
+<button class="btn btn-primary" @onclick="OpenCourseBuilder">Create New Course</button>
+<br />
+<br />
+<h5>Draft courses</h5>
 
 <table class="table">
     <thead>
@@ -12,26 +18,61 @@
             <th>Course name</th>
             <th>Description</th>
             <th>Price</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var course in courses)
+        @foreach (var course in coursesDraft)
         {
             <tr>
                 <td>@course.Title</td>
                 <td>@course.Description</td>
                 <td>@course.Price</td>
+                <td><button class="btn btn-primary">Edit Draft</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<br />
+<h5>Published courses</h5>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in coursesPublished)
+        {
+            <tr>
+                <td>@course.Title</td>
+                <td>@course.Description</td>
+                <td>@course.Price</td>
+                <td><button class="btn btn-primary">Edit Course</button></td>
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-    List<Course> courses = new List<Course>();
+    List<Course> coursesDraft = new List<Course>();
+    List<Course> coursesPublished = new List<Course>();
 
     protected override async Task OnInitializedAsync()
     {
-        var coursesList = await CourseService.GetAllCoursesAsync();
-        courses = coursesList.ToList();
+        var coursesListPubl = await CourseService.GetPublishedCoursesAsync();
+        var coursesListDraft = await CourseService.GetDraftCoursesAsync();
+        coursesPublished = coursesListPubl.ToList();
+        coursesDraft = coursesListDraft.ToList();
+    }
+
+    void OpenCourseBuilder()
+    {
+        NavigationManager.NavigateTo("/admin/adminpages/coursebuilder");
     }
 }

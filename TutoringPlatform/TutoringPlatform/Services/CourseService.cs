@@ -28,5 +28,23 @@ namespace TutoringPlatform.Services
         {
             return await _context.Courses.Where(c => c.IsActive).ToListAsync();
         }
+
+        public async Task<Course> AddCourseAsync(Course course)
+        {
+            if (course == null) 
+            { 
+                return null; 
+            }
+            //Check if course already exists
+            var check = await _context.Courses.FirstOrDefaultAsync(c => c.Title.ToLower() == course.Title.ToLower());
+            if (check != null) 
+            {
+                return null;
+            }
+            //Add course
+            var newCourse = _context.Courses.Add(course).Entity;
+            await _context.SaveChangesAsync();
+            return newCourse;
+        }
     }
 }
