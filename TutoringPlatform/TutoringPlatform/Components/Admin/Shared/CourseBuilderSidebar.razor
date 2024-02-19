@@ -1,10 +1,21 @@
-﻿<ul class="nav nav-pills flex-column">
+﻿@using TutoringPlatform.Services
+@inject BuilderStateService BuilderState
+@rendermode InteractiveServer
+<ul class="nav nav-pills flex-column">
     <li class="nav-item">
-        <NavLink class="nav-link" href="/admin/adminpages/coursebuilder" Match="NavLinkMatch.All">@CourseTitle</NavLink>
+        <NavLink class="nav-link" href="/admin/adminpages/coursebuilder" Match="NavLinkMatch.All">@BuilderState.CourseTitle</NavLink>
     </li>
 </ul>
 
 @code {
-    public string? CourseTitle;
+    protected override void OnInitialized()
+    {
+        BuilderState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        BuilderState.OnChange -= StateHasChanged;
+    }
 
 }
