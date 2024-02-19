@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TutoringPlatform.Shared.Models;
+
+namespace TutoringPlatform.Shared.Interfaces
+{
+    public interface ICourseService
+    {
+        Task<IEnumerable<Course>> GetAllCoursesAsync();
+        Task<IEnumerable<Course>> GetPublishedCoursesAsync();
+        Task<IEnumerable<Course>> GetDraftCoursesAsync();
+    }
+}

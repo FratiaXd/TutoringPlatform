@@ -15,7 +15,9 @@ namespace TutoringPlatform.Shared.Models
         public string? QuizGrade { get; set; }
         public string? SubmittedAssignment { get; set; }
         public string? TutorFeedback { get; set; }
+        [MaxLength(20)]
         public string? LessonStatus { get; set; }
+        [MaxLength(20)]
         public string? FeedbackStatus { get; set; }
 
         //Relationships

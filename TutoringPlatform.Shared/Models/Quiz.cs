@@ -11,6 +11,7 @@ namespace TutoringPlatform.Shared.Models
         public int LessonId { get; set; }
 
         //Properties
+        [MaxLength(30)]
         public string QuizName { get; set; }
 
         //Relationships

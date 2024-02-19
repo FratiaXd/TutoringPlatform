@@ -1,0 +1,32 @@
+﻿using Microsoft.EntityFrameworkCore;
+using TutoringPlatform.Data;
+using TutoringPlatform.Shared.Interfaces;
+using TutoringPlatform.Shared.Models;
+
+namespace TutoringPlatform.Services
+{
+    public class CourseService : ICourseService
+    {
+        private readonly TutoringPlatformContext _context;
+
+        public CourseService(TutoringPlatformContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IEnumerable<Course>> GetAllCoursesAsync()
+        {
+            return await _context.Courses.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Course>> GetDraftCoursesAsync()
+        {
+            return await _context.Courses.Where(c => !c.IsActive).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Course>> GetPublishedCoursesAsync()
+        {
+            return await _context.Courses.Where(c => c.IsActive).ToListAsync();
+        }
+    }
+}

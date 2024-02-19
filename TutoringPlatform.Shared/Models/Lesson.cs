@@ -8,7 +8,7 @@ namespace TutoringPlatform.Shared.Models
         public int LessonId { get; set; }
 
         //Properties
-        [Required]
+        [Required, MaxLength(50)]
         public string LessonTitle { get; set; }
         public string? LessonDescription { get; set; }
         public int LessonOrder { get; set; }

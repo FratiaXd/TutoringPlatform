@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TutoringPlatform.Shared.Models;
+using TutoringPlatform.Shared.Interfaces;
+using TutoringPlatform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,6 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
-builder.Services.AddScoped<UserContextService>();
 
 var connectionString = builder.Configuration["ConnectionStrings:MySqlDb:TutoringPlatform"];
 
@@ -32,6 +33,7 @@ builder.Services.AddIdentity<TutoringPlatformUser, IdentityRole>(options => opti
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<TutoringPlatformUser>, IdentityNoOpEmailSender>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 var app = builder.Build();
 

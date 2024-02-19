@@ -8,7 +8,7 @@ namespace TutoringPlatform.Shared.Models
         public int CourseId { get; set; }
 
         //Properties
-        [Required]
+        [Required, MaxLength(80)]
         public string Title { get; set; }
         public decimal Price { get; set; }
         public string? Description { get; set; }
@@ -16,6 +16,8 @@ namespace TutoringPlatform.Shared.Models
         public string? AccessLevel { get; set; }
         public string? ImageUrl { get; set; }
         public bool IsActive { get; set; }
+        [MaxLength(20)]
+        public string? Status { get; set; }
 
         //Relationships
         public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();

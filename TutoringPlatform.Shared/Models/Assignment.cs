@@ -11,6 +11,7 @@ namespace TutoringPlatform.Shared.Models
         public int LessonId { get; set; }
 
         //Properties
+        [MaxLength(35)]
         public string TaskName { get; set; }
         public string TaskDescription { get; set; }
 

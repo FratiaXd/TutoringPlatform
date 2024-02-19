@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Components\Admin\Shared\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>

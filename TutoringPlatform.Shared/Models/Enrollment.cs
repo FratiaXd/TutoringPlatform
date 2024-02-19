@@ -14,6 +14,7 @@ namespace TutoringPlatform.Shared.Models
         public int? LatestLessonId { get; set; }
 
         //Properties
+        [MaxLength(20)]
         public string EnrollmentStatus { get; set; }
 
         //Relationships

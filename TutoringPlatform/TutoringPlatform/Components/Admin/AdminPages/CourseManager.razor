@@ -1,0 +1,37 @@
+﻿@page "/admin/adminpages/coursemanager"
+@attribute [Authorize(Roles = "Admin")]
+@attribute [StreamRendering]
+@rendermode InteractiveServer
+@inject ICourseService CourseService
+
+<h3>CourseManager</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course name</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in courses)
+        {
+            <tr>
+                <td>@course.Title</td>
+                <td>@course.Description</td>
+                <td>@course.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Course> courses = new List<Course>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var coursesList = await CourseService.GetAllCoursesAsync();
+        courses = coursesList.ToList();
+    }
+}
