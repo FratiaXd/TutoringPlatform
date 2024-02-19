@@ -1,16 +1,16 @@
-﻿@layout ManageCourseBuilderLayout
+﻿@page "/admin/adminpages/initializenewcourse"
+@using System.ComponentModel.DataAnnotations
+@using TutoringPlatform.Components.Account
 @inject ICourseService CourseService
 @inject BuilderStateService BuilderState
+@inject IdentityRedirectManager RedirectManager
 @rendermode InteractiveServer
-@page "/admin/adminpages/coursebuilder/{CourseId:int}"
-@using System.ComponentModel.DataAnnotations
-<h3>Add Course Details</h3>
+<h3>Enter New Course Details</h3>
+
 <br />
 <h4>@message</h4>
 
-<Modal @ref="deleteModal" IsVerticallyCentered="true" />
-
-<EditForm Model="Input" FormName="editcourse" OnValidSubmit="UpdateCourse" method="post">
+<EditForm Model="Input" FormName="createcourse" OnValidSubmit="CreateCourse" method="post">
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
     <div class="form-floating mb-3">
@@ -45,70 +45,35 @@
     </div>
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
-<br />
-<Button Color="ButtonColor.Danger" @onclick="ShowCourseDelete">Delete Course</Button>
 
 @code {
-    [Parameter]
-    public int? CourseId { get; set; }
-
-    public Course? updateCourse;
-
-    private Modal deleteModal = default!;
-
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new InputModel();
     private string? message;
+    private InputModel Input { get; set; } = new InputModel();
 
-    protected override async Task OnInitializedAsync()
+    private async Task CreateCourse()
     {
-        if (CourseId.HasValue)
+        Course newCourse = new Course
+            {
+                Title = Input.Title,
+                Price = Input.Price,
+                Description = Input.Description,
+                AccessLevel = Input.AccessLevel.ToString(),
+                Duration = 0,
+                ImageUrl = Input.ImageUrl,
+                IsActive = false,
+                Status = "Draft initialized"
+            };
+        var updateResult = await CourseService.AddCourseAsync(newCourse);
+        if (updateResult == null)
         {
-            updateCourse = await CourseService.GetCourseByIdAsync(CourseId.Value);
-            Input.Title = updateCourse.Title;
-            Input.Price = updateCourse.Price;
-            Input.Description = updateCourse.Description;
-            Input.AccessLevel = Enum.Parse<AccessLevel>(updateCourse.AccessLevel);
-            Input.ImageUrl = updateCourse.ImageUrl;
-            BuilderState.CourseTitle = updateCourse.Title;
-        }
+            message = "Unexpected error. Please try again.";
+            return;
+        } 
         else
         {
-            BuilderState.CourseTitle = "Course draft";
-        }
-    }
-
-    private async Task UpdateCourse()
-    {
-        if (CourseId.HasValue)
-        {
-            updateCourse = await CourseService.GetCourseByIdAsync(CourseId.Value);
-            updateCourse.Title = Input.Title;
-            updateCourse.Price = Input.Price;
-            updateCourse.Description = Input.Description;
-            updateCourse.AccessLevel = Input.AccessLevel.ToString();
-            updateCourse.ImageUrl = Input.ImageUrl;
-
-            var updateResult = await CourseService.UpdateCourseAsync(updateCourse);
-            if (updateResult == null)
-            {
-                message = "Unexpected error when adding course.";
-            }
-            else
-            {
-                BuilderState.CourseTitle = updateCourse.Title;
-                message = "Course updated successfully";
-            }
-        }
-    }
-
-    private async Task ShowCourseDelete()
-    {
-        if (CourseId.HasValue)
-        {
-            var parameters = new Dictionary<string, object>();
-            parameters.Add("Id", CourseId);
-            await deleteModal.ShowAsync<DeleteCourse>(title: "Delete Course", parameters: parameters);
+            message = string.Empty;
+            BuilderState.CourseId = newCourse.CourseId;
+            RedirectManager.RedirectToCreatedCourse(newCourse.CourseId);
         }
     }
 
@@ -122,7 +87,6 @@
             if (IsPriceDisabled())
             {
                 Input.Price = 0;
-                StateHasChanged();
             }
         }
     }

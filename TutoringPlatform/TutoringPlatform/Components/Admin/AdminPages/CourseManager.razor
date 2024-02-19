@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject ICourseService CourseService
+@inject BuilderStateService BuilderState
 
 <h3>CourseManager</h3>
 
@@ -76,11 +77,12 @@
 
     void OpenCourseBuilder()
     {
-        NavigationManager.NavigateTo("/admin/adminpages/coursebuilder");
+        NavigationManager.NavigateTo("/admin/adminpages/initializenewcourse");
     }
 
     void EditCourse(int courseId)
     {
+        BuilderState.CourseId = courseId;
         NavigationManager.NavigateTo($"/admin/adminpages/coursebuilder/{courseId}");
     }
 }

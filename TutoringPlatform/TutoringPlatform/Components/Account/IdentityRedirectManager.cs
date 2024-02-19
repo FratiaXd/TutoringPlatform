@@ -67,5 +67,10 @@ namespace TutoringPlatform.Components.Account
         {
             navigationManager.NavigateTo("/admin/adminpages/coursemanager", forceLoad: true);
         }
+
+        public void RedirectToCreatedCourse(int id)
+        {
+            navigationManager.NavigateTo($"/admin/adminpages/coursebuilder/{id}", forceLoad: true);
+        }
     }
 }
