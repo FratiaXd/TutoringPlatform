@@ -62,5 +62,10 @@ namespace TutoringPlatform.Components.Account
             // Navigate to a page or controller action designed to handle sign-out
             navigationManager.NavigateTo("/profile/shared/signout", forceLoad: true);
         }
+
+        public void RedirectToCourseManager()
+        {
+            navigationManager.NavigateTo("/admin/adminpages/coursemanager", forceLoad: true);
+        }
     }
 }

@@ -8,8 +8,8 @@ namespace TutoringPlatform.Shared.Constants
 {
     public enum AccessLevel
     {
-        Free,
         Paid,
+        Free,
         Restricted
     }
 }

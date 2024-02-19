@@ -31,20 +31,53 @@ namespace TutoringPlatform.Services
 
         public async Task<Course> AddCourseAsync(Course course)
         {
-            if (course == null) 
-            { 
-                return null; 
-            }
+            if (course == null) {  return null; }
             //Check if course already exists
             var check = await _context.Courses.FirstOrDefaultAsync(c => c.Title.ToLower() == course.Title.ToLower());
-            if (check != null) 
-            {
-                return null;
-            }
+            if (check != null) { return null; }
             //Add course
             var newCourse = _context.Courses.Add(course).Entity;
             await _context.SaveChangesAsync();
             return newCourse;
+        }
+
+        public async Task<Course> GetCourseByIdAsync(int id)
+        {
+            if (id == 0) { return null; }
+
+            var course = await _context.Courses.FirstOrDefaultAsync(c => c.CourseId == id);
+            if (course == null) { return null; }
+            return course;
+        }
+
+        public async Task<Course> UpdateCourseAsync(Course updatedCourse)
+        {
+            if (updatedCourse == null) { return null; }
+            var existingCourse = await _context.Courses.FindAsync(updatedCourse.CourseId);
+            if (existingCourse == null) { return null; }
+
+            existingCourse.Title = updatedCourse.Title;
+            existingCourse.Description = updatedCourse.Description;
+            existingCourse.Price = updatedCourse.Price;
+            existingCourse.AccessLevel = updatedCourse.AccessLevel;
+            existingCourse.ImageUrl = updatedCourse.ImageUrl;
+            existingCourse.IsActive = updatedCourse.IsActive;
+
+            _context.Courses.Update(existingCourse);
+            await _context.SaveChangesAsync();
+
+            return existingCourse;
+        }
+
+        public async Task<Course> DeleteCourseAsync(int id)
+        {
+            var deletedCourse = await _context.Courses.FindAsync(id);
+            if (deletedCourse == null) { return null; }
+            
+            _context.Courses.Remove(deletedCourse);
+            await _context.SaveChangesAsync();
+
+            return deletedCourse;
         }
     }
 }

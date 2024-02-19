@@ -3,10 +3,13 @@
 @inject BuilderStateService BuilderState
 @rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder"
+@page "/admin/adminpages/coursebuilder/{CourseId:int}"
 @using System.ComponentModel.DataAnnotations
 <h3>Add Course Details</h3>
 <br />
 <h4>@message</h4>
+
+<Modal @ref="deleteModal" IsVerticallyCentered="true" />
 
 <EditForm Model="Input" FormName="editcourse" OnValidSubmit="UpdateCourse" method="post">
     <DataAnnotationsValidator />
@@ -17,7 +20,17 @@
         <ValidationMessage For="() => Input.Title" class="text-danger" />
     </div>
     <div class="form-floating mb-3">
-        <InputNumber @bind-Value="Input.Price" class="form-control" placeholder="Please enter course price." />
+        <InputSelect @bind-Value="Input.AccessLevel" class="form-select" @onchange="OnAccessLevelChanged">
+            <option value="" selected disabled>Select option</option>
+            @foreach (var level in Enum.GetValues<AccessLevel>())
+            {
+                <option value="@level">@level</option>
+            }
+        </InputSelect>
+        <label for="access-level" class="form-label">Course Access Level</label>
+    </div>
+    <div class="form-floating mb-3">
+        <InputNumber @bind-Value="Input.Price" class="form-control" placeholder="Please enter course price." disabled="@IsPriceDisabled()" />
         <label for="price" class="form-label">Course Price</label>
         <ValidationMessage For="() => Input.Price" class="text-danger" />
     </div>
@@ -27,51 +40,110 @@
         <ValidationMessage For="() => Input.Description" class="text-danger" />
     </div>
     <div class="form-floating mb-3">
-        <InputSelect @bind-Value="Input.AccessLevel" class="form-select">
-        @foreach (var level in Enum.GetValues<AccessLevel>())
-        {
-            <option value="@level">@level</option>
-        }
-        </InputSelect>
-        <label for="access-level" class="form-label">Course Access Level</label>
-    </div>
-    <div class="form-floating mb-3">
         <InputText @bind-Value="Input.ImageUrl" class="form-control" placeholder="Please add course image." />
         <label for="image-url" class="form-label">Course Image</label>
         <ValidationMessage For="() => Input.ImageUrl" class="text-danger" />
     </div>
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
+<br />
+<Button Color="ButtonColor.Danger" @onclick="ShowCourseDelete">Delete Course</Button>
 
 @code {
+    [Parameter]
+    public int? CourseId { get; set; }
+
+    public Course? updateCourse;
+
+    private Modal deleteModal = default!;
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new InputModel();
     private string? message;
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (CourseId.HasValue)
+        {
+            updateCourse = await CourseService.GetCourseByIdAsync(CourseId.Value);
+            Input.Title = updateCourse.Title;
+            Input.Price = updateCourse.Price;
+            Input.Description = updateCourse.Description;
+            Input.AccessLevel = Enum.Parse<AccessLevel>(updateCourse.AccessLevel);
+            Input.ImageUrl = updateCourse.ImageUrl;
+        }
+    }
+
     private async Task UpdateCourse()
     {
-        Course newCourse = new Course
+        if (CourseId.HasValue)
         {
-            Title = Input.Title,
-            Price = Input.Price,
-            Description = Input.Description,
-            AccessLevel = Input.AccessLevel.ToString(),
-            Duration = 0,
-            ImageUrl = Input.ImageUrl,
-            IsActive = false,
-            Status = "Draft initialized"
-        };
+            updateCourse = await CourseService.GetCourseByIdAsync(CourseId.Value);
+            updateCourse.Title = Input.Title;
+            updateCourse.Price = Input.Price;
+            updateCourse.Description = Input.Description;
+            updateCourse.AccessLevel = Input.AccessLevel.ToString();
+            updateCourse.ImageUrl = Input.ImageUrl;
 
-        var updateResult = await CourseService.AddCourseAsync(newCourse);
-        if (updateResult == null)
-        {
-            message = "Unexpected error when adding course.";
+            var updateResult = await CourseService.UpdateCourseAsync(updateCourse);
+            if (updateResult == null)
+            {
+                message = "Unexpected error when adding course.";
+            }
+            else
+            {
+                BuilderState.CourseTitle = updateCourse.Title;
+                message = "Course updated successfully";
+            }
         }
         else
         {
-            BuilderState.CourseTitle = newCourse.Title;
-            message = "Course added successfully";
+            Course newCourse = new Course
+                {
+                    Title = Input.Title,
+                    Price = Input.Price,
+                    Description = Input.Description,
+                    AccessLevel = Input.AccessLevel.ToString(),
+                    Duration = 0,
+                    ImageUrl = Input.ImageUrl,
+                    IsActive = false,
+                    Status = "Draft initialized"
+                };
+            var updateResult = await CourseService.AddCourseAsync(newCourse);
+            if (updateResult == null)
+            {
+                message = "Unexpected error when adding course.";
+            }
+            else
+            {
+                BuilderState.CourseTitle = newCourse.Title;
+                CourseId = newCourse.CourseId;
+                message = "Course added successfully";
+            }
+        }
+    }
+
+    private async Task ShowCourseDelete()
+    {
+        if (CourseId.HasValue)
+        {
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("Id", CourseId);
+            await deleteModal.ShowAsync<DeleteCourse>(title: "Delete Course", parameters: parameters);
+        }
+    }
+
+    private bool IsPriceDisabled() => Input.AccessLevel == AccessLevel.Free || Input.AccessLevel == AccessLevel.Restricted;
+
+    private void OnAccessLevelChanged(ChangeEventArgs e)
+    {
+        if (Enum.TryParse<AccessLevel>(e.Value?.ToString(), out var selectedAccessLevel))
+        {
+            Input.AccessLevel = selectedAccessLevel;
+            if (IsPriceDisabled())
+            {
+                Input.Price = 0;
+            }
         }
     }
 
@@ -79,7 +151,7 @@
     {
         [Required, MaxLength(80)]
         public string Title { get; set; }
-        [Required, Range(1, double.MaxValue)]
+        [Required, Range(0, double.MaxValue)]
         public decimal Price { get; set; }
         [Required]
         public string? Description { get; set; }

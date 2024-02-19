@@ -1,6 +1,5 @@
 ﻿@page "/admin/adminpages/coursemanager"
 @attribute [Authorize(Roles = "Admin")]
-@attribute [StreamRendering]
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject ICourseService CourseService
@@ -18,6 +17,7 @@
             <th>Course name</th>
             <th>Description</th>
             <th>Price</th>
+            <th>Access Level</th>
             <th></th>
         </tr>
     </thead>
@@ -28,7 +28,8 @@
                 <td>@course.Title</td>
                 <td>@course.Description</td>
                 <td>@course.Price</td>
-                <td><button class="btn btn-primary">Edit Draft</button></td>
+                <td>@course.AccessLevel</td>
+                <td><button class="btn btn-primary" @onclick="() => EditCourse(course.CourseId)">Edit Draft</button></td>
             </tr>
         }
     </tbody>
@@ -43,6 +44,7 @@
             <th>Course name</th>
             <th>Description</th>
             <th>Price</th>
+            <th>Access Level</th>
             <th></th>
         </tr>
     </thead>
@@ -53,7 +55,8 @@
                 <td>@course.Title</td>
                 <td>@course.Description</td>
                 <td>@course.Price</td>
-                <td><button class="btn btn-primary">Edit Course</button></td>
+                <td>@course.AccessLevel</td>
+                <td><button class="btn btn-primary" @onclick="() => EditCourse(course.CourseId)">Edit Course</button></td>
             </tr>
         }
     </tbody>
@@ -74,5 +77,10 @@
     void OpenCourseBuilder()
     {
         NavigationManager.NavigateTo("/admin/adminpages/coursebuilder");
+    }
+
+    void EditCourse(int courseId)
+    {
+        NavigationManager.NavigateTo($"/admin/adminpages/coursebuilder/{courseId}");
     }
 }

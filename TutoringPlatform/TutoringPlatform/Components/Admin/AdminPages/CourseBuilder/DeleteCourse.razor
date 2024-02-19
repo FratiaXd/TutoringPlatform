@@ -1,0 +1,66 @@
+﻿@using System.ComponentModel.DataAnnotations
+@using TutoringPlatform.Components.Account
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<TutoringPlatformUser> UserManager
+@inject IdentityRedirectManager RedirectManager
+@inject ICourseService CourseService
+
+<div class="mt-3 bg-danger text-white bg-opacity-75">
+    @message
+</div>
+
+<EditForm Model="Input" FormName="delete-course" OnValidSubmit="OnDeleteCourse" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText type="password" @bind-Value="Input.AdminPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter admin password." />
+        <label for="password" class="form-label">Admin Password</label>
+        <ValidationMessage For="() => Input.AdminPassword" class="text-danger" />
+    </div>
+    <button class="w-100 btn btn-lg btn-danger" type="submit">Delete all course data</button>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private TutoringPlatformUser userAdmin = default;
+
+    private string? message = string.Empty;
+
+    private InputModel Input { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userPrincipal = authState.User;
+        var userId = UserManager.GetUserId(userPrincipal);
+        userAdmin = await UserManager.FindByIdAsync(userId);
+    }
+
+    private async Task OnDeleteCourse()
+    {
+        var result = await UserManager.CheckPasswordAsync(userAdmin, Input.AdminPassword);
+        if (!result)
+        {
+            message = "Incorrect admin password. Please try again.";
+        }
+        else
+        {
+            var updateResult = await CourseService.DeleteCourseAsync(Id);
+            if (updateResult == null)
+            {
+                message = "Error when deleting course.";
+            }
+            message = string.Empty;
+            RedirectManager.RedirectToCourseManager();
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [DataType(DataType.Password)]
+        public string AdminPassword { get; set; } = "";
+    }
+}

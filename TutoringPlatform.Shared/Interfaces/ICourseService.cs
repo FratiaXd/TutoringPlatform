@@ -13,5 +13,8 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<IEnumerable<Course>> GetPublishedCoursesAsync();
         Task<IEnumerable<Course>> GetDraftCoursesAsync();
         Task<Course> AddCourseAsync(Course course);
+        Task<Course> GetCourseByIdAsync(int id);
+        Task<Course> UpdateCourseAsync(Course updatedCourse);
+        Task<Course> DeleteCourseAsync(int id);
     }
 }
