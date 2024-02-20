@@ -52,5 +52,26 @@ namespace TutoringPlatform.Services
             if (lesson == null) { return null; }
             return lesson;
         }
+
+        public async Task<Lesson> UpdateLessonAsync(Lesson updatedLesson)
+        {
+            if (updatedLesson == null) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+            var existingLesson = await context.Lessons.FindAsync(updatedLesson.LessonId);
+            if (existingLesson == null) { return null; }
+
+            existingLesson.LessonTitle = updatedLesson.LessonTitle;
+            existingLesson.LessonDescription = updatedLesson.LessonDescription;
+            existingLesson.IsAutograded = updatedLesson.IsAutograded;
+            existingLesson.LessonVideoUrl = updatedLesson.LessonVideoUrl;
+            existingLesson.LessonImageUrl = updatedLesson.LessonImageUrl;
+            existingLesson.LessonContent = updatedLesson.LessonContent;
+            existingLesson.IsAssessed = updatedLesson.IsAssessed;
+
+            context.Lessons.Update(existingLesson);
+            await context.SaveChangesAsync();
+
+            return existingLesson;
+        }
     }
 }

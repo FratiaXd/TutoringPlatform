@@ -1,9 +1,69 @@
 ﻿@layout ManageCourseBuilderLayout
+@inject ILessonService LessonService
 @page "/admin/adminpages/coursebuilder/lessondetailbuilder/{LessonId:int}"
 
 <h3>Lesson Detail Builder</h3>
 
+<EditForm Model="Input" FormName="editlesson" OnValidSubmit="UpdateLesson" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.LessonTitle" class="form-control" placeholder="Please enter lesson title." />
+        <label for="title" class="form-label">Lesson Title</label>
+        <ValidationMessage For="() => Input.LessonTitle" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.LessonDescription" class="form-control" placeholder="Please enter lesson description." />
+        <label for="description" class="form-label">Lesson Description</label>
+        <ValidationMessage For="() => Input.LessonDescription" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.LessonVideoUrl" class="form-control" placeholder="Please add course video." />
+        <label for="video-url" class="form-label">Lesson Video</label>
+        <ValidationMessage For="() => Input.LessonVideoUrl" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.LessonImageUrl" class="form-control" placeholder="Please add course image." />
+        <label for="image-url" class="form-label">Lesson Image</label>
+        <ValidationMessage For="() => Input.LessonImageUrl" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.LessonContent" class="form-control" placeholder="Please add course video." />
+        <label for="content" class="form-label">Lesson Content</label>
+        <ValidationMessage For="() => Input.LessonContent" class="text-danger" />
+    </div>
+    <div class="mb-3">
+        <Switch @bind-Value="Input.IsAutograded" Label="Autograded" />
+    </div>
+    <div class="mb-3">
+        <Switch @bind-Value="Input.IsAssessed" Label="Assessed" />
+    </div>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+</EditForm>
+
 @code {
     [Parameter]
     public int? LessonId { get; set; }
+
+    public Lesson updatedLesson;
+
+    [SupplyParameterFromForm]
+    private LessonInput Input { get; set; } = new LessonInput();
+
+    protected override async Task OnInitializedAsync()
+    {
+        updatedLesson = await LessonService.GetLessonByIdAsync(LessonId.Value);
+        Input.LessonTitle = updatedLesson.LessonTitle;
+        Input.LessonDescription = updatedLesson.LessonDescription;
+        Input.LessonVideoUrl = updatedLesson.LessonVideoUrl;
+        Input.LessonImageUrl = updatedLesson.LessonImageUrl;
+        Input.LessonContent = updatedLesson.LessonContent;
+        Input.IsAutograded = updatedLesson.IsAutograded;
+        Input.IsAssessed = updatedLesson.IsAssessed;
+    }
+
+    private async Task UpdateLesson()
+    {
+        
+    }
 }
