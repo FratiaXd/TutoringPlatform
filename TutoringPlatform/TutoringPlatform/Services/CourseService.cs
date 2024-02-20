@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using TutoringPlatform.Data;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Shared.Models;
@@ -55,7 +56,7 @@ namespace TutoringPlatform.Services
             if (updatedCourse == null) { return null; }
             var existingCourse = await _context.Courses.FindAsync(updatedCourse.CourseId);
             if (existingCourse == null) { return null; }
-
+            
             existingCourse.Title = updatedCourse.Title;
             existingCourse.Description = updatedCourse.Description;
             existingCourse.Price = updatedCourse.Price;
@@ -78,6 +79,13 @@ namespace TutoringPlatform.Services
             await _context.SaveChangesAsync();
 
             return deletedCourse;
+        }
+
+        public async Task<bool> IsTitleUsedAsync(int id, string title)
+        {
+            if (title == null) { return true; }
+            var check = await _context.Courses.FirstOrDefaultAsync(c => c.Title.ToLower() == title.ToLower() && c.CourseId != id);
+            return check != null;
         }
     }
 }

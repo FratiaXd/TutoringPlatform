@@ -3,7 +3,7 @@
 @using TutoringPlatform.Components.Account
 @inject ICourseService CourseService
 @inject BuilderStateService BuilderState
-@inject IdentityRedirectManager RedirectManager
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 <h3>Enter New Course Details</h3>
 
@@ -19,17 +19,17 @@
         <ValidationMessage For="() => Input.Title" class="text-danger" />
     </div>
     <div class="form-floating mb-3">
-        <InputSelect @bind-Value="Input.AccessLevel" class="form-select" @onchange="OnAccessLevelChanged">
+        <InputSelect @bind-Value="Input.AccessLevel" class="form-select" @bind-Value:after="OnAccessLevelChanged">
             <option value="" selected disabled>Select option</option>
             @foreach (var level in Enum.GetValues<AccessLevel>())
             {
-                <option value="@level">@level</option>
+                <option value="@level.ToString()">@level.ToString()</option>
             }
         </InputSelect>
         <label for="access-level" class="form-label">Course Access Level</label>
     </div>
     <div class="form-floating mb-3">
-        <InputNumber @bind-Value="Input.Price" class="form-control" placeholder="Please enter course price." disabled="@IsPriceDisabled()" />
+        <InputNumber @bind-Value="Input.Price" class="form-control" placeholder="Please enter course price." readonly="@IsPriceReadOnly()" />
         <label for="price" class="form-label">Course Price</label>
         <ValidationMessage For="() => Input.Price" class="text-danger" />
     </div>
@@ -73,21 +73,18 @@
         {
             message = string.Empty;
             BuilderState.CourseId = newCourse.CourseId;
-            RedirectManager.RedirectToCreatedCourse(newCourse.CourseId);
+            NavigationManager.NavigateTo($"/admin/adminpages/coursebuilder/{newCourse.CourseId}");
         }
     }
 
-    private bool IsPriceDisabled() => Input.AccessLevel == AccessLevel.Free || Input.AccessLevel == AccessLevel.Restricted;
+    private bool IsPriceReadOnly() => Input.AccessLevel == "Free" || Input.AccessLevel == "Restricted";
 
-    private void OnAccessLevelChanged(ChangeEventArgs e)
+    private void OnAccessLevelChanged()
     {
-        if (Enum.TryParse<AccessLevel>(e.Value?.ToString(), out var selectedAccessLevel))
+        if (IsPriceReadOnly())
         {
-            Input.AccessLevel = selectedAccessLevel;
-            if (IsPriceDisabled())
-            {
-                Input.Price = 0;
-            }
+            Input.Price = 0;
+
         }
     }
 
@@ -100,7 +97,7 @@
         [Required]
         public string? Description { get; set; }
         [Required]
-        public AccessLevel? AccessLevel { get; set; }
+        public string? AccessLevel { get; set; }
         [Required]
         public string? ImageUrl { get; set; }
     }

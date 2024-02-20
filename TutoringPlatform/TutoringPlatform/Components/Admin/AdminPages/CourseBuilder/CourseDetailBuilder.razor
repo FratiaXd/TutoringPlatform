@@ -1,10 +1,11 @@
 ﻿@layout ManageCourseBuilderLayout
 @inject ICourseService CourseService
 @inject BuilderStateService BuilderState
-@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @page "/admin/adminpages/coursebuilder/{CourseId:int}"
 @using System.ComponentModel.DataAnnotations
-<h3>Add Course Details</h3>
+<h3>Edit Course Details</h3>
 <br />
 <h4>@message</h4>
 
@@ -19,17 +20,17 @@
         <ValidationMessage For="() => Input.Title" class="text-danger" />
     </div>
     <div class="form-floating mb-3">
-        <InputSelect @bind-Value="Input.AccessLevel" class="form-select" @onchange="OnAccessLevelChanged">
+        <InputSelect @bind-Value="Input.AccessLevel" class="form-select" @bind-Value:after="OnAccessLevelChanged">
             <option value="" selected disabled>Select option</option>
             @foreach (var level in Enum.GetValues<AccessLevel>())
             {
-                <option value="@level">@level</option>
+                <option value="@level.ToString()">@level.ToString()</option>
             }
         </InputSelect>
         <label for="access-level" class="form-label">Course Access Level</label>
     </div>
     <div class="form-floating mb-3">
-        <InputNumber @bind-Value="Input.Price" class="form-control" placeholder="Please enter course price." disabled="@IsPriceDisabled()" />
+        <InputNumber @bind-Value="Input.Price" class="form-control" placeholder="Please enter course price." readonly="@IsPriceReadOnly()" />
         <label for="price" class="form-label">Course Price</label>
         <ValidationMessage For="() => Input.Price" class="text-danger" />
     </div>
@@ -68,13 +69,9 @@
             Input.Title = updateCourse.Title;
             Input.Price = updateCourse.Price;
             Input.Description = updateCourse.Description;
-            Input.AccessLevel = Enum.Parse<AccessLevel>(updateCourse.AccessLevel);
+            Input.AccessLevel = updateCourse.AccessLevel;
             Input.ImageUrl = updateCourse.ImageUrl;
             BuilderState.CourseTitle = updateCourse.Title;
-        }
-        else
-        {
-            BuilderState.CourseTitle = "Course draft";
         }
     }
 
@@ -83,6 +80,11 @@
         if (CourseId.HasValue)
         {
             updateCourse = await CourseService.GetCourseByIdAsync(CourseId.Value);
+            if (await CourseService.IsTitleUsedAsync(CourseId.Value, Input.Title))
+            {
+                message = "The course with this title already exists.";
+                return;
+            }
             updateCourse.Title = Input.Title;
             updateCourse.Price = Input.Price;
             updateCourse.Description = Input.Description;
@@ -112,18 +114,14 @@
         }
     }
 
-    private bool IsPriceDisabled() => Input.AccessLevel == AccessLevel.Free || Input.AccessLevel == AccessLevel.Restricted;
+    private bool IsPriceReadOnly() => Input.AccessLevel == "Free" || Input.AccessLevel == "Restricted";
 
-    private void OnAccessLevelChanged(ChangeEventArgs e)
+    private void OnAccessLevelChanged()
     {
-        if (Enum.TryParse<AccessLevel>(e.Value?.ToString(), out var selectedAccessLevel))
+        if (IsPriceReadOnly())
         {
-            Input.AccessLevel = selectedAccessLevel;
-            if (IsPriceDisabled())
-            {
-                Input.Price = 0;
-                StateHasChanged();
-            }
+            Input.Price = 0;
+
         }
     }
 
@@ -136,7 +134,7 @@
         [Required]
         public string? Description { get; set; }
         [Required]
-        public AccessLevel? AccessLevel { get; set; }
+        public string? AccessLevel { get; set; }
         [Required]
         public string? ImageUrl { get; set; }
     }
