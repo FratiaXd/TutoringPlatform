@@ -43,7 +43,7 @@
     public EventCallback OnClosed { get; set; }
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private AdminInput Input { get; set; } = new AdminInput();
 
     private TutoringPlatformUser user = default!;
     public string? message;
@@ -90,14 +90,5 @@
 
         var userId = await UserManager.GetUserIdAsync(user);
         Logger.LogInformation("User with ID '{UserId}' deleted.", userId);
-    }
-
-    private sealed class InputModel
-    {
-        [DataType(DataType.Password)]
-        public string Password { get; set; } = "";
-
-        [DataType(DataType.Password)]
-        public string AdminPassword { get; set; } = "";
     }
 }

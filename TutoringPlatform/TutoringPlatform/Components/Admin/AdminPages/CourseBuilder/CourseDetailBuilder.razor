@@ -57,7 +57,7 @@
     private Modal deleteModal = default!;
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new InputModel();
+    private CourseInput Input { get; set; } = new CourseInput();
     private string? message;
 
     protected override async Task OnInitializedAsync()
@@ -122,19 +122,5 @@
             Input.Price = 0;
 
         }
-    }
-
-    private sealed class InputModel
-    {
-        [Required, MaxLength(80)]
-        public string Title { get; set; }
-        [Required, Range(0, double.MaxValue)]
-        public decimal Price { get; set; }
-        [Required]
-        public string? Description { get; set; }
-        [Required]
-        public string? AccessLevel { get; set; }
-        [Required]
-        public string? ImageUrl { get; set; }
     }
 }

@@ -29,7 +29,7 @@
 
     private string? message = string.Empty;
 
-    private InputModel Input { get; set; } = new();
+    private AdminInput Input { get; set; } = new AdminInput();
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,11 +56,5 @@
             message = string.Empty;
             RedirectManager.RedirectToCourseManager();
         }
-    }
-
-    private sealed class InputModel
-    {
-        [DataType(DataType.Password)]
-        public string AdminPassword { get; set; } = "";
     }
 }

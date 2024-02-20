@@ -33,7 +33,7 @@
     public bool IsUserAdmin { get; set; }
 
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private DetailsInput Input { get; set; } = new DetailsInput();
 
     [Parameter]
     public EventCallback OnClosed { get; set; }
@@ -80,14 +80,5 @@
         {
             await OnClosed.InvokeAsync(null);
         }
-    }
-
-    private sealed class InputModel
-    {
-        [Required, MaxLength(20), RegularExpression(@"^[a-zA-Z]+$")]
-        public string? FirstName { get; set; }
-        [Required, MaxLength(20), RegularExpression(@"^[a-zA-Z]+$")]
-        public string? LastName { get; set; }
-        public bool IsAdmin { get; set; }
     }
 }
