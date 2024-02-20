@@ -7,27 +7,39 @@ namespace TutoringPlatform.Services
 {
     public class LessonService : ILessonService
     {
-        private readonly TutoringPlatformContext _context;
+        private readonly IDbContextFactory<TutoringPlatformContext> _contextFactory;
 
-        public LessonService(TutoringPlatformContext context)
+        public LessonService(IDbContextFactory<TutoringPlatformContext> context)
         {
-            _context = context;
+            _contextFactory = context;
         }
 
         public async Task<IEnumerable<Lesson>> GetAllLessonsAsync()
         {
-            return await _context.Lessons.ToListAsync();
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Lessons.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lesson>> GetAllLessonsForCourse(int? id)
+        {
+            if (id == 0) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+            return await context.Lessons.Where(l => l.CourseId == id).OrderBy(l => l.LessonOrder).ToListAsync();
         }
 
         public async Task<Lesson> AddLessonAsync(Lesson lesson)
         {
             if (lesson == null) { return null; }
             //Check if lesson already exists
-            var check = await _context.Lessons.FirstOrDefaultAsync(l => l.LessonTitle.ToLower() == lesson.LessonTitle.ToLower());
+            using var context = _contextFactory.CreateDbContext();
+            var check = await context.Lessons.FirstOrDefaultAsync(l => l.LessonTitle.ToLower() == lesson.LessonTitle.ToLower());
             if (check != null) { return null; }
+            //Set lesson data
+
+
             //Add lesson
-            var newLesson = _context.Lessons.Add(lesson).Entity;
-            await _context.SaveChangesAsync();
+            var newLesson = context.Lessons.Add(lesson).Entity;
+            await context.SaveChangesAsync();
             return newLesson;
         }
 
@@ -35,7 +47,8 @@ namespace TutoringPlatform.Services
         {
             if (id == 0) { return null; }
 
-            var lesson = await _context.Lessons.FirstOrDefaultAsync(l => l.LessonId == id);
+            using var context = _contextFactory.CreateDbContext();
+            var lesson = await context.Lessons.FirstOrDefaultAsync(l => l.LessonId == id);
             if (lesson == null) { return null; }
             return lesson;
         }

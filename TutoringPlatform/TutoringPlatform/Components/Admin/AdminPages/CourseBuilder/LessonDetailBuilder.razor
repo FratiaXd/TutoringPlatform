@@ -1,0 +1,9 @@
+﻿@layout ManageCourseBuilderLayout
+@page "/admin/adminpages/coursebuilder/lessondetailbuilder/{LessonId:int}"
+
+<h3>Lesson Detail Builder</h3>
+
+@code {
+    [Parameter]
+    public int? LessonId { get; set; }
+}

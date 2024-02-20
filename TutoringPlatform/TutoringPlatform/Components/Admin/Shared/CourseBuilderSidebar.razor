@@ -1,19 +1,34 @@
-﻿@using TutoringPlatform.Services
+﻿@using TutoringPlatform.Shared.Interfaces
+@using TutoringPlatform.Services
+@using System.Linq
+@using TutoringPlatform.Shared.Models
 @inject BuilderStateService BuilderState
+@inject ILessonService LessonService
 @rendermode InteractiveServer
+
+
 <ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <Button Color="ButtonColor.Success" @onclick="AddLesson"> + Add Lesson </Button>
+    </li>
     <li class="nav-item">
         <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/{BuilderState.CourseId}")" Match="NavLinkMatch.All">@BuilderState.CourseTitle</NavLink>
     </li>
-    <li class="nav-item">
-        <Button Color="ButtonColor.Success"> + Add Lesson </Button>
-    </li>
+    @foreach (var lesson in lessons)
+    {
+        <li class="nav-item">
+            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/lessondetailbuilder/{lesson.LessonId}")">@lesson.LessonTitle</NavLink>
+        </li>
+    }
 </ul>
 
 @code {
-    protected override void OnInitialized()
+    List<Lesson> lessons;
+
+    protected override async Task OnInitializedAsync()
     {
         BuilderState.OnChange += StateHasChanged;
+        await LoadLessons();
     }
 
     public void Dispose()
@@ -21,4 +36,32 @@
         BuilderState.OnChange -= StateHasChanged;
     }
 
+    private async Task LoadLessons()
+    {
+        lessons = new List<Lesson>();
+        var lessonsList = await LessonService.GetAllLessonsForCourse(BuilderState.CourseId);
+        if (lessonsList != null)
+        {
+            lessons.AddRange(lessonsList);
+        }
+    }
+
+    public async void AddLesson()
+    {
+        var listSize = lessons.Count();
+        var lessonName = lessons.Count() + 1;
+        if (listSize == 0) { listSize = 1; }
+        var addLesson = new Lesson
+        {
+            LessonTitle = "New Lesson" + BuilderState.CourseTitle + lessonName.ToString(),
+            LessonOrder = listSize,
+            CourseId = BuilderState.CourseId           
+        };
+        var addedLesson = await LessonService.AddLessonAsync(addLesson);
+        if (addedLesson != null)
+        {
+            lessons.Add(addedLesson);
+            StateHasChanged();
+        }
+    }
 }

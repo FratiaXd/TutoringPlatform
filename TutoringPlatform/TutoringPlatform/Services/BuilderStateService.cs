@@ -3,7 +3,7 @@
     public class BuilderStateService
     {
         private string _courseTitle = "Course draft";
-        private int? _courseId;
+        private int _courseId;
         public string CourseTitle
         {
             get => _courseTitle;
@@ -17,7 +17,7 @@
             }
         }
 
-        public int? CourseId
+        public int CourseId
         {
             get => _courseId;
             set
