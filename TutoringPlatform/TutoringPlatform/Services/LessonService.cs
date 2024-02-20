@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TutoringPlatform.Components.Admin.AdminPages.CourseBuilder;
 using TutoringPlatform.Data;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Shared.Models;
@@ -80,6 +81,19 @@ namespace TutoringPlatform.Services
             await context.SaveChangesAsync();
 
             return existingLesson;
+        }
+
+        public async Task<Lesson> DeleteLessonAsync(int id)
+        {
+            if (id == 0) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+            var deletedLesson = await context.Lessons.FindAsync(id);
+            if (deletedLesson == null) { return null; }
+
+            context.Lessons.Remove(deletedLesson);
+            await context.SaveChangesAsync();
+
+            return deletedLesson;
         }
     }
 }

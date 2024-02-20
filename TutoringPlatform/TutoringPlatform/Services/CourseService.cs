@@ -72,6 +72,7 @@ namespace TutoringPlatform.Services
 
         public async Task<Course> DeleteCourseAsync(int id)
         {
+            if (id == 0) { return null; }
             var deletedCourse = await _context.Courses.FindAsync(id);
             if (deletedCourse == null) { return null; }
             

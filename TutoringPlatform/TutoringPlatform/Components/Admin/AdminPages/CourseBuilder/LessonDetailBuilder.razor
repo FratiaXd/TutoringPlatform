@@ -1,5 +1,6 @@
 ﻿@layout ManageCourseBuilderLayout
 @inject ILessonService LessonService
+@inject BuilderStateService BuilderState
 @rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder/lessondetailbuilder/{LessonId:int}"
 
@@ -44,6 +45,8 @@
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
 
+<Button Color="ButtonColor.Danger">Delete Lesson</Button>
+
 @code {
     [Parameter]
     public int? LessonId { get; set; }
@@ -64,6 +67,9 @@
         Input.LessonContent = updatedLesson.LessonContent;
         Input.IsAutograded = updatedLesson.IsAutograded;
         Input.IsAssessed = updatedLesson.IsAssessed;
+
+        //Update lesson in BuilderStateService
+        //BuilderState.UpdateLessonTitle(LessonId.Value, updatedLesson.LessonTitle);
     }
 
     private async Task UpdateLesson()
@@ -88,6 +94,7 @@
         }
         else
         {
+            BuilderState.UpdateLessonTitle(LessonId.Value, updatedLesson.LessonTitle);
             message = "Lesson updated successfully";
         }
     }

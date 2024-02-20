@@ -4,6 +4,8 @@
     {
         private string _courseTitle = "Course draft";
         private int _courseId;
+        private Dictionary<int, string> _lessonTitles = new Dictionary<int, string>();
+
         public string CourseTitle
         {
             get => _courseTitle;
@@ -28,6 +30,21 @@
                     NotifyStateChanged();
                 }
             }
+        }
+
+        public void UpdateLessonTitle(int lessonId, string title)
+        {
+            _lessonTitles[lessonId] = title;
+            NotifyStateChanged();
+        }
+
+        public string GetLessonTitle(int lessonId)
+        {
+            if (_lessonTitles.ContainsKey(lessonId))
+            {
+                return _lessonTitles[lessonId];
+            }
+            return string.Empty;
         }
 
         public event Action OnChange;

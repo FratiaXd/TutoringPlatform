@@ -15,6 +15,7 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<Lesson> GetLessonByIdAsync(int id);
         Task<bool> IsTitleUsedAsync(int id, string title);
         Task<Lesson> UpdateLessonAsync(Lesson updatedLesson);
+        Task<Lesson> DeleteLessonAsync(int id);
 
     }
 }

@@ -17,7 +17,7 @@
     @foreach (var lesson in lessons)
     {
         <li class="nav-item">
-            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/lessondetailbuilder/{lesson.LessonId}")">@lesson.LessonTitle</NavLink>
+            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/lessondetailbuilder/{lesson.LessonId}")">@BuilderState.GetLessonTitle(lesson.LessonId)</NavLink>
         </li>
     }
 </ul>
@@ -43,6 +43,10 @@
         if (lessonsList != null)
         {
             lessons.AddRange(lessonsList);
+            foreach (var lesson in lessons)
+            {
+                BuilderState.UpdateLessonTitle(lesson.LessonId, lesson.LessonTitle);
+            }
         }
     }
 
@@ -61,7 +65,7 @@
         if (addedLesson != null)
         {
             lessons.Add(addedLesson);
-            StateHasChanged();
+            BuilderState.UpdateLessonTitle(addedLesson.LessonId, addedLesson.LessonTitle);
         }
     }
 }
