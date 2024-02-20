@@ -1,8 +1,11 @@
 ﻿@layout ManageCourseBuilderLayout
 @inject ILessonService LessonService
+@rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder/lessondetailbuilder/{LessonId:int}"
 
 <h3>Lesson Detail Builder</h3>
+
+<h4>@message</h4>
 
 <EditForm Model="Input" FormName="editlesson" OnValidSubmit="UpdateLesson" method="post">
     <DataAnnotationsValidator />
@@ -47,7 +50,8 @@
 
     public Lesson updatedLesson;
 
-    [SupplyParameterFromForm]
+    public string? message;
+
     private LessonInput Input { get; set; } = new LessonInput();
 
     protected override async Task OnInitializedAsync()
@@ -64,6 +68,27 @@
 
     private async Task UpdateLesson()
     {
-        
+        if (await LessonService.IsTitleUsedAsync(LessonId.Value, Input.LessonTitle))
+        {
+            message = "The lesson with this title already exists.";
+            return;
+        }
+        updatedLesson.LessonTitle = Input.LessonTitle;
+        updatedLesson.LessonDescription = Input.LessonDescription;
+        updatedLesson.LessonVideoUrl = Input.LessonVideoUrl;
+        updatedLesson.LessonImageUrl = Input.LessonImageUrl;
+        updatedLesson.LessonContent = Input.LessonContent;
+        updatedLesson.IsAutograded = Input.IsAutograded;
+        updatedLesson.IsAssessed = Input.IsAssessed;
+
+        var updateResult = await LessonService.UpdateLessonAsync(updatedLesson);
+        if (updateResult == null)
+        {
+            message = "Unexpected error when adding course.";
+        }
+        else
+        {
+            message = "Lesson updated successfully";
+        }
     }
 }

@@ -53,6 +53,14 @@ namespace TutoringPlatform.Services
             return lesson;
         }
 
+        public async Task<bool> IsTitleUsedAsync(int id, string title)
+        {
+            if (title == null) { return true; }
+            using var context = _contextFactory.CreateDbContext();
+            var check = await context.Lessons.FirstOrDefaultAsync(l => l.LessonTitle.ToLower() == title.ToLower() && l.LessonId != id);
+            return check != null;
+        }
+
         public async Task<Lesson> UpdateLessonAsync(Lesson updatedLesson)
         {
             if (updatedLesson == null) { return null; }

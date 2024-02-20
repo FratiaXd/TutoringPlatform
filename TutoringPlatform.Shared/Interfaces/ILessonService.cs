@@ -13,6 +13,7 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<IEnumerable<Lesson>> GetAllLessonsForCourse(int? id);
         Task<Lesson> AddLessonAsync(Lesson lesson);
         Task<Lesson> GetLessonByIdAsync(int id);
+        Task<bool> IsTitleUsedAsync(int id, string title);
         Task<Lesson> UpdateLessonAsync(Lesson updatedLesson);
 
     }
