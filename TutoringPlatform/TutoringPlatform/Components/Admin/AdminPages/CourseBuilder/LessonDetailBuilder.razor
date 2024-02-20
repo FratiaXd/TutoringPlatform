@@ -8,6 +8,8 @@
 
 <h4>@message</h4>
 
+<Modal @ref="deleteModal" IsVerticallyCentered="true" />
+
 <EditForm Model="Input" FormName="editlesson" OnValidSubmit="UpdateLesson" method="post">
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
@@ -45,7 +47,7 @@
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
 
-<Button Color="ButtonColor.Danger">Delete Lesson</Button>
+<Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Lesson</Button>
 
 @code {
     [Parameter]
@@ -57,6 +59,8 @@
 
     private LessonInput Input { get; set; } = new LessonInput();
 
+    private Modal deleteModal = default!;
+
     protected override async Task OnInitializedAsync()
     {
         updatedLesson = await LessonService.GetLessonByIdAsync(LessonId.Value);
@@ -67,9 +71,6 @@
         Input.LessonContent = updatedLesson.LessonContent;
         Input.IsAutograded = updatedLesson.IsAutograded;
         Input.IsAssessed = updatedLesson.IsAssessed;
-
-        //Update lesson in BuilderStateService
-        //BuilderState.UpdateLessonTitle(LessonId.Value, updatedLesson.LessonTitle);
     }
 
     private async Task UpdateLesson()
@@ -97,5 +98,13 @@
             BuilderState.UpdateLessonTitle(LessonId.Value, updatedLesson.LessonTitle);
             message = "Lesson updated successfully";
         }
+    }
+
+    private async Task ShowDelete()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("RecordId", LessonId);
+        parameters.Add("RecordType", "Lesson");
+        await deleteModal.ShowAsync<AdminDelete>(title: "Delete Lesson", parameters: parameters);       
     }
 }

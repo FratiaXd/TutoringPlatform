@@ -46,7 +46,7 @@
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
 <br />
-<Button Color="ButtonColor.Danger" @onclick="ShowCourseDelete">Delete Course</Button>
+<Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Course</Button>
 
 @code {
     [Parameter]
@@ -103,14 +103,12 @@
         }
     }
 
-    private async Task ShowCourseDelete()
+    private async Task ShowDelete()
     {
-        if (CourseId.HasValue)
-        {
-            var parameters = new Dictionary<string, object>();
-            parameters.Add("Id", CourseId);
-            await deleteModal.ShowAsync<DeleteCourse>(title: "Delete Course", parameters: parameters);
-        }
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("RecordId", CourseId);
+        parameters.Add("RecordType", "Course");
+        await deleteModal.ShowAsync<AdminDelete>(title: "Delete Course", parameters: parameters);
     }
 
     private bool IsPriceReadOnly() => Input.AccessLevel == "Free" || Input.AccessLevel == "Restricted";
