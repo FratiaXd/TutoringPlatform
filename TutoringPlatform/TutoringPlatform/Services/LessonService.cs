@@ -54,7 +54,10 @@ namespace TutoringPlatform.Services
             if (id == 0) { return null; }
 
             using var context = _contextFactory.CreateDbContext();
-            var lesson = await context.Lessons.FirstOrDefaultAsync(l => l.LessonId == id);
+            var lesson = await context.Lessons
+                .Include(l => l.Quiz)
+                .Include(l => l.Assignment)
+                .FirstOrDefaultAsync(l => l.LessonId == id);
             if (lesson == null) { return null; }
             return lesson;
         }

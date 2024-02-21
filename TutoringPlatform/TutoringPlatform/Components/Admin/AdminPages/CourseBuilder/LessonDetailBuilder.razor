@@ -53,7 +53,7 @@
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
 
-<Button Color="ButtonColor.Success" @onclick="AddQuiz">Add Quiz</Button>
+<Button Color="ButtonColor.Success" @onclick="AddQuiz" Disabled="@QuizExists">Add Quiz</Button>
 <Button Color="ButtonColor.Success">Add Assessment</Button>
 
 <Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Lesson</Button>
@@ -65,6 +65,8 @@
     public Lesson updatedLesson;
 
     public string? message;
+
+    private bool QuizExists;
 
     private LessonInput Input { get; set; } = new LessonInput();
 
@@ -81,6 +83,7 @@
         Input.IsAutograded = updatedLesson.IsAutograded;
         Input.IsAssessed = updatedLesson.IsAssessed;
         Input.LessonOrder = updatedLesson.LessonOrder;
+        QuizExists = IsQuizCreated();
     }
 
     private async Task UpdateLesson()
@@ -129,7 +132,20 @@
         if (addedQuiz != null)
         {
             updatedLesson.Quiz = addedQuiz;
+            QuizExists = true;
             BuilderState.UpdateLesson(updatedLesson.LessonId, updatedLesson);
+        }
+    }
+
+    private bool IsQuizCreated()
+    {
+        if (updatedLesson.Quiz != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
