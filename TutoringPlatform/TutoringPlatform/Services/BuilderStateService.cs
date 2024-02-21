@@ -88,6 +88,19 @@ namespace TutoringPlatform.Services
             }
         }
 
+        public void UpdateAssignment(Assignment assignment)
+        {
+            foreach (var lesson in _lessons.Values)
+            {
+                if (lesson.Assignment != null && lesson.Assignment.AssignmentId == assignment.AssignmentId)
+                {
+                    lesson.Assignment = assignment; 
+                    NotifyStateChanged();
+                    return;
+                }
+            }
+        }
+
         public void DeleteAssignment(int assignmentId)
         {
             foreach (var lesson in _lessons.Values)

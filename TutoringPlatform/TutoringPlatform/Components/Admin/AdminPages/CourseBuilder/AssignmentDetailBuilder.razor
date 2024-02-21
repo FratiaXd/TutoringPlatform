@@ -1,17 +1,68 @@
 ﻿@layout ManageCourseBuilderLayout
+@inject IAssignmentService AssignmentService
+@inject BuilderStateService BuilderState
 @rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder/assignmentdetailbuilder/{AssignmentId:int}"
 <h3>AssignmentDetailBuilder</h3>
 <p>@AssignmentId</p>
 
 <Modal @ref="deleteModal" IsVerticallyCentered="true" />
+
+<h4>@message</h4>
+
+<EditForm Model="Input" FormName="editassignment" OnValidSubmit="UpdateAssignment" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.TaskName" class="form-control" placeholder="Assignment title." />
+        <label for="title" class="form-label">Assignment Title</label>
+        <ValidationMessage For="() => Input.TaskName" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.TaskDescription" class="form-control" placeholder="Please enter assignment description." />
+        <label for="description" class="form-label">Assignment Description</label>
+        <ValidationMessage For="() => Input.TaskDescription" class="text-danger" />
+    </div>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+</EditForm>
+
 <Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Assignment</Button>
 
 @code {
     [Parameter]
     public int? AssignmentId { get; set; }
 
+    private AssignmentInput Input { get; set; } = new AssignmentInput();
+
     private Modal deleteModal = default!;
+
+    public Assignment assignmentEdit;
+
+    public string? message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        assignmentEdit = await AssignmentService.GetAssignmentByIdAsync(AssignmentId.Value);
+        Input.TaskName = assignmentEdit.TaskName;
+        Input.TaskDescription = assignmentEdit.TaskDescription;
+    }
+
+    private async Task UpdateAssignment()
+    {
+        assignmentEdit.TaskName = Input.TaskName;
+        assignmentEdit.TaskDescription = Input.TaskDescription;
+
+        var updateResult = await AssignmentService.UpdateAssignmentAsync(assignmentEdit);
+        if (updateResult == null)
+        {
+            message = "Unexpected error when updating assignment.";
+        }
+        else
+        {
+            BuilderState.UpdateAssignment(updateResult);
+            message = "Assignment updated successfully";
+        }
+    }
 
     private async Task ShowDelete()
     {

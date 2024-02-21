@@ -36,5 +36,29 @@ namespace TutoringPlatform.Services
 
             return deletedAssignment;
         }
+
+        public async Task<Assignment> GetAssignmentByIdAsync(int id)
+        {
+            if (id == 0) { return null; }
+
+            using var context = _contextFactory.CreateDbContext();
+            var assignment = await context.Assignments.FirstOrDefaultAsync(a => a.AssignmentId == id);
+            if (assignment == null) { return null; }
+            return assignment;
+        }
+
+        public async Task<Assignment> UpdateAssignmentAsync(Assignment assignment)
+        {
+            if (assignment == null) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+            var existingAssignment = await context.Assignments.FindAsync(assignment.AssignmentId);
+            if (existingAssignment == null) { return null; }
+
+            existingAssignment.TaskName = assignment.TaskName;
+            existingAssignment.TaskDescription = assignment.TaskDescription;
+
+            await context.SaveChangesAsync();
+            return assignment;
+        }
     }
 }

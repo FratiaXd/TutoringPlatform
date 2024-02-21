@@ -11,5 +11,7 @@ namespace TutoringPlatform.Shared.Interfaces
     {
         Task<Assignment> AddAssignmentAsync(Assignment assignment);
         Task<Assignment> DeleteAssignmentAsync(int id);
+        Task<Assignment> GetAssignmentByIdAsync(int id);
+        Task<Assignment> UpdateAssignmentAsync(Assignment assignment);
     }
 }
