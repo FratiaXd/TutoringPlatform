@@ -1,11 +1,57 @@
 ﻿@layout ManageCourseBuilderLayout
+@inject IQuizService QuizService
+@inject BuilderStateService BuilderService
 @rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder/quizdetailbuilder/{QuizId:int}"
-<h3>QuizDetailBuilder</h3>
+<h3>Quiz Builder</h3>
 <p>@QuizId</p>
-
+<p>@message</p>
 <Modal @ref="deleteModal" IsVerticallyCentered="true" />
+<Button Color="ButtonColor.Success" @onclick="AddQuestion">+ Add Question</Button>
 <Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Quiz</Button>
+
+<br />
+<br />
+
+<EditForm Model="Input" FormName="editquiz" OnValidSubmit="UpdateQuizName" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText @bind-Value="Input.QuizName" class="form-control" placeholder="Quiz title." />
+        <label for="title" class="form-label">Quiz Title</label>
+        <ValidationMessage For="() => Input.QuizName" class="text-danger" />
+    </div>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+</EditForm>
+
+<br />
+<br />
+
+@if (questions != null)
+{
+    @foreach (var question in questions)
+    {
+        <Card Style="width:50rem">
+            <CardBody>
+                <CardTitle>@question.Question</CardTitle>
+            </CardBody>
+            <ul class="list-group list-group-flush">
+                @if (question.QuizOptions != null)
+                {
+                    @foreach (var option in question.QuizOptions)
+                    {
+                        <li class="list-group-item">
+                            <Switch @bind-Value="option.IsCorrect" Label="Correct" />
+                            @option.Option
+                        </li>
+                    }
+                }
+            </ul>
+            <br/>
+            <Button Color="ButtonColor.Success" @onclick="() => AddOption(question)">+ Add Option</Button>
+        </Card>
+    }
+}
 
 @code {
     [Parameter]
@@ -13,11 +59,79 @@
 
     private Modal deleteModal = default!;
 
+    private Quiz quiz;
+
+    List<QuizQuestion>? questions;
+
+    private string? message;
+
+    private QuizModel Input { get; set; } = new ();
+
+    protected override async Task OnInitializedAsync()
+    {
+        quiz = await QuizService.GetQuizWithQandOAsync(QuizId.Value);
+        questions = new List<QuizQuestion>();
+        questions.AddRange(quiz.QuizQuestions);
+        Input.QuizName = quiz.QuizName;
+    }
+
+    private async Task AddQuestion()
+    {
+        var question = new QuizQuestion
+        {
+            Question = "Draft",
+            QuizId = QuizId.Value
+        };
+        var addedQuestion = await QuizService.AddQuizQuestionAsync(question);
+        if (addedQuestion != null)
+        {
+            questions.Add(addedQuestion);
+            //BuilderService.AddQuizQuestion(addedQuestion);
+        }
+    }
+
+    private async Task AddOption(QuizQuestion question)
+    {
+        var option = new QuizOption
+        {
+            Option = "Draft Option",
+            IsCorrect = false,
+            QuizQuestionId = question.QuizQuestionId
+        };
+        var addedOption = await QuizService.AddQuizOptionAsync(option);
+        if (addedOption != null)
+        {
+            question.QuizOptions.Add(addedOption);
+
+        }
+    }
+
     private async Task ShowDelete()
     {
         var parameters = new Dictionary<string, object>();
         parameters.Add("RecordId", QuizId);
         parameters.Add("RecordType", "Quiz");
         await deleteModal.ShowAsync<AdminDelete>(title: "Delete Quiz", parameters: parameters);
+    }
+
+    private async Task UpdateQuizName()
+    {
+        quiz.QuizName = Input.QuizName;
+        var updateResult = await QuizService.UpdateQuizAsync(quiz);
+        if (updateResult == null)
+        {
+            message = "Unexpected error when updating quiz.";
+        }
+        else
+        {
+            BuilderService.UpdateQuiz(quiz);
+            message = "Quiz updated successfully";
+        }
+    }
+
+    private sealed class QuizModel
+    {
+        [Required, MaxLength(30)]
+        public string? QuizName { get; set; }
     }
 }

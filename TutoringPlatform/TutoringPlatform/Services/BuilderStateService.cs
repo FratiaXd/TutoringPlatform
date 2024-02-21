@@ -75,6 +75,19 @@ namespace TutoringPlatform.Services
             }
         }
 
+        public void UpdateQuiz(Quiz quiz)
+        {
+            foreach (var lesson in _lessons.Values)
+            {
+                if (lesson.Quiz != null && lesson.Quiz.QuizId == quiz.QuizId)
+                {
+                    lesson.Quiz = quiz;
+                    NotifyStateChanged();
+                    return; 
+                }
+            }
+        }
+
         public void DeleteQuiz(int quizId)
         {
             foreach (var lesson in _lessons.Values)
@@ -84,6 +97,19 @@ namespace TutoringPlatform.Services
                     lesson.Quiz = null; // Remove the quiz from the lesson
                     NotifyStateChanged();
                     return; // No need to continue searching if the quiz is found and removed
+                }
+            }
+        }
+
+        public void AddQuizQuestion(QuizQuestion question)
+        {
+            foreach (var lesson in _lessons.Values)
+            {
+                if (lesson.Quiz != null && lesson.Quiz.QuizId == question.QuizId)
+                {
+                    lesson.Quiz.QuizQuestions.Add(question);
+                    NotifyStateChanged(); 
+                    return;
                 }
             }
         }
