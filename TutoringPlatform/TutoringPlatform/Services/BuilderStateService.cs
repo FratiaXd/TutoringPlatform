@@ -1,10 +1,12 @@
-﻿namespace TutoringPlatform.Services
+﻿using TutoringPlatform.Shared.Models;
+
+namespace TutoringPlatform.Services
 {
     public class BuilderStateService
     {
         private string _courseTitle = "Course draft";
         private int _courseId;
-        private Dictionary<int, string> _lessonTitles = new Dictionary<int, string>();
+        private Dictionary<int, Lesson> _lessons = new Dictionary<int, Lesson>();
 
         public string CourseTitle
         {
@@ -32,19 +34,19 @@
             }
         }
 
-        public void UpdateLessonTitle(int lessonId, string title)
+        public void UpdateLesson(int lessonId, Lesson lesson)
         {
-            _lessonTitles[lessonId] = title;
+            _lessons[lessonId] = lesson;
             NotifyStateChanged();
         }
 
-        public string GetLessonTitle(int lessonId)
+        public Lesson GetLesson(int lessonId)
         {
-            if (_lessonTitles.ContainsKey(lessonId))
+            if (_lessons.ContainsKey(lessonId))
             {
-                return _lessonTitles[lessonId];
+                return _lessons[lessonId];
             }
-            return string.Empty;
+            return null;
         }
 
         public event Action OnChange;

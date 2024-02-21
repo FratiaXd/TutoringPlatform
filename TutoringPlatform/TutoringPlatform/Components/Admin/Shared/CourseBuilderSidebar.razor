@@ -16,23 +16,27 @@
     </li>
     @foreach (var lesson in lessons)
     {
-        <li class="nav-item">
-            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/lessondetailbuilder/{lesson.LessonId}")">@BuilderState.GetLessonTitle(lesson.LessonId)</NavLink>
-            <ul>
-                @if (lesson.Quiz != null)
-                {
-                    <li>
-                        <NavLink class="nav-link">@lesson.Quiz.QuizName</NavLink>
-                    </li>
-                }
-                @if (lesson.Assignment != null)
-                {
-                    <li>
-                        <NavLink class="nav-link">@lesson.Assignment.TaskName</NavLink>
-                    </li>
-                }
-            </ul>
-        </li>
+        var currentLesson = BuilderState.GetLesson(lesson.LessonId);
+        if (currentLesson != null)
+        {
+            <li class="nav-item">
+                <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/lessondetailbuilder/{lesson.LessonId}")">@currentLesson.LessonTitle</NavLink>
+                    <ul>
+                        @if (currentLesson.Quiz != null)
+                    {
+                        <li>
+                            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/quizdetailbuilder/{currentLesson.Quiz.QuizId}")">@currentLesson.Quiz.QuizName</NavLink>
+                        </li>
+                    }
+                    @if (currentLesson.Assignment != null)
+                    {
+                        <li>
+                            <NavLink class="nav-link">@currentLesson.Assignment.TaskName</NavLink>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
     }
 </ul>
 
@@ -59,7 +63,7 @@
             lessons.AddRange(lessonsList);
             foreach (var lesson in lessons)
             {
-                BuilderState.UpdateLessonTitle(lesson.LessonId, lesson.LessonTitle);
+                BuilderState.UpdateLesson(lesson.LessonId, lesson);
             }
         }
     }
@@ -78,7 +82,7 @@
         if (addedLesson != null)
         {
             lessons.Add(addedLesson);
-            BuilderState.UpdateLessonTitle(addedLesson.LessonId, addedLesson.LessonTitle);
+            BuilderState.UpdateLesson(addedLesson.LessonId, addedLesson);
         }
     }
 }

@@ -1,5 +1,9 @@
-﻿<h3>QuizDetailBuilder</h3>
+﻿@layout ManageCourseBuilderLayout
+@page "/admin/adminpages/coursebuilder/quizdetailbuilder/{QuizId:int}"
+<h3>QuizDetailBuilder</h3>
+<p>@QuizId</p>
 
 @code {
-
+    [Parameter]
+    public int? QuizId { get; set; }
 }

@@ -105,7 +105,7 @@
         }
         else
         {
-            BuilderState.UpdateLessonTitle(LessonId.Value, updatedLesson.LessonTitle);
+            BuilderState.UpdateLesson(LessonId.Value, updatedLesson);
             message = "Lesson updated successfully";
         }
     }
@@ -126,5 +126,10 @@
             LessonId = LessonId.Value
         };
         var addedQuiz = await QuizService.AddQuizAsync(addQuiz);
+        if (addedQuiz != null)
+        {
+            updatedLesson.Quiz = addedQuiz;
+            BuilderState.UpdateLesson(updatedLesson.LessonId, updatedLesson);
+        }
     }
 }
