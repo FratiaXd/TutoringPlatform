@@ -35,6 +35,7 @@ builder.Services.AddIdentity<TutoringPlatformUser, IdentityRole>(options => opti
 builder.Services.AddSingleton<IEmailSender<TutoringPlatformUser>, IdentityNoOpEmailSender>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
+builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<BuilderStateService>();
 
 var app = builder.Build();

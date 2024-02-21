@@ -1,6 +1,7 @@
 ﻿@layout ManageCourseBuilderLayout
 @inject ILessonService LessonService
 @inject BuilderStateService BuilderState
+@inject IQuizService QuizService
 @rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder/lessondetailbuilder/{LessonId:int}"
 
@@ -13,6 +14,11 @@
 <EditForm Model="Input" FormName="editlesson" OnValidSubmit="UpdateLesson" method="post">
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputNumber @bind-Value="Input.LessonOrder" class="form-control" placeholder="Lesson order." readonly/>
+        <label for="order" class="form-label">Lesson Order Number</label>
+        <ValidationMessage For="() => Input.LessonOrder" class="text-danger" />
+    </div>
     <div class="form-floating mb-3">
         <InputText @bind-Value="Input.LessonTitle" class="form-control" placeholder="Please enter lesson title." />
         <label for="title" class="form-label">Lesson Title</label>
@@ -47,6 +53,9 @@
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
 
+<Button Color="ButtonColor.Success" @onclick="AddQuiz">Add Quiz</Button>
+<Button Color="ButtonColor.Success">Add Assessment</Button>
+
 <Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Lesson</Button>
 
 @code {
@@ -71,6 +80,7 @@
         Input.LessonContent = updatedLesson.LessonContent;
         Input.IsAutograded = updatedLesson.IsAutograded;
         Input.IsAssessed = updatedLesson.IsAssessed;
+        Input.LessonOrder = updatedLesson.LessonOrder;
     }
 
     private async Task UpdateLesson()
@@ -106,5 +116,15 @@
         parameters.Add("RecordId", LessonId);
         parameters.Add("RecordType", "Lesson");
         await deleteModal.ShowAsync<AdminDelete>(title: "Delete Lesson", parameters: parameters);       
+    }
+
+    private async Task AddQuiz()
+    {
+        var addQuiz = new Quiz
+        {
+            QuizName = "Quiz",
+            LessonId = LessonId.Value
+        };
+        var addedQuiz = await QuizService.AddQuizAsync(addQuiz);
     }
 }

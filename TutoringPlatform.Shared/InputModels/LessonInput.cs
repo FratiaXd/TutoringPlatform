@@ -13,6 +13,7 @@ namespace TutoringPlatform.Shared.InputModels
         public string LessonTitle { get; set; }
         [Required]
         public string? LessonDescription { get; set; }
+        public int LessonOrder { get; set; }
         public bool IsAutograded { get; set; }
         [Required]
         public string? LessonVideoUrl { get; set; }

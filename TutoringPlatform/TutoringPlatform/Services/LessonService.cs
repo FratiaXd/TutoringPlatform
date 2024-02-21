@@ -25,7 +25,12 @@ namespace TutoringPlatform.Services
         {
             if (id == 0) { return null; }
             using var context = _contextFactory.CreateDbContext();
-            return await context.Lessons.Where(l => l.CourseId == id).OrderBy(l => l.LessonOrder).ToListAsync();
+            return await context.Lessons
+                .Include(l => l.Quiz)
+                .Include(l => l.Assignment)
+                .Where(l => l.CourseId == id)
+                .OrderBy(l => l.LessonOrder)
+                .ToListAsync();
         }
 
         public async Task<Lesson> AddLessonAsync(Lesson lesson)
@@ -89,6 +94,18 @@ namespace TutoringPlatform.Services
             using var context = _contextFactory.CreateDbContext();
             var deletedLesson = await context.Lessons.FindAsync(id);
             if (deletedLesson == null) { return null; }
+
+            //Handle lesson order after delete
+            var courseLessons = await context.Lessons.
+                Where(l => l.CourseId == deletedLesson.CourseId).
+                OrderBy(l => l.LessonOrder).
+                ToListAsync();
+
+            var deletedLessonOrder = deletedLesson.LessonOrder;
+            foreach (var lesson in courseLessons.Where(l => l.LessonOrder > deletedLessonOrder))
+            {
+                lesson.LessonOrder -= 1;
+            }
 
             context.Lessons.Remove(deletedLesson);
             await context.SaveChangesAsync();
