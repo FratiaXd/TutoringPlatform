@@ -31,7 +31,7 @@
                     @if (currentLesson.Assignment != null)
                     {
                         <li>
-                            <NavLink class="nav-link">@currentLesson.Assignment.TaskName</NavLink>
+                            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/assignmentdetailbuilder/{currentLesson.Assignment.AssignmentId}")">@currentLesson.Assignment.TaskName</NavLink>
                         </li>
                     }
                 </ul>

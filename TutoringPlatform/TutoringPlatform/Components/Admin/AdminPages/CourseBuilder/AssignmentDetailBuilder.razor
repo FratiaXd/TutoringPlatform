@@ -1,23 +1,23 @@
 ﻿@layout ManageCourseBuilderLayout
 @rendermode InteractiveServer
-@page "/admin/adminpages/coursebuilder/quizdetailbuilder/{QuizId:int}"
-<h3>QuizDetailBuilder</h3>
-<p>@QuizId</p>
+@page "/admin/adminpages/coursebuilder/assignmentdetailbuilder/{AssignmentId:int}"
+<h3>AssignmentDetailBuilder</h3>
+<p>@AssignmentId</p>
 
 <Modal @ref="deleteModal" IsVerticallyCentered="true" />
-<Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Quiz</Button>
+<Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Assignment</Button>
 
 @code {
     [Parameter]
-    public int? QuizId { get; set; }
+    public int? AssignmentId { get; set; }
 
     private Modal deleteModal = default!;
 
     private async Task ShowDelete()
     {
         var parameters = new Dictionary<string, object>();
-        parameters.Add("RecordId", QuizId);
-        parameters.Add("RecordType", "Quiz");
+        parameters.Add("RecordId", AssignmentId);
+        parameters.Add("RecordType", "Assignment");
         await deleteModal.ShowAsync<AdminDelete>(title: "Delete Quiz", parameters: parameters);
     }
 }

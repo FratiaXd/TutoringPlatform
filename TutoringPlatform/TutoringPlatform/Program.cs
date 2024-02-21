@@ -36,6 +36,7 @@ builder.Services.AddSingleton<IEmailSender<TutoringPlatformUser>, IdentityNoOpEm
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<BuilderStateService>();
 
 var app = builder.Build();

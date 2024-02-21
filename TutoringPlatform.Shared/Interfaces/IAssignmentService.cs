@@ -7,9 +7,9 @@ using TutoringPlatform.Shared.Models;
 
 namespace TutoringPlatform.Shared.Interfaces
 {
-    public interface IQuizService
+    public interface IAssignmentService
     {
-        Task<Quiz> AddQuizAsync(Quiz quiz);
-        Task<Quiz> DeleteQuizAsync(int id);
+        Task<Assignment> AddAssignmentAsync(Assignment assignment);
+        Task<Assignment> DeleteAssignmentAsync(int id);
     }
 }
