@@ -37,6 +37,9 @@
     [Parameter]
     public string RecordType { get; set; }
 
+    [Parameter]
+    public Modal ModalRef { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         buttonText = "Delete " + RecordType; 
@@ -64,19 +67,23 @@
             else if (RecordType == "Lesson")
             {
                 var deleted = await LessonService.DeleteLessonAsync(RecordId);
-                RedirectManager.RedirectToCourseManager();
-                //Need to navigate to course detail
+                //Need to automatically close the modal and point to coursedetail
+                BuilderState.DeleteLesson(RecordId);
                 //NavigationManager.NavigateTo($"/admin/adminpages/coursebuilder/{BuilderState.CourseId}");
             }
             else if (RecordType == "Quiz")
             {
                 var deleted = await QuizService.DeleteQuizAsync(RecordId);
-                RedirectManager.RedirectToCourseManager();
+                //Need to automatically close the modal and point to lessondetail
+                BuilderState.DeleteQuiz(RecordId);
+                //RedirectManager.RedirectToCourseManager();
             }
             else if (RecordType == "Assignment")
             {
                 var deleted = await AssignmentService.DeleteAssignmentAsync(RecordId);
-                RedirectManager.RedirectToCourseManager();
+                //Need to automatically close the modal and point to lessondetail
+                BuilderState.DeleteAssignment(RecordId);
+                //RedirectManager.RedirectToCourseManager();
             }
         }
     }

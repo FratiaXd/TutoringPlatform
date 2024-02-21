@@ -4,6 +4,7 @@
 @using TutoringPlatform.Shared.Models
 @inject BuilderStateService BuilderState
 @inject ILessonService LessonService
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 
@@ -45,12 +46,23 @@
 
     protected override async Task OnInitializedAsync()
     {
+        NavigationManager.LocationChanged += HandleLocationChanged;
         BuilderState.OnChange += StateHasChanged;
         await LoadLessons();
     }
 
+    private void HandleLocationChanged(object sender, LocationChangedEventArgs e)
+    {
+        // Check if the user navigated away from the course builder page
+        if (!e.Location.Contains("/admin/adminpages/coursebuilder"))
+        {
+            Dispose();
+        }
+    }
+
     public void Dispose()
     {
+        BuilderState.ClearCourseState();
         BuilderState.OnChange -= StateHasChanged;
     }
 
