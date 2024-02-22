@@ -1,9 +1,29 @@
 ﻿@page "/coursepreview/{CourseId:int}"
+@rendermode InteractiveAuto
 
 <h3>CoursePreview</h3>
-<h4>@CourseId</h4>
+
+<h4>@displayCourse.CourseId</h4>
+<h4>@displayCourse.Title</h4>
+<h4>@displayCourse.Price</h4>
+<h4>@displayCourse.Description</h4>
+<h4>@displayCourse.AccessLevel</h4>
 
 @code {
     [Parameter]
     public int CourseId { get; set; }
+    public Course displayCourse { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCourse();
+    }
+
+    private async Task LoadCourse()
+    {
+        var course = await CourseService.GetCourseByIdAsync(CourseId);
+        if (course == null) return;
+
+        displayCourse = course;
+    }
 }

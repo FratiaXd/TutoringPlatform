@@ -22,5 +22,12 @@ namespace TutoringPlatform.Controllers
             var publishedCourses = await courseService.GetPublishedCoursesAsync();
             return Ok(publishedCourses);
         }
+
+        [HttpGet("Single-Course/{id}")]
+        public async Task<ActionResult<IEnumerable<Course>>> GetSingleCourseAsync(int id)
+        {
+            var course = await courseService.GetCourseByIdAsync(id);
+            return Ok(course);
+        }
     }
 }

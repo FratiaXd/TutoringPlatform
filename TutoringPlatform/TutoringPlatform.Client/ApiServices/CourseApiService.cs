@@ -27,9 +27,11 @@ namespace TutoringPlatform.Client.ApiServices
             throw new NotImplementedException();
         }
 
-        public Task<Course> GetCourseByIdAsync(int id)
+        public async Task<Course> GetCourseByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var course = await httpClient.GetAsync($"api/Course/Single-Course/{id}");
+            var response = await course.Content.ReadFromJsonAsync<Course>();
+            return response;
         }
 
         public Task<IEnumerable<Course>> GetDraftCoursesAsync()
