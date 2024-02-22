@@ -124,5 +124,19 @@ namespace TutoringPlatform.Services
             await context.SaveChangesAsync();
             return newOption;
         }
+
+        public async Task<QuizOption> DeleteQuizOptionAsync(QuizOption option)
+        {
+            if (option == null) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+
+            var deletedQuizOption = await context.QuizOptions.FindAsync(option.QuizOptionId);
+            if (deletedQuizOption == null) { return null; }
+
+            context.QuizOptions.Remove(deletedQuizOption);
+            await context.SaveChangesAsync();
+
+            return deletedQuizOption;
+        }
     }
 }

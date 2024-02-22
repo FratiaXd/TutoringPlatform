@@ -44,7 +44,7 @@
                         <li class="list-group-item">
                             <Switch @bind-Value="option.IsCorrect" Label="Correct" Disabled="true" />
                             @option.Option
-                            <Button Color="ButtonColor.Danger" @onclick="() => DeleteOption(question)">Delete Question</Button>
+                            <Button Color="ButtonColor.Danger" @onclick="() => DeleteOption(question, option)">Delete Question</Button>
                         </li>
                     }
                 }
@@ -163,9 +163,15 @@
         }
     }
 
-    public async Task DeleteOption(QuizQuestion question)
+    public async Task DeleteOption(QuizQuestion question, QuizOption option)
     {
-        
+        var deleteResult = await QuizService.DeleteQuizOptionAsync(option);
+        if (deleteResult != null)
+        {
+            var optionToDelete = question.QuizOptions.FirstOrDefault(o => o.QuizOptionId == deleteResult.QuizOptionId);
+            question.QuizOptions.Remove(optionToDelete);
+            StateHasChanged();
+        }
     }
 
     private sealed class QuizModel

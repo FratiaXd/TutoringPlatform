@@ -46,10 +46,10 @@
         <ValidationMessage For="() => Input.LessonContent" class="text-danger" />
     </div>
     <div class="mb-3">
-        <Switch @bind-Value="Input.IsAutograded" Label="Autograded" />
+        <Switch @bind-Value="Input.IsAutograded" Label="Make Quiz Visible" />
     </div>
     <div class="mb-3">
-        <Switch @bind-Value="Input.IsAssessed" Label="Assessed" />
+        <Switch @bind-Value="Input.IsAssessed" Label="Make Assignment Visible" />
     </div>
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
