@@ -1,4 +1,5 @@
-﻿@using TutoringPlatform.Shared.Interfaces
+﻿@using TutoringPlatform.Components.Admin.AdminPages.CourseBuilder
+@using TutoringPlatform.Shared.Interfaces
 @using TutoringPlatform.Services
 @using System.Linq
 @using TutoringPlatform.Shared.Models
@@ -7,6 +8,11 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
+<Modal @ref="publishModal" IsVerticallyCentered="true" />
+
+<Button Color="ButtonColor.Success" @onclick="ShowPublish">Publish Course</Button>
+
+<br />
 
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
@@ -43,6 +49,8 @@
 
 @code {
     List<Lesson> lessons;
+
+    private Modal publishModal = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,5 +104,13 @@
             lessons.Add(addedLesson);
             BuilderState.UpdateLesson(addedLesson.LessonId, addedLesson);
         }
+    }
+
+    private async Task ShowPublish()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("RecordId", BuilderState.CourseId);
+        parameters.Add("RecordType", "CoursePublish");
+        await publishModal.ShowAsync<AdminDelete>(title: "Publish Course", parameters: parameters);
     }
 }

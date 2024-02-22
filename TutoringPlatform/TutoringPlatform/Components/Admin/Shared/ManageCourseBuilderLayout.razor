@@ -1,14 +1,12 @@
-﻿@using TutoringPlatform.Services
+﻿@using TutoringPlatform.Components.Admin.AdminPages.CourseBuilder
+@using TutoringPlatform.Services
 @using TutoringPlatform.Shared.Interfaces
 @inherits LayoutComponentBase
 @layout CourseBuilderLayout
 @inject BuilderStateService BuilderState
 
 <div>
-    <div class="d-flex justify-content-between align-items-center">
-        <h2>Course Builder</h2>
-        <Button Color="ButtonColor.Success">Publish Course</Button>
-    </div>
+    <h2>Course Builder</h2>
     <hr />
     <div class="row">
         <div class="col-md-3">

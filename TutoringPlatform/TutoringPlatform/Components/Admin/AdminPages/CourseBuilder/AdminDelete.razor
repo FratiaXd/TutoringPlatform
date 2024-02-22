@@ -22,7 +22,7 @@
         <label for="password" class="form-label">Admin Password</label>
         <ValidationMessage For="() => Input.AdminPassword" class="text-danger" />
     </div>
-    <button class="w-100 btn btn-lg btn-danger" type="submit">@buttonText</button>
+    <button class="w-100 btn btn-lg @buttonColor" type="submit">@buttonText</button>
 </EditForm>
 
 @code {
@@ -30,6 +30,7 @@
     private string? message = string.Empty;
     private TutoringPlatformUser userAdmin = default;
     private AdminInput Input { get; set; } = new AdminInput();
+    private string? buttonColor;
 
     [Parameter]
     public int RecordId { get; set; }
@@ -42,7 +43,16 @@
 
     protected override async Task OnInitializedAsync()
     {
-        buttonText = "Delete " + RecordType; 
+        if (RecordType == "CoursePublish")
+        {
+            buttonText = "Publish Course";
+            buttonColor = "btn-primary";
+        }
+        else
+        {
+            buttonText = "Delete " + RecordType;
+            buttonColor = "btn-danger";
+        }
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userPrincipal = authState.User;
         var userId = UserManager.GetUserId(userPrincipal);
@@ -84,6 +94,11 @@
                 //Need to automatically close the modal and point to lessondetail
                 BuilderState.DeleteAssignment(RecordId);
                 //RedirectManager.RedirectToCourseManager();
+            }
+            else if (RecordType == "CoursePublish")
+            {
+                var published = await CourseService.PublishCourseAsync(RecordId);
+                RedirectManager.RedirectToCourseManager();
             }
         }
     }
