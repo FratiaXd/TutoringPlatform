@@ -7,6 +7,7 @@
 <p>@QuizId</p>
 <p>@message</p>
 <Modal @ref="deleteModal" IsVerticallyCentered="true" />
+<Modal @ref="editModal" IsVerticallyCentered="true" />
 <Button Color="ButtonColor.Success" @onclick="AddQuestion">+ Add Question</Button>
 <Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Quiz</Button>
 
@@ -41,15 +42,21 @@
                     @foreach (var option in question.QuizOptions)
                     {
                         <li class="list-group-item">
-                            <Switch @bind-Value="option.IsCorrect" Label="Correct" />
+                            <Switch @bind-Value="option.IsCorrect" Label="Correct" Disabled="true" />
                             @option.Option
+                            <Button Color="ButtonColor.Danger" @onclick="() => DeleteOption(question)">Delete Question</Button>
                         </li>
                     }
                 }
             </ul>
             <br/>
+            <Button Color="ButtonColor.Primary" @onclick="() => EditClicked(question)">Edit</Button>
+            <br />
             <Button Color="ButtonColor.Success" @onclick="() => AddOption(question)">+ Add Option</Button>
+            <br />
+            <Button Color="ButtonColor.Danger" @onclick="() => DeleteQuestion(question)">Delete Question</Button>
         </Card>
+        <br />
     }
 }
 
@@ -58,6 +65,8 @@
     public int? QuizId { get; set; }
 
     private Modal deleteModal = default!;
+
+    private Modal editModal = default!;
 
     private Quiz quiz;
 
@@ -127,6 +136,36 @@
             BuilderService.UpdateQuiz(quiz);
             message = "Quiz updated successfully";
         }
+    }
+
+    private async void EditClicked(QuizQuestion question)
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("QuestionToEdit", question);
+        parameters.Add("OnClosed", EventCallback.Factory.Create(this, OnQuizQuestionUpdated));
+        await editModal.ShowAsync<EditQuestion>(title: "Edit Question", parameters: parameters);
+    }
+
+    private async Task OnQuizQuestionUpdated()
+    {
+        await editModal.HideAsync();
+        StateHasChanged();
+    }
+
+    public async Task DeleteQuestion(QuizQuestion question)
+    {
+        var deleteResult = await QuizService.DeleteQuizQuestionAsync(question);
+        if (deleteResult != null)
+        {
+            var questionToDelete = questions.FirstOrDefault(q => q.QuizQuestionId == deleteResult.QuizQuestionId);
+            questions.Remove(questionToDelete);
+            StateHasChanged();
+        }
+    }
+
+    public async Task DeleteOption(QuizQuestion question)
+    {
+        
     }
 
     private sealed class QuizModel

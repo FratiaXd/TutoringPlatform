@@ -74,6 +74,47 @@ namespace TutoringPlatform.Services
             return newQuestion;
         }
 
+        public async Task<QuizQuestion> UpdateQuizQuestionAsync(QuizQuestion question)
+        {
+            if (question == null) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingQuestion = await context.QuizQuestions
+                .Include(q => q.QuizOptions)
+                .FirstOrDefaultAsync(q => q.QuizQuestionId ==  question.QuizQuestionId);
+            if (existingQuestion == null) { return null; }
+
+            existingQuestion.Question = question.Question;
+
+            foreach (var option in question.QuizOptions)
+            {
+                var existingOption = existingQuestion.QuizOptions.FirstOrDefault(o => o.QuizOptionId == option.QuizOptionId);
+                if (existingOption != null)
+                {
+                    existingOption.Option = option.Option;
+                    existingOption.IsCorrect = option.IsCorrect;
+                }
+            }
+
+            await context.SaveChangesAsync();
+
+            return existingQuestion;
+        }
+
+        public async Task<QuizQuestion> DeleteQuizQuestionAsync(QuizQuestion question)
+        {
+            if (question == null) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+
+            var deletedQuizQuestion = await context.QuizQuestions.FindAsync(question.QuizQuestionId);
+            if (deletedQuizQuestion == null) { return null; }
+
+            context.QuizQuestions.Remove(deletedQuizQuestion);
+            await context.SaveChangesAsync();
+
+            return deletedQuizQuestion;
+        }
+
         public async Task<QuizOption> AddQuizOptionAsync(QuizOption option)
         {
             if (option == null) { return null; }

@@ -14,6 +14,8 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<Quiz> UpdateQuizAsync(Quiz quiz);
         Task<Quiz> GetQuizWithQandOAsync(int quizId);
         Task<QuizQuestion> AddQuizQuestionAsync(QuizQuestion question);
+        Task<QuizQuestion> UpdateQuizQuestionAsync(QuizQuestion question);
+        Task<QuizQuestion> DeleteQuizQuestionAsync(QuizQuestion question);
         Task<QuizOption> AddQuizOptionAsync(QuizOption option);
     }
 }

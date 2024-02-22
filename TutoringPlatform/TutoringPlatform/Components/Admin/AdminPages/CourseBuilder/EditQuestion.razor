@@ -1,0 +1,85 @@
+﻿@inject IQuizService QuizService
+
+<p>@message</p>
+
+<EditForm Model="Input" FormName="delete-record" OnValidSubmit="OnEditQuestion" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText type="question" @bind-Value="Input.Question" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter question." />
+        <label for="question" class="form-label">Question</label>
+        <ValidationMessage For="() => Input.Question" class="text-danger" />
+    </div>
+    @foreach (var option in Input.Options)
+    {
+        <div class="row align-items-center">
+            <div class="col-md-2">
+                <Switch @bind-Value="option.IsCorrect"/>
+                <label class="form-check-label">Correct</label>
+            </div>
+            <div class="col-md-10">
+                <div class="form-floating mb-3">
+                    <InputText type="option" @bind-Value="option.Option" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter option." Required="true" />
+                    <label for="option" class="form-label">Option</label>
+                    <ValidationMessage For="() => option.Option" class="text-danger" />
+                </div>
+            </div>
+        </div>
+    }
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Save</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public QuizQuestion QuestionToEdit { get; set; }
+
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    private QuizInput Input { get; set; }
+    private string? message;
+
+    protected override void OnParametersSet()
+    {
+        Input = new QuizInput
+            {
+                Question = QuestionToEdit.Question,
+                Options = QuestionToEdit.QuizOptions.ToList()
+            };
+    }
+
+    private async Task OnEditQuestion()
+    {
+        if (Input.Options.Any(option => option.IsCorrect))
+        {
+            QuestionToEdit.Question = Input.Question;
+
+            foreach (var option in Input.Options)
+            {
+                // Find the corresponding option in the original question
+                var originalOption = QuestionToEdit.QuizOptions.FirstOrDefault(o => o.QuizOptionId == option.QuizOptionId);
+                if (originalOption != null)
+                {
+                    // Update the option text and correctness
+                    originalOption.Option = option.Option;
+                    originalOption.IsCorrect = option.IsCorrect;
+                }
+            }
+
+            var result = await QuizService.UpdateQuizQuestionAsync(QuestionToEdit);
+
+            if (result != null)
+            {
+                await OnClosed.InvokeAsync(null);
+            }
+            else
+            {
+                message = "Error while updating question.";
+            }
+        }
+        else
+        {
+            message = "At least one option has to be correct.";
+        }
+    }
+}
