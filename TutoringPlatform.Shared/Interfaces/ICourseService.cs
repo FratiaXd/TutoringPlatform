@@ -18,5 +18,6 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<Course> DeleteCourseAsync(int id);
         Task<bool> IsTitleUsedAsync(int id, string title);
         Task<Course> PublishCourseAsync(int id);
+        Task<Course> UnpublishCourseAsync(int id);
     }
 }

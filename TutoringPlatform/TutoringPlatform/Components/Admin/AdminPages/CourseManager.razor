@@ -33,7 +33,7 @@
                     <td>@course.Description</td>
                     <td>@course.Price</td>
                     <td>@course.AccessLevel</td>
-                    <td><button class="btn btn-primary" @onclick="() => EditCourse(course.CourseId)">Edit Draft</button></td>
+                    <td><button class="btn btn-primary" @onclick="() => EditCourse(course.CourseId, course.IsActive)">Edit Draft</button></td>
                 </tr>
             }
         </tbody>
@@ -64,7 +64,7 @@
                     <td>@course.Description</td>
                     <td>@course.Price</td>
                     <td>@course.AccessLevel</td>
-                    <td><button class="btn btn-primary" @onclick="() => EditCourse(course.CourseId)">Edit Course</button></td>
+                    <td><button class="btn btn-primary" @onclick="() => EditCourse(course.CourseId, course.IsActive)">Edit Course</button></td>
                 </tr>
             }
         </tbody>
@@ -90,9 +90,10 @@
         NavigationManager.NavigateTo("/admin/adminpages/initializenewcourse");
     }
 
-    void EditCourse(int courseId)
+    void EditCourse(int courseId, bool publishedCourse)
     {
         BuilderState.CourseId = courseId;
+        BuilderState.IsActive = publishedCourse;
         NavigationManager.NavigateTo($"/admin/adminpages/coursebuilder/{courseId}");
     }
 }

@@ -9,8 +9,16 @@
 @rendermode InteractiveServer
 
 <Modal @ref="publishModal" IsVerticallyCentered="true" />
+<Modal @ref="unpublishModal" IsVerticallyCentered="true" />
 
-<Button Color="ButtonColor.Success" @onclick="ShowPublish">Publish Course</Button>
+@if (BuilderState.IsActive)
+{
+    <Button Color="ButtonColor.Success" @onclick="ShowUnpublish">Unpublish Course</Button>
+}
+else
+{
+    <Button Color="ButtonColor.Success" @onclick="ShowPublish">Publish Course</Button>
+}
 
 <br />
 
@@ -51,6 +59,7 @@
     List<Lesson> lessons;
 
     private Modal publishModal = default!;
+    private Modal unpublishModal = default!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,5 +121,13 @@
         parameters.Add("RecordId", BuilderState.CourseId);
         parameters.Add("RecordType", "CoursePublish");
         await publishModal.ShowAsync<AdminDelete>(title: "Publish Course", parameters: parameters);
+    }
+
+    private async Task ShowUnpublish()
+    {
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("RecordId", BuilderState.CourseId);
+        parameters.Add("RecordType", "CourseUnpublish");
+        await publishModal.ShowAsync<AdminDelete>(title: "Unpublish Course", parameters: parameters);
     }
 }

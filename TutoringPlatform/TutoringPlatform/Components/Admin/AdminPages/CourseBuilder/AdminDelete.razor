@@ -48,6 +48,11 @@
             buttonText = "Publish Course";
             buttonColor = "btn-primary";
         }
+        else if (RecordType == "CourseUnpublish")
+        {
+            buttonText = "Unpublish Course";
+            buttonColor = "btn-danger";
+        }
         else
         {
             buttonText = "Delete " + RecordType;
@@ -98,6 +103,11 @@
             else if (RecordType == "CoursePublish")
             {
                 var published = await CourseService.PublishCourseAsync(RecordId);
+                RedirectManager.RedirectToCourseManager();
+            }
+            else if (RecordType == "CourseUnpublish")
+            {
+                var unpublished = await CourseService.UnpublishCourseAsync(RecordId);
                 RedirectManager.RedirectToCourseManager();
             }
         }

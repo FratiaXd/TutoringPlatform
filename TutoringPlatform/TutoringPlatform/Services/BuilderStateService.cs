@@ -6,6 +6,7 @@ namespace TutoringPlatform.Services
     {
         private string _courseTitle = "Course draft";
         private int _courseId;
+        private bool _isActive;
         private Dictionary<int, Lesson> _lessons = new Dictionary<int, Lesson>();
 
         public string CourseTitle
@@ -29,6 +30,19 @@ namespace TutoringPlatform.Services
                 if (_courseId != value)
                 {
                     _courseId = value;
+                    NotifyStateChanged();
+                }
+            }
+        }
+
+        public bool IsActive
+        {
+            get => _isActive;
+            set
+            {
+                if (_isActive != value)
+                {
+                    _isActive = value;
                     NotifyStateChanged();
                 }
             }

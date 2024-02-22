@@ -103,5 +103,20 @@ namespace TutoringPlatform.Services
 
             return existingCourse;
         }
+
+        public async Task<Course> UnpublishCourseAsync(int id)
+        {
+            if (id == 0) { return null; }
+            var existingCourse = await _context.Courses.FindAsync(id);
+            if (existingCourse == null) { return null; }
+
+            existingCourse.IsActive = false;
+            existingCourse.Status = "Unpublished";
+
+            _context.Courses.Update(existingCourse);
+            await _context.SaveChangesAsync();
+
+            return existingCourse;
+        }
     }
 }
