@@ -1,0 +1,62 @@
+﻿@page "/browse"
+@rendermode InteractiveAuto
+
+<h3>BrowseCourses</h3>
+
+<div class="card">
+    @if (Courses.Count > 0)
+    {
+        <div class="card-header">Course List</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Course Id</th>
+                        <th>Course Title</th>
+                        <th>Course Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Courses)
+                    {
+                        <tr>
+                            <td>@course.CourseId</td>
+                            <td>@course.Title</td>
+                            <td>@course.Price</td>
+                            <td>
+                                <Button Color="ButtonColor.Success" @onclick="() => OpenCourse(course)">Open</Button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Course> Courses { get; set; } = new List<Course>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCourses();
+    }
+
+    private async Task LoadCourses()
+    {
+        var courses = await CourseService.GetPublishedCoursesAsync();
+        Courses?.Clear();
+        if (courses == null) return;
+
+        foreach (var course in courses)
+        {
+            Courses.Add(course);
+        }
+    }
+
+    private void OpenCourse(Course course)
+    {
+        NavigationManager.NavigateTo($"coursepreview/{course.CourseId}");
+    }
+}

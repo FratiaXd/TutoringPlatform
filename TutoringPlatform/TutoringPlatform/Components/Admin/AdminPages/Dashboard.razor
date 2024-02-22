@@ -1,8 +1,6 @@
 ﻿@page "/admin/adminpages/dashboard"
-@attribute [Authorize(Roles = "Admin")]
 @attribute [StreamRendering]
 @rendermode InteractiveServer
-@inject NavigationManager NavigationManager
 
 <PageTitle>Student Dashboard</PageTitle>
 <h3>Student Dashboard</h3>
@@ -33,9 +31,6 @@
 
 @code {
     List<TutoringPlatformUser> users = new List<TutoringPlatformUser>();
-
-    [Inject]
-    private UserManager<TutoringPlatformUser> UserManager { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

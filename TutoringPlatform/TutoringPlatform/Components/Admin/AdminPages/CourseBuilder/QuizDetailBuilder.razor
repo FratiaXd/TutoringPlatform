@@ -1,8 +1,8 @@
 ﻿@layout ManageCourseBuilderLayout
-@inject IQuizService QuizService
-@inject BuilderStateService BuilderService
 @rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder/quizdetailbuilder/{QuizId:int}"
+
+
 <h3>Quiz Builder</h3>
 <p>@QuizId</p>
 <p>@message</p>
@@ -95,7 +95,7 @@
         if (addedQuestion != null)
         {
             questions.Add(addedQuestion);
-            BuilderService.AddQuizQuestion(addedQuestion);
+            BuilderState.AddQuizQuestion(addedQuestion);
         }
     }
 
@@ -133,7 +133,7 @@
         }
         else
         {
-            BuilderService.UpdateQuiz(quiz);
+            BuilderState.UpdateQuiz(quiz);
             message = "Quiz updated successfully";
         }
     }

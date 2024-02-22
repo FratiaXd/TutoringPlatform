@@ -1,10 +1,6 @@
 ﻿@page "/admin/adminpages/coursemanager"
-@attribute [Authorize(Roles = "Admin")]
 @rendermode InteractiveServer
 @attribute [StreamRendering]
-@inject NavigationManager NavigationManager
-@inject ICourseService CourseService
-@inject BuilderStateService BuilderState
 
 <h3>CourseManager</h3>
 

@@ -32,12 +32,18 @@ builder.Services.AddIdentity<TutoringPlatformUser, IdentityRole>(options => opti
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+builder.Services.AddControllers();
 builder.Services.AddSingleton<IEmailSender<TutoringPlatformUser>, IdentityNoOpEmailSender>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILessonService, LessonService>();
 builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<BuilderStateService>();
+
+builder.Services.AddScoped(http => new HttpClient
+{
+    BaseAddress = new Uri(builder.Configuration.GetSection("BaseAddress").Value!)
+});
 
 var app = builder.Build();
 
@@ -54,7 +60,7 @@ else
 }
 
 app.UseHttpsRedirection();
-
+app.MapControllers();
 app.UseStaticFiles();
 app.UseAntiforgery();
 

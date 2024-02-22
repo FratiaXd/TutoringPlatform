@@ -1,0 +1,9 @@
+﻿@page "/coursepreview/{CourseId:int}"
+
+<h3>CoursePreview</h3>
+<h4>@CourseId</h4>
+
+@code {
+    [Parameter]
+    public int CourseId { get; set; }
+}

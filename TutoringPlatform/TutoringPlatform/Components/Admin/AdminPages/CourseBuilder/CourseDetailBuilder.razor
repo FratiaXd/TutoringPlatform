@@ -1,9 +1,8 @@
 ﻿@layout ManageCourseBuilderLayout
-@inject ICourseService CourseService
-@inject BuilderStateService BuilderState
-@inject NavigationManager NavigationManager
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @page "/admin/adminpages/coursebuilder/{CourseId:int}"
+
+
 <h3>Edit Course Details</h3>
 <br />
 <h4>@message</h4>
