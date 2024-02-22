@@ -74,7 +74,10 @@ namespace TutoringPlatform.Services
         {
             if (updatedLesson == null) { return null; }
             using var context = _contextFactory.CreateDbContext();
-            var existingLesson = await context.Lessons.FindAsync(updatedLesson.LessonId);
+            var existingLesson = await context.Lessons
+                .Include(l => l.Quiz)
+                .Include(l => l.Assignment)
+                .FirstOrDefaultAsync(l => l.LessonId == updatedLesson.LessonId);
             if (existingLesson == null) { return null; }
 
             existingLesson.LessonTitle = updatedLesson.LessonTitle;

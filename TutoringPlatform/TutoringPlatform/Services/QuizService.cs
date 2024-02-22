@@ -1,6 +1,8 @@
 ﻿using BlazorBootstrap;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.EntityFrameworkCore;
 using TutoringPlatform.Data;
+using TutoringPlatform.Migrations;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Shared.Models;
 
@@ -137,6 +139,36 @@ namespace TutoringPlatform.Services
             await context.SaveChangesAsync();
 
             return deletedQuizOption;
+        }
+
+        public async Task<bool> AllQuizQuestionsHaveOptionsAsync(int quizId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var questionsExist = await context.QuizQuestions.AnyAsync(q => q.QuizId == quizId);
+
+            // If there are no questions at all, return false
+            if (!questionsExist) { return false; }
+
+            // Query the database to check if all quiz questions for a lesson have options
+            var questionsWithoutOptions = await context.QuizQuestions
+            .Where(q => q.QuizId == quizId && !q.QuizOptions.Any())
+            .ToListAsync();
+
+            // If there are no questions without options, return true
+            return questionsWithoutOptions.Count == 0;
+        }
+
+        public async Task<bool> AllQuizQuestionsHaveCorrectAnswerAsync(int quizId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+
+            // Query the database to check if all quiz questions for a lesson have at least one correct answer
+            var questionsWithNoCorrectAnswer = await context.QuizQuestions
+                .Where(q => q.QuizId == quizId && !q.QuizOptions.Any(option => option.IsCorrect))
+                .ToListAsync();
+
+            // If there are no questions without correct answers, return true
+            return questionsWithNoCorrectAnswer.Count == 0;
         }
     }
 }

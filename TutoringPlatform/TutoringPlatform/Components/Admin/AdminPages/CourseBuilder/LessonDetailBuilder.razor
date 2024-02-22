@@ -46,10 +46,10 @@
         <ValidationMessage For="() => Input.LessonContent" class="text-danger" />
     </div>
     <div class="mb-3">
-        <Switch @bind-Value="Input.IsAutograded" Label="Make Quiz Visible" />
+        <Switch @bind-Value="Input.IsAutograded" Label="Make Quiz Visible" Disabled="@(!QuizExists)" />
     </div>
     <div class="mb-3">
-        <Switch @bind-Value="Input.IsAssessed" Label="Make Assignment Visible" />
+        <Switch @bind-Value="Input.IsAssessed" Label="Make Assignment Visible" Disabled="@(!AssignmentExists)" />
     </div>
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
@@ -104,6 +104,25 @@
         updatedLesson.LessonContent = Input.LessonContent;
         updatedLesson.IsAutograded = Input.IsAutograded;
         updatedLesson.IsAssessed = Input.IsAssessed;
+
+        if (updatedLesson.Quiz != null)
+        {
+            var checkQuiz = await QuizService.AllQuizQuestionsHaveOptionsAsync(updatedLesson.Quiz.QuizId);
+            if (!checkQuiz && updatedLesson.IsAutograded)
+            {
+                message = "Quiz missing options.";
+                Input.IsAutograded = false;
+                return;
+            }
+
+            var checkOptions = await QuizService.AllQuizQuestionsHaveCorrectAnswerAsync(updatedLesson.Quiz.QuizId);
+            if (!checkOptions && updatedLesson.IsAutograded)
+            {
+                message = "Quiz Questions missing correct options.";
+                Input.IsAutograded = false;
+                return;
+            }
+        }
 
         var updateResult = await LessonService.UpdateLessonAsync(updatedLesson);
         if (updateResult == null)

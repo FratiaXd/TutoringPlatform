@@ -18,5 +18,7 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<QuizQuestion> DeleteQuizQuestionAsync(QuizQuestion question);
         Task<QuizOption> AddQuizOptionAsync(QuizOption option);
         Task<QuizOption> DeleteQuizOptionAsync(QuizOption option);
+        Task<bool> AllQuizQuestionsHaveOptionsAsync(int quizId);
+        Task<bool> AllQuizQuestionsHaveCorrectAnswerAsync(int quizId);
     }
 }
