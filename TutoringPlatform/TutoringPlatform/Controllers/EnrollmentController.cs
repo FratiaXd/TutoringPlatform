@@ -29,5 +29,12 @@ namespace TutoringPlatform.Controllers
             var enrollments = await enrollmentService.GetAllUserEnrollmentsAsync(id);
             return Ok(enrollments);
         }
+
+        [HttpGet("User-Enrollments-Data/{id}")]
+        public async Task<ActionResult<IEnumerable<Enrollment>>> GetAllUserEnrolledCoursesDataAsync(string id)
+        {
+            var enrollments = await enrollmentService.GetUserEnrollmentDataAsync(id);
+            return Ok(enrollments);
+        }
     }
 }

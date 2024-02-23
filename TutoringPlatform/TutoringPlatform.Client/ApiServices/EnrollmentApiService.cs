@@ -26,5 +26,12 @@ namespace TutoringPlatform.Client.ApiServices
             var response = await enrollments.Content.ReadFromJsonAsync<IEnumerable<Enrollment>>();
             return response!;
         }
+
+        public async Task<IEnumerable<Enrollment>> GetUserEnrollmentDataAsync(string id)
+        {
+            var enrollments = await httpClient.GetAsync($"api/Enrollment/User-Enrollments-Data/{id}");
+            var response = await enrollments.Content.ReadFromJsonAsync<IEnumerable<Enrollment>>();
+            return response!;
+        }
     }
 }

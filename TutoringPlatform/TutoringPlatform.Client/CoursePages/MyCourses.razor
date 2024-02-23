@@ -1,7 +1,52 @@
 ﻿@page "/mycourses"
+@rendermode InteractiveAuto
 
-<h3>MyCourses</h3>
+<h3>My Courses</h3>
+<h4>A list of courses you are enrolled to:</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course Title</th>
+            <th>Your progress</th>
+            <th>Lessons Total</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var enrollment in Enrollments)
+        {
+            <tr>
+                <td>@enrollment.Course.Title</td>
+                <td>@enrollment.LatestLesson.LessonOrder</td>
+                <td>@enrollment.Course.Duration</td>
+                <td>@enrollment.EnrollmentStatus</td>
+                <td><button class="btn btn-primary">Open</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
+    private string CurUserId { get; set; }
+    private List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        await LoadEnrollments();
+    }
+
+    private async Task LoadEnrollments()
+    {
+        var enrollments = await EnrollmentService.GetUserEnrollmentDataAsync(CurUserId);
+        Enrollments?.Clear();
+        if (enrollments == null) return;
+        Enrollments = enrollments.ToList();
+    }
 }
