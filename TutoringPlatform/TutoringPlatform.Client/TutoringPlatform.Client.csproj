@@ -18,4 +18,8 @@
     <ProjectReference Include="..\..\TutoringPlatform.Shared\TutoringPlatform.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CoursePages\Shared\" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,10 @@
+﻿@page "/coursepages/learning/{CourseId:int}"
+@rendermode InteractiveAuto
+
+<h3>CourseLearning</h3>
+<h4>@CourseId</h4>
+
+@code {
+    [Parameter]
+    public int CourseId { get; set; }
+}

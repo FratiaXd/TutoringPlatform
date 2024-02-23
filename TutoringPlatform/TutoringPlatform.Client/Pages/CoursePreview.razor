@@ -9,14 +9,30 @@
 <h4>@displayCourse.Description</h4>
 <h4>@displayCourse.AccessLevel</h4>
 
+@if (displayCourse.AccessLevel == "Free")
+{
+    <Button Color="ButtonColor.Primary" @onclick="EnrollStudent">Enroll</Button>
+}
+else if (displayCourse.AccessLevel == "Paid")
+{
+    <Button Color="ButtonColor.Primary">Add to cart</Button>
+}
+
 @code {
     [Parameter]
     public int CourseId { get; set; }
     public Course displayCourse { get; set; } = new();
+    private string UserId { get; set; }
+    private string Email { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
         await LoadCourse();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        UserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+        Email = user.FindFirstValue(ClaimTypes.Email);
     }
 
     private async Task LoadCourse()
@@ -25,5 +41,10 @@
         if (course == null) return;
 
         displayCourse = course;
+    }
+
+    private async Task EnrollStudent()
+    {
+        NavigationManager.NavigateTo($"/coursepages/learning/{CourseId}");
     }
 }

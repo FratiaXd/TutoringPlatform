@@ -1,5 +1,5 @@
 ﻿@page "/admin/adminpages/coursemanager"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @attribute [StreamRendering]
 
 <h3>CourseManager</h3>
