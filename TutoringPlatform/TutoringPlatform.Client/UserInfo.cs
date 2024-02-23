@@ -1,3 +1,5 @@
+using TutoringPlatform.Shared.Models;
+
 namespace TutoringPlatform.Client
 {
     // Add properties to this class and update the server and client AuthenticationStateProviders
@@ -6,5 +8,6 @@ namespace TutoringPlatform.Client
     {
         public required string UserId { get; set; }
         public required string Email { get; set; }
+        
     }
 }

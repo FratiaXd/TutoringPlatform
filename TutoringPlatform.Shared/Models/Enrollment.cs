@@ -18,8 +18,8 @@ namespace TutoringPlatform.Shared.Models
         public string EnrollmentStatus { get; set; }
 
         //Relationships
-        public TutoringPlatformUser User { get; set; }
-        public Course Course {  get; set; }
+        public TutoringPlatformUser? User { get; set; }
+        public Course? Course {  get; set; }
         public Lesson? LatestLesson { get; set; }
     }
 }

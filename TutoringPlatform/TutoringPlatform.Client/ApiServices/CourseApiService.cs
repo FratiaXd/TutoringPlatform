@@ -65,5 +65,12 @@ namespace TutoringPlatform.Client.ApiServices
         {
             throw new NotImplementedException();
         }
+
+        public async Task<int> GetLessonIdForCourseAsync(int courseId, int lessonNum)
+        {
+            var lessonId = await httpClient.GetAsync($"api/Course/Lesson-Id/{courseId}/{lessonNum}");
+            var response = await lessonId.Content.ReadFromJsonAsync<int>();
+            return response;
+        }
     }
 }

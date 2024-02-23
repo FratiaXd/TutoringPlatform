@@ -118,5 +118,21 @@ namespace TutoringPlatform.Services
 
             return existingCourse;
         }
+
+        public async Task<int> GetLessonIdForCourseAsync(int courseId, int lessonNum)
+        {
+            if (courseId == 0 || lessonNum == 0) return 0;
+            var course = await _context.Courses
+                .Include(c => c.Lessons)
+                .FirstOrDefaultAsync(c => c.CourseId == courseId);
+
+            if (course == null) return 0;
+
+            var lesson = course.Lessons.FirstOrDefault(l => l.LessonOrder == lessonNum);
+
+            if (lesson == null) return 0;
+
+            return lesson.LessonId;
+        }
     }
 }
