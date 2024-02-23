@@ -48,11 +48,7 @@
         var courses = await CourseService.GetPublishedCoursesAsync();
         Courses?.Clear();
         if (courses == null) return;
-
-        foreach (var course in courses)
-        {
-            Courses.Add(course);
-        }
+        Courses = courses.ToList();
     }
 
     private void OpenCourse(Course course)

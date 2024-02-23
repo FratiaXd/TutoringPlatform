@@ -21,7 +21,7 @@ namespace TutoringPlatform.Shared.Models
         public string? FeedbackStatus { get; set; }
 
         //Relationships
-        public TutoringPlatformUser User { get; set; }
-        public Lesson Lesson { get; set; }
+        public TutoringPlatformUser? User { get; set; }
+        public Lesson? Lesson { get; set; }
     }
 }

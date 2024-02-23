@@ -66,7 +66,10 @@ else if (displayCourse.AccessLevel == "Free")
         var enrollment = await EnrollmentService.EnrollUserAsync(newEnrollment);
         if (enrollment != null)
         {
-            OpenCourse();
+            if (CreateProgressRecord(firstLessonId) != null)
+            {
+                OpenCourse();
+            }
         }
         else
         {
@@ -80,6 +83,18 @@ else if (displayCourse.AccessLevel == "Free")
         NavigationManager.NavigateTo($"/coursepages/learning/{CourseId}");
     }
 
+    private async Task<LessonProgress> CreateProgressRecord(int lessonId)
+    {
+        var newProgress = new LessonProgress
+        {
+            UserId = CurUserId,
+            LessonId = lessonId,
+            LessonStatus = "In Progress"
+        };
+
+        return await LessonProgressService.AddLessonProgressRecordAsync(newProgress);
+    }
+
     private async Task<bool> IsUserEnrolled()
     {
         var enrollments = await EnrollmentService.GetAllUserEnrollmentsAsync(CurUserId);
@@ -90,6 +105,7 @@ else if (displayCourse.AccessLevel == "Free")
         {
             if (enrollment.CourseId == CourseId)
             {
+                //get lastest lessonid?
                 return true; // User is enrolled in this course
             }
         }
