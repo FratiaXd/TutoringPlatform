@@ -20,5 +20,6 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<Course> PublishCourseAsync(int id);
         Task<Course> UnpublishCourseAsync(int id);
         Task<int> GetLessonIdForCourseAsync(int courseId, int lessonNum);
+        Task<Course> UpdateCourseDurationAsync(int courseId, bool addLesson);
     }
 }

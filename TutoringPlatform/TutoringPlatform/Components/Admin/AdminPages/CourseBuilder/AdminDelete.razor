@@ -72,6 +72,7 @@
                 var deleted = await LessonService.DeleteLessonAsync(RecordId);
                 //Need to automatically close the modal and point to coursedetail
                 BuilderState.DeleteLesson(RecordId);
+                await CourseService.UpdateCourseDurationAsync(deleted.CourseId, false);
                 //NavigationManager.NavigateTo($"/admin/adminpages/coursebuilder/{BuilderState.CourseId}");
             }
             else if (RecordType == "Quiz")

@@ -72,5 +72,10 @@ namespace TutoringPlatform.Client.ApiServices
             var response = await lessonId.Content.ReadFromJsonAsync<int>();
             return response;
         }
+
+        public Task<Course> UpdateCourseDurationAsync(int courseId, bool addLesson)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

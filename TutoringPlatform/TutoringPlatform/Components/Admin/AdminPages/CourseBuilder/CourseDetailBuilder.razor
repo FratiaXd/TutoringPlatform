@@ -88,6 +88,7 @@
             updateCourse.Description = Input.Description;
             updateCourse.AccessLevel = Input.AccessLevel.ToString();
             updateCourse.ImageUrl = Input.ImageUrl;
+            updateCourse.Duration = await CountLessons();
 
             var updateResult = await CourseService.UpdateCourseAsync(updateCourse);
             if (updateResult == null)
@@ -119,5 +120,11 @@
             Input.Price = 0;
 
         }
+    }
+
+    private async Task<int> CountLessons()
+    {
+        var courseLessons = await LessonService.GetAllLessonsForCourse(CourseId);
+        return courseLessons.Count();
     }
 }

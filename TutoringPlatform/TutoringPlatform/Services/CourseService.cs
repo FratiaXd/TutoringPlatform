@@ -63,6 +63,7 @@ namespace TutoringPlatform.Services
             existingCourse.AccessLevel = updatedCourse.AccessLevel;
             existingCourse.ImageUrl = updatedCourse.ImageUrl;
             existingCourse.IsActive = updatedCourse.IsActive;
+            existingCourse.Duration = updatedCourse.Duration;
 
             _context.Courses.Update(existingCourse);
             await _context.SaveChangesAsync();
@@ -133,6 +134,27 @@ namespace TutoringPlatform.Services
             if (lesson == null) return 0;
 
             return lesson.LessonId;
+        }
+
+        public async Task<Course> UpdateCourseDurationAsync(int courseId, bool addLesson)
+        {
+            if (courseId == 0) return null;
+            var existingCourse = await _context.Courses.FindAsync(courseId);
+            if (existingCourse == null) return null;
+
+            if (addLesson)
+            {
+                existingCourse.Duration += 1;
+            }
+            else 
+            {
+                existingCourse.Duration -= 1;
+            }
+
+            _context.Courses.Update(existingCourse);
+            await _context.SaveChangesAsync();
+
+            return existingCourse;
         }
     }
 }
