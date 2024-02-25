@@ -37,7 +37,8 @@
     [Parameter]
     public int CourseId { get; set; }
     public Course currentCourse { get; set; }
-    private string CurUserId { get; set; }
+    [Parameter]
+    public string CurUserId { get; set; }
     List<Lesson> lessons;
 
     [Parameter]
@@ -65,11 +66,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-
         await LoadLessons();
         currentCourse = await CourseService.GetCourseByIdAsync(CourseId);
 

@@ -8,7 +8,7 @@
     <hr />
     <div class="row">
         <div class="col-md-3">
-            <LearningSidebar CourseId="@CourseId" 
+            <LearningSidebar CourseId="@CourseId" CurUserId="@CurUserId"
                 OnLessonClicked="HandleLessonClicked"
                 OnQuizClicked="HandleQuizClicked"
                 OnAssignmentClicked="HandleAssignmentClicked" />
@@ -16,15 +16,15 @@
         <div class="col-md-9">
             @if (selectedLesson != null)
             {
-                <LessonContent Lesson="@selectedLesson" />
+                <LessonContent Lesson="@selectedLesson" CurUserId="@CurUserId" />
             }
             else if (selectedQuiz != null)
             {
-                <QuizContent Quiz="@selectedQuiz" />
+                <QuizContent Quiz="@selectedQuiz" CurUserId="@CurUserId" />
             }
             else if (selectedAssignment != null)
             {
-                <AssignmentContent Assignment="@selectedAssignment" />
+                <AssignmentContent Assignment="@selectedAssignment" CurUserId="@CurUserId" />
             }
         </div>
     </div>
@@ -34,7 +34,7 @@
 @code {
     [Parameter]
     public int CourseId { get; set; }
-
+    private string CurUserId { get; set; }
     private Lesson selectedLesson;
     private Quiz selectedQuiz;
     private Assignment selectedAssignment;
@@ -58,5 +58,13 @@
         selectedLesson = null; // Reset other selections
         selectedQuiz = null;
         selectedAssignment = assignment;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }
