@@ -54,7 +54,8 @@
 
     private async Task HandleQuizClick(Quiz quiz)
     {
-        await OnQuizClicked.InvokeAsync(quiz);
+        var quizInfo = await QuizService.GetQuizWithQandOAsync(quiz.QuizId);
+        await OnQuizClicked.InvokeAsync(quizInfo);
     }
 
     private async Task HandleAssignmentClick(Assignment assignment)

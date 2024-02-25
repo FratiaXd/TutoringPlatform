@@ -49,7 +49,7 @@
     private async Task HandleQuizClicked(Quiz quiz)
     {
         selectedLesson = null; // Reset other selections
-        selectedQuiz = await QuizService.GetQuizWithQandOAsync(quiz.QuizId);
+        selectedQuiz = quiz;
         selectedAssignment = null;
     }
 
