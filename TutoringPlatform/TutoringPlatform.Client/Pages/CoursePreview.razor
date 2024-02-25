@@ -37,10 +37,18 @@ else if (displayCourse.AccessLevel == "Free")
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
-        Email = user.FindFirstValue(ClaimTypes.Email);
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            Email = user.FindFirstValue(ClaimTypes.Email);
 
-        IsEnrolled = await IsUserEnrolled();
+            IsEnrolled = await IsUserEnrolled();
+        }
+        else
+        {
+            IsEnrolled = false;
+        }
+
     }
 
     private async Task LoadCourse()

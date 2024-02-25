@@ -22,7 +22,7 @@
                 <td>@enrollment.LatestLesson.LessonOrder</td>
                 <td>@enrollment.Course.Duration</td>
                 <td>@enrollment.EnrollmentStatus</td>
-                <td><button class="btn btn-primary">Open</button></td>
+                <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment.CourseId)">Open</button></td>
             </tr>
         }
     </tbody>
@@ -48,5 +48,10 @@
         Enrollments?.Clear();
         if (enrollments == null) return;
         Enrollments = enrollments.ToList();
+    }
+
+    public void OpenCourse(int id)
+    {
+        NavigationManager.NavigateTo($"/coursepages/learning/{id}");
     }
 }
