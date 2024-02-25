@@ -8,10 +8,24 @@
     <hr />
     <div class="row">
         <div class="col-md-3">
-            <LearningSidebar CourseId="@CourseId"/>
+            <LearningSidebar CourseId="@CourseId" 
+                OnLessonClicked="HandleLessonClicked"
+                OnQuizClicked="HandleQuizClicked"
+                OnAssignmentClicked="HandleAssignmentClicked" />
         </div>
         <div class="col-md-9">
-            
+            @if (selectedLesson != null)
+            {
+                <LessonContent Lesson="@selectedLesson" />
+            }
+            else if (selectedQuiz != null)
+            {
+                <QuizContent Quiz="@selectedQuiz" />
+            }
+            else if (selectedAssignment != null)
+            {
+                <AssignmentContent Assignment="@selectedAssignment" />
+            }
         </div>
     </div>
 </div>
@@ -20,4 +34,29 @@
 @code {
     [Parameter]
     public int CourseId { get; set; }
+
+    private Lesson selectedLesson;
+    private Quiz selectedQuiz;
+    private Assignment selectedAssignment;
+
+    private async Task HandleLessonClicked(Lesson lesson)
+    {
+        selectedLesson = lesson;
+        selectedQuiz = null; // Reset other selections
+        selectedAssignment = null;
+    }
+
+    private async Task HandleQuizClicked(Quiz quiz)
+    {
+        selectedLesson = null; // Reset other selections
+        selectedQuiz = quiz;
+        selectedAssignment = null;
+    }
+
+    private async Task HandleAssignmentClicked(Assignment assignment)
+    {
+        selectedLesson = null; // Reset other selections
+        selectedQuiz = null;
+        selectedAssignment = assignment;
+    }
 }

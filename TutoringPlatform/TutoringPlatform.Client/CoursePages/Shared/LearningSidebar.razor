@@ -12,18 +12,18 @@
         if (lesson != null)
         {
             <li class="nav-item">
-                <NavLink class="nav-link">@lesson.LessonTitle</NavLink>
+                <NavLink class="nav-link" @onclick="() => HandleLessonClick(lesson)">@lesson.LessonTitle</NavLink>
                     <ul>
                     @if (lesson.Quiz.QuizName != null)
                     {
                         <li>
-                            <NavLink class="nav-link" >@lesson.Quiz.QuizName</NavLink>
+                            <NavLink class="nav-link" @onclick="() => HandleQuizClick(lesson.Quiz)">@lesson.Quiz.QuizName</NavLink>
                         </li>
                     }
                     @if (lesson.Assignment.TaskName != null)
                     {
                         <li>
-                            <NavLink class="nav-link" >@lesson.Assignment.TaskName</NavLink>
+                            <NavLink class="nav-link" @onclick="() => HandleAssignmentClick(lesson.Assignment)">@lesson.Assignment.TaskName</NavLink>
                         </li>
                     }
                 </ul>
@@ -40,6 +40,28 @@
     private string CurUserId { get; set; }
     List<Lesson> lessons;
 
+    [Parameter]
+    public EventCallback<Lesson> OnLessonClicked { get; set; }
+    [Parameter]
+    public EventCallback<Quiz> OnQuizClicked { get; set; }
+    [Parameter]
+    public EventCallback<Assignment> OnAssignmentClicked { get; set; }
+
+    private async Task HandleLessonClick(Lesson lesson)
+    {
+        await OnLessonClicked.InvokeAsync(lesson);
+    }
+
+    private async Task HandleQuizClick(Quiz quiz)
+    {
+        await OnQuizClicked.InvokeAsync(quiz);
+    }
+
+    private async Task HandleAssignmentClick(Assignment assignment)
+    {
+        await OnAssignmentClicked.InvokeAsync(assignment);
+    }
+
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -49,6 +71,15 @@
 
         await LoadLessons();
         currentCourse = await CourseService.GetCourseByIdAsync(CourseId);
+
+        var inProgressLesson = lessons.FirstOrDefault(l =>
+        l.LessonProgresses.Any(lp => lp.UserId == CurUserId && lp.LessonStatus == "In Progress"));
+
+        if (inProgressLesson != null)
+        {
+            // Invoke the lesson clicked event callback to render the lesson content
+            await HandleLessonClick(inProgressLesson);
+        }
     }
 
     private async Task LoadLessons()
