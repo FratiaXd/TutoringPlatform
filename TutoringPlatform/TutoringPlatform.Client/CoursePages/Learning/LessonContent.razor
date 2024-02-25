@@ -1,5 +1,12 @@
 ﻿<h3>LessonContent</h3>
-<h4>@Lesson.LessonTitle</h4>
+<h4>Title: @Lesson.LessonTitle</h4>
+<br />
+<p>Description: @Lesson.LessonDescription</p>
+<p>Video: @Lesson.LessonVideoUrl</p>
+<p>Image: @Lesson.LessonImageUrl</p>
+<p>Content: @Lesson.LessonContent</p>
+
+
 @code {
     [Parameter]
     public Lesson Lesson { get; set; }

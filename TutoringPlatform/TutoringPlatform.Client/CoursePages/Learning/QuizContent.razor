@@ -1,5 +1,17 @@
 ﻿<h3>QuizContent</h3>
-<h4>@Quiz.QuizName</h4>
+<h4>Title: @Quiz.QuizName</h4>
+<br />
+
+@foreach (var question in Quiz.QuizQuestions)
+{
+    <h3>@question.Question</h3>
+    @foreach (var option in question.QuizOptions)
+    {
+        <h4>@option.Option</h4>
+    }
+    <br />
+}
+
 
 @code {
     [Parameter]

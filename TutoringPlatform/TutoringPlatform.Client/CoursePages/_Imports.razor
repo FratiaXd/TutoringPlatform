@@ -1,5 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Authorization
+@using System.ComponentModel.DataAnnotations
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 @inject NavigationManager NavigationManager
 @inject ILessonService LessonService
 @inject ICourseService CourseService
+@inject IQuizService QuizService

@@ -65,7 +65,8 @@ namespace TutoringPlatform.Services
                 Assignment = new Assignment
                 {
                     AssignmentId = l.Assignment?.AssignmentId ?? 0,
-                    TaskName = l.Assignment?.TaskName
+                    TaskName = l.Assignment?.TaskName,
+                    TaskDescription = l.Assignment?.TaskDescription
                 },
 
                 LessonProgresses = l.LessonProgresses.Where(lp => lp.UserId == userId).ToList()
