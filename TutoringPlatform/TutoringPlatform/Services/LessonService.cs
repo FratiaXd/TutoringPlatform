@@ -21,7 +21,7 @@ namespace TutoringPlatform.Services
             return await context.Lessons.ToListAsync();
         }
 
-        public async Task<IEnumerable<Lesson>> GetAllLessonsForCourse(int? id)
+        public async Task<IEnumerable<Lesson>> GetAllLessonsForCourseAsync(int? id)
         {
             if (id == 0) { return null; }
             using var context = _contextFactory.CreateDbContext();
@@ -31,6 +31,47 @@ namespace TutoringPlatform.Services
                 .Where(l => l.CourseId == id)
                 .OrderBy(l => l.LessonOrder)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Lesson>> GetAllCourseLessonsQAndLAsync(int? id, string userId)
+        {
+            if (id == 0 || string.IsNullOrEmpty(userId)) { return null; }
+            using var context = _contextFactory.CreateDbContext();
+
+            var lessons = await context.Lessons
+                .Include(l => l.Quiz)
+                .Include(l => l.Assignment)
+                .Include(l => l.LessonProgresses)
+                .Where(l => l.CourseId == id)
+                .OrderBy(l => l.LessonOrder)
+                .ToListAsync();
+
+            var serializedLessons = lessons.Select(l => new Lesson
+            {
+                LessonId = l.LessonId,
+                LessonTitle = l.LessonTitle,
+                LessonVideoUrl = l.LessonVideoUrl,
+                LessonImageUrl = l.LessonImageUrl,
+                LessonContent = l.LessonContent,
+                LessonDescription = l.LessonDescription,
+                LessonOrder = l.LessonOrder,
+
+                Quiz = new Quiz
+                {
+                    QuizId = l.Quiz?.QuizId ?? 0,
+                    QuizName = l.Quiz?.QuizName
+                },
+
+                Assignment = new Assignment
+                {
+                    AssignmentId = l.Assignment?.AssignmentId ?? 0,
+                    TaskName = l.Assignment?.TaskName
+                },
+
+                LessonProgresses = l.LessonProgresses.Where(lp => lp.UserId == userId).ToList()
+            });
+
+            return serializedLessons;
         }
 
         public async Task<Lesson> AddLessonAsync(Lesson lesson)

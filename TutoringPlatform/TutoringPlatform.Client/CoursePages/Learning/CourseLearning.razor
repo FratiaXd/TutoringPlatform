@@ -1,8 +1,21 @@
 ﻿@page "/coursepages/learning/{CourseId:int}"
+@using TutoringPlatform.Client.CoursePages.Shared
 @rendermode InteractiveAuto
+@inherits LayoutComponentBase
 
-<h3>CourseLearning</h3>
-<h4>@CourseId</h4>
+<div>
+    <h2>CourseLearning</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <LearningSidebar CourseId="@CourseId"/>
+        </div>
+        <div class="col-md-9">
+            
+        </div>
+    </div>
+</div>
+
 
 @code {
     [Parameter]

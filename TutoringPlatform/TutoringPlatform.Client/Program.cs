@@ -13,6 +13,7 @@ builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticat
 builder.Services.AddScoped<ICourseService, CourseApiService>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentApiService>();
 builder.Services.AddScoped<ILessonProgressService, LessonProgressApiService>();
+builder.Services.AddScoped<ILessonService, LessonApiService>();
 
 builder.Services.AddScoped(http => new HttpClient
 {

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TutoringPlatform.Shared.Models;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Services;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,7 @@ builder.Services.AddIdentity<TutoringPlatformUser, IdentityRole>(options => opti
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddSingleton<IEmailSender<TutoringPlatformUser>, IdentityNoOpEmailSender>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<ILessonService, LessonService>();

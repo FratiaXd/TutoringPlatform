@@ -124,7 +124,7 @@
 
     private async Task<int> CountLessons()
     {
-        var courseLessons = await LessonService.GetAllLessonsForCourse(CourseId);
+        var courseLessons = await LessonService.GetAllLessonsForCourseAsync(CourseId);
         return courseLessons.Count();
     }
 }

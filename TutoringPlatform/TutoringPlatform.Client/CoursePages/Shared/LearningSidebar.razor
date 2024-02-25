@@ -1,0 +1,63 @@
+﻿@rendermode InteractiveAuto
+
+<ul class="nav nav-pills flex-column">
+    @if (currentCourse != null)
+    {
+        <li class="nav-item">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">@currentCourse.Title</NavLink>
+        </li>
+    }
+    @foreach (var lesson in lessons)
+    {
+        if (lesson != null)
+        {
+            <li class="nav-item">
+                <NavLink class="nav-link">@lesson.LessonTitle</NavLink>
+                    <ul>
+                    @if (lesson.Quiz.QuizName != null)
+                    {
+                        <li>
+                            <NavLink class="nav-link" >@lesson.Quiz.QuizName</NavLink>
+                        </li>
+                    }
+                    @if (lesson.Assignment.TaskName != null)
+                    {
+                        <li>
+                            <NavLink class="nav-link" >@lesson.Assignment.TaskName</NavLink>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    }
+</ul>
+
+
+@code {
+    [Parameter]
+    public int CourseId { get; set; }
+    public Course currentCourse { get; set; }
+    private string CurUserId { get; set; }
+    List<Lesson> lessons;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        await LoadLessons();
+        currentCourse = await CourseService.GetCourseByIdAsync(CourseId);
+    }
+
+    private async Task LoadLessons()
+    {
+        lessons = new List<Lesson>();
+        var lessonsList = await LessonService.GetAllCourseLessonsQAndLAsync(CourseId, CurUserId);
+        if (lessonsList != null)
+        {
+            lessons.AddRange(lessonsList);
+        }
+    }
+}

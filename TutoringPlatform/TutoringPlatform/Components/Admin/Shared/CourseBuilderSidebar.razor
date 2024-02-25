@@ -87,7 +87,7 @@ else
     private async Task LoadLessons()
     {
         lessons = new List<Lesson>();
-        var lessonsList = await LessonService.GetAllLessonsForCourse(BuilderState.CourseId);
+        var lessonsList = await LessonService.GetAllLessonsForCourseAsync(BuilderState.CourseId);
         if (lessonsList != null)
         {
             lessons.AddRange(lessonsList);
