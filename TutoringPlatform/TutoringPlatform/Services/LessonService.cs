@@ -55,6 +55,8 @@ namespace TutoringPlatform.Services
                 LessonContent = l.LessonContent,
                 LessonDescription = l.LessonDescription,
                 LessonOrder = l.LessonOrder,
+                IsAssessed = l.IsAssessed,
+                IsAutograded = l.IsAutograded,
 
                 Quiz = new Quiz
                 {

@@ -28,7 +28,10 @@
             }
             else if (selectedQuiz != null)
             {
-                <QuizContent Quiz="@selectedQuiz" CurUserId="@CurUserId" />
+                <QuizContent Quiz="@selectedQuiz" CurUserId="@CurUserId"
+                    QuizScore="@QuizScore"
+                    UpdateLessonProgress="UpdateLessonProgress"
+                    QuizCompleted="@QuizCompleted"/>
             }
             else if (selectedAssignment != null)
             {
@@ -52,6 +55,8 @@
     private Lesson currentLessonOpen { get; set; }
     private List<Lesson> lessons;
     public bool AssignmentCompleted { get; set; }
+    public bool QuizCompleted { get; set; }
+    public string? QuizScore { get; set; }
 
     private async Task HandleLessonClicked(Lesson lesson)
     {
@@ -67,6 +72,13 @@
         selectedQuiz = lesson.Quiz;
         selectedAssignment = null;
         currentLessonOpen = lesson;
+        var l = currentLessonOpen.LessonProgresses.ToList();
+        if (l[0].QuizGrade != null)
+        {
+            QuizCompleted = true;
+            QuizScore = l[0].QuizGrade;
+        }
+        else { QuizCompleted = false; }
     }
 
     private async Task HandleAssignmentClicked(Lesson lesson)
@@ -116,25 +128,34 @@
 
     private async Task GoToNext()
     {
+        bool isLessonCompleted = false;
         if (currentLessonOpen.IsAutograded == false && currentLessonOpen.IsAssessed == false)
         {
+            //Checks if user opens new lesson or just navigates between already completed lessons
+            if (currentLessonOpen.LessonProgresses.First().LessonStatus == "Completed")
+            {
+                isLessonCompleted = true;
+            }
             var lessonCompleted = new LessonProgress
             {
                 UserId = CurUserId,
                 LessonId = currentLessonOpen.LessonId,
                 LessonStatus = "Completed"
             };
-            await NextLesson(lessonCompleted);
+            await NextLesson(lessonCompleted, isLessonCompleted);
         }
         //need to go to quiz or assignment and check if they are submitted
     }
 
-    private async Task NextLesson(LessonProgress updLesson)
+    private async Task NextLesson(LessonProgress updLesson, bool isCompleted)
     {
-        await LessonProgressService.FinishLessonAsync(updLesson);
         int nextLessonOrder = currentLessonOpen.LessonOrder + 1;
         var nextLesson = lessons.FirstOrDefault(l => l.LessonOrder == nextLessonOrder);
-        if (nextLesson != null)
+        if (!isCompleted)
+        {
+            await LessonProgressService.FinishLessonAsync(updLesson);
+        }
+        if (nextLesson != null && !isCompleted)
         {
             // Invoke the lesson clicked event callback to render the next lesson content
             //need to update enrollment data as well
@@ -155,6 +176,10 @@
             };
             var result = await LessonProgressService.AddLessonProgressRecordAsync(lessonProgressUpd);
             nextLesson.LessonProgresses.Add(result);
+            await HandleLessonClicked(nextLesson);
+        }
+        else if (nextLesson != null && isCompleted)
+        {
             await HandleLessonClicked(nextLesson);
         }
     }

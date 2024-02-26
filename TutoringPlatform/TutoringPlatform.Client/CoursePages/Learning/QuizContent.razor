@@ -1,21 +1,164 @@
-﻿<h3>QuizContent</h3>
-<h4>Title: @Quiz.QuizName</h4>
-<br />
-
-@foreach (var question in Quiz.QuizQuestions)
+﻿<h3>@Quiz.QuizName</h3>
+@if (!QuizCompleted)
 {
-    <h3>@question.Question</h3>
-    @foreach (var option in question.QuizOptions)
+    @if (currentQuestionIndex >= 0 && currentQuestionIndex < Quiz.QuizQuestions.Count)
     {
-        <h4>@option.Option</h4>
+        <Card Style="width:50rem">
+            @{
+                var currentQuestion = Quiz.QuizQuestions.Skip(currentQuestionIndex).FirstOrDefault();
+            }
+            @if (currentQuestion != null)
+            {
+                <CardBody>
+                    <CardTitle>@currentQuestion.Question</CardTitle>
+                    </CardBody>
+                <ul class="list-group list-group-flush">
+                    @foreach (var option in currentQuestion.QuizOptions)
+                    {
+                        <li class="list-group-item">
+                            <input type="checkbox" id="@option.QuizOptionId"
+                                   checked="@selectedOptions.Contains(option)"
+                                   disabled="@answersChecked"
+                                   @onclick="() => HandleOptionSelected(option)" />
+                            <label for="@option.QuizOptionId">@option.Option</label>
+                        </li>
+                    }
+                </ul>
+                <br />
+                <Button Color="ButtonColor.Primary" @onclick="CheckAnswer">Check Answer</Button>
+                <br />
+                @if (showNextButton)
+                {
+                    @if (currentQuestionIndex == Quiz.QuizQuestions.Count - 1)
+                    {
+                        <Button Color="ButtonColor.Primary" @onclick="SubmitQuiz">Submit Quiz</Button>
+                    }
+                    else
+                    {
+                        <Button Color="ButtonColor.Success" @onclick="NextQuestion">Next</Button>
+                    }
+                }
+                <p>@answerFeedback</p>
+            }
+            else
+            {
+                <p>Question not found.</p>
+            }
+        </Card>
     }
-    <br />
+    else
+    {
+        <p>No quiz questions available.</p>
+    }
 }
-
+else
+{
+    <p>Quiz Completed. Your score is: @QuizScore</p>
+}
 
 @code {
     [Parameter]
     public Quiz Quiz { get; set; }
     [Parameter]
     public string CurUserId { get; set; }
+    [Parameter]
+    public bool QuizCompleted { get; set; }
+    [Parameter]
+    public EventCallback<LessonProgress> UpdateLessonProgress { get; set; }
+    [Parameter]
+    public string QuizScore { get; set; }
+
+    private int currentQuestionIndex = 0;
+    private List<QuizOption> selectedOptions = new List<QuizOption>();
+    private bool showNextButton = false;
+    private string answerFeedback = "";
+    private bool answersChecked = false;
+    private int quizScore = 0;
+
+    private void HandleOptionSelected(QuizOption option)
+    {
+        if (selectedOptions.Contains(option))
+        {
+            selectedOptions.Remove(option);
+        }
+        else
+        {
+            selectedOptions.Add(option);
+        }
+    }
+
+    private async Task CheckAnswer()
+    {
+        if (selectedOptions.Count == 0)
+        {
+            // No option selected, display a message
+            answerFeedback = "Please select an answer.";
+            return;
+        }
+        bool isCorrect = CheckSelectedOptions(out string correctAnswer);
+        if (isCorrect)
+        {
+            answerFeedback = "Correct!";
+            quizScore += 1;
+        }
+        else
+        {
+            answerFeedback = "Incorrect. The correct answer is: " + correctAnswer;
+        }
+        showNextButton = true;
+        answersChecked = true;
+    }
+
+    private bool CheckSelectedOptions(out string correctAnswer)
+    {
+        correctAnswer = "";
+        var currentQuestion = Quiz.QuizQuestions.Skip(currentQuestionIndex).FirstOrDefault();
+        if (currentQuestion != null)
+        {
+            List<QuizOption> correctAnswers = currentQuestion.QuizOptions.Where(o => o.IsCorrect).ToList();
+            foreach (var option in selectedOptions)
+            {
+                if (!correctAnswers.Any(o => o.QuizOptionId == option.QuizOptionId))
+                {
+                    correctAnswer = string.Join(", ", correctAnswers.Select(o => o.Option));
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void NextQuestion()
+    {
+        if (currentQuestionIndex < Quiz.QuizQuestions.Count - 1)
+        {
+            currentQuestionIndex++;
+            ResetQuizState();
+        }
+    }
+
+    private void ResetQuizState()
+    {
+        selectedOptions.Clear();
+        showNextButton = false;
+        answerFeedback = "";
+        answersChecked = false;
+    }
+
+    private async Task SubmitQuiz()
+    {
+        double percentageCorrect = (double)quizScore / Quiz.QuizQuestions.Count * 100;
+        QuizScore = percentageCorrect.ToString() + "%";
+        var quizScoreUpd = new LessonProgress
+        {
+            UserId = CurUserId,
+            LessonId = Quiz.LessonId,
+            QuizGrade = QuizScore
+        };
+
+        var updatedProgress = await LessonProgressService.SubmitQuizAsync(quizScoreUpd);
+        await UpdateLessonProgress.InvokeAsync(updatedProgress);
+        QuizCompleted = true;
+    }
 }

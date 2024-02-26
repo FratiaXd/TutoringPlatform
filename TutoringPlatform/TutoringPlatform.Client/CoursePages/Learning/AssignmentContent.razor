@@ -18,7 +18,7 @@
 }
 else
 {
-    <p>You already completed this assignment.</p>
+    <p>Thank you for your submission.</p>
 }
 
 
@@ -40,7 +40,8 @@ else
         {
             UserId = CurUserId,
             LessonId = Assignment.LessonId,
-            SubmittedAssignment = Input.AssignmentAnswer
+            SubmittedAssignment = Input.AssignmentAnswer,
+            FeedbackStatus = "Waiting"
         };
 
         var updatedLessonProgress = await LessonProgressService.SubmitAssignmentAsync(addAssignment);

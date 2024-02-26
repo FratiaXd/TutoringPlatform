@@ -11,6 +11,7 @@ namespace TutoringPlatform.Shared.Interfaces
     {
         Task<LessonProgress> AddLessonProgressRecordAsync(LessonProgress lessonProgress);
         Task<LessonProgress> SubmitAssignmentAsync(LessonProgress lessonProgress);
+        Task<LessonProgress> SubmitQuizAsync(LessonProgress lessonProgress);
         Task<LessonProgress> FinishLessonAsync(LessonProgress lessonProgress);
     }
 }

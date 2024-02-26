@@ -27,6 +27,13 @@ namespace TutoringPlatform.Client.ApiServices
             return response!;
         }
 
+        public async Task<LessonProgress> SubmitQuizAsync(LessonProgress lessonProgress)
+        {
+            var updProgress = await httpClient.PostAsJsonAsync("api/LessonProgress/Submit-Quiz", lessonProgress);
+            var response = await updProgress.Content.ReadFromJsonAsync<LessonProgress>();
+            return response!;
+        }
+
         public async Task<LessonProgress> FinishLessonAsync(LessonProgress lessonProgress)
         {
             var updProgress = await httpClient.PostAsJsonAsync("api/LessonProgress/Finish-Lesson", lessonProgress);

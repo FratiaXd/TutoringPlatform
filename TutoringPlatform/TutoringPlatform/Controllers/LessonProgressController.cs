@@ -31,6 +31,13 @@ namespace TutoringPlatform.Controllers
             return Ok(updProgress);
         }
 
+        [HttpPost("Submit-Quiz")]
+        public async Task<ActionResult<LessonProgress>> SubmitNewQuizAsync(LessonProgress lessonProgress)
+        {
+            var updProgress = await lessonProgressService.SubmitQuizAsync(lessonProgress);
+            return Ok(updProgress);
+        }
+
         [HttpPost("Finish-Lesson")]
         public async Task<ActionResult<LessonProgress>> FinishCurrentLessonAsync(LessonProgress lessonProgress)
         {
