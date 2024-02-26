@@ -189,6 +189,21 @@
         {
             await HandleLessonClicked(nextLesson);
         }
+        else if (nextLesson == null)
+        {
+            var enrollmentComplete = new Enrollment
+                {
+                    UserId = CurUserId,
+                    CourseId = CourseId,
+                    LatestLessonId = currentLessonOpen.LessonId,
+                    EnrollmentStatus = "Completed"
+                };
+            var result = await EnrollmentService.UpdateEnrollmentDetailsAsync(enrollmentComplete);
+            if (result != null)
+            {
+                NavigationManager.NavigateTo($"/coursepages/learning/coursecompleted/{CourseId}");
+            }
+        }
     }
 
     private bool CheckSubmittedAnswers(Lesson lessonToCheck)
