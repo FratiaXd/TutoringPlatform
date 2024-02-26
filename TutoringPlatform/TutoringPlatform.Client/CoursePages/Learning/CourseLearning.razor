@@ -3,6 +3,8 @@
 @rendermode InteractiveAuto
 @inherits LayoutComponentBase
 
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
 <div>
     <div class="row align-items-center">
         <div class="col">
@@ -10,7 +12,7 @@
         </div>
         <div class="col text-end">
             <Button Color="ButtonColor.Secondary" @onclick="GoBack">Go Back</Button>
-            <Button Color="ButtonColor.Primary" @onclick="GoToNext">Go to Next</Button>
+            <Button Color="ButtonColor.Primary" @onclick="GoToNext">Go to Next Lesson</Button>
         </div>
     </div>
     <hr />
@@ -57,6 +59,7 @@
     public bool AssignmentCompleted { get; set; }
     public bool QuizCompleted { get; set; }
     public string? QuizScore { get; set; }
+    List<ToastMessage> messages = new List<ToastMessage>();
 
     private async Task HandleLessonClicked(Lesson lesson)
     {
@@ -129,22 +132,28 @@
     private async Task GoToNext()
     {
         bool isLessonCompleted = false;
-        if (currentLessonOpen.IsAutograded == false && currentLessonOpen.IsAssessed == false)
+        //Checks if user opens new lesson or just navigates between already completed lessons
+        if (currentLessonOpen.LessonProgresses.First().LessonStatus == "Completed")
         {
-            //Checks if user opens new lesson or just navigates between already completed lessons
-            if (currentLessonOpen.LessonProgresses.First().LessonStatus == "Completed")
-            {
-                isLessonCompleted = true;
-            }
-            var lessonCompleted = new LessonProgress
+            isLessonCompleted = true;
+        }
+
+        var lessonCompleted = new LessonProgress
             {
                 UserId = CurUserId,
                 LessonId = currentLessonOpen.LessonId,
                 LessonStatus = "Completed"
             };
+
+        bool hasAllAnswers = CheckSubmittedAnswers(currentLessonOpen);
+        if (hasAllAnswers)
+        {
             await NextLesson(lessonCompleted, isLessonCompleted);
         }
-        //need to go to quiz or assignment and check if they are submitted
+        else
+        {
+            ShowMessage(ToastType.Secondary, "Please complete all tasks in the current lesson.");
+        }
     }
 
     private async Task NextLesson(LessonProgress updLesson, bool isCompleted)
@@ -157,8 +166,6 @@
         }
         if (nextLesson != null && !isCompleted)
         {
-            // Invoke the lesson clicked event callback to render the next lesson content
-            //need to update enrollment data as well
             var enrollmentUpd = new Enrollment
             {
                 UserId = CurUserId,
@@ -184,10 +191,33 @@
         }
     }
 
+    private bool CheckSubmittedAnswers(Lesson lessonToCheck)
+    {
+        var lessonProgressList = lessonToCheck.LessonProgresses.ToList();
+        if (lessonToCheck.IsAutograded && lessonToCheck.IsAssessed)
+        {
+            return lessonProgressList.Any(lp => lp.QuizGrade != null && lp.SubmittedAssignment != null);
+        }
+        else
+        {
+            if (lessonToCheck.IsAutograded)
+            {
+                return lessonProgressList.Any(lp => lp.QuizGrade != null);
+            }
+
+            if (lessonToCheck.IsAssessed)
+            {
+                return lessonProgressList.Any(lp => lp.SubmittedAssignment != null);
+            }
+        }
+        return true;
+    }
+
     private async Task GoBack()
     {
         if (currentLessonOpen.LessonOrder == 1)
         {
+            ShowMessage(ToastType.Secondary, "Cant go back further.");
             return;
         }
         else
@@ -201,4 +231,13 @@
             }
         }
     }
+
+    private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string message)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Message = message,
+        };
 }
