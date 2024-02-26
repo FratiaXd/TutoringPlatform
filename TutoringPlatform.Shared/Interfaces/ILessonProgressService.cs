@@ -10,5 +10,7 @@ namespace TutoringPlatform.Shared.Interfaces
     public interface ILessonProgressService
     {
         Task<LessonProgress> AddLessonProgressRecordAsync(LessonProgress lessonProgress);
+        Task<LessonProgress> SubmitAssignmentAsync(LessonProgress lessonProgress);
+        Task<LessonProgress> FinishLessonAsync(LessonProgress lessonProgress);
     }
 }

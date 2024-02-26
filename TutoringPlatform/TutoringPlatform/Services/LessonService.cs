@@ -59,12 +59,14 @@ namespace TutoringPlatform.Services
                 Quiz = new Quiz
                 {
                     QuizId = l.Quiz?.QuizId ?? 0,
-                    QuizName = l.Quiz?.QuizName
+                    QuizName = l.Quiz?.QuizName,
+                    LessonId = l.Quiz?.LessonId ?? 0
                 },
 
                 Assignment = new Assignment
                 {
                     AssignmentId = l.Assignment?.AssignmentId ?? 0,
+                    LessonId = l.Assignment?.LessonId ?? 0,
                     TaskName = l.Assignment?.TaskName,
                     TaskDescription = l.Assignment?.TaskDescription
                 },

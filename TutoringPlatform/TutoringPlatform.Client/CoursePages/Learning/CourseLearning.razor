@@ -4,11 +4,19 @@
 @inherits LayoutComponentBase
 
 <div>
-    <h2>CourseLearning</h2>
+    <div class="row align-items-center">
+        <div class="col">
+            <h2>CourseLearning</h2>
+        </div>
+        <div class="col text-end">
+            <Button Color="ButtonColor.Secondary" @onclick="GoBack">Go Back</Button>
+            <Button Color="ButtonColor.Primary" @onclick="GoToNext">Go to Next</Button>
+        </div>
+    </div>
     <hr />
     <div class="row">
         <div class="col-md-3">
-            <LearningSidebar CourseId="@CourseId" CurUserId="@CurUserId"
+            <LearningSidebar CourseId="@CourseId" CurUserId="@CurUserId" Lessons="@lessons"
                 OnLessonClicked="HandleLessonClicked"
                 OnQuizClicked="HandleQuizClicked"
                 OnAssignmentClicked="HandleAssignmentClicked" />
@@ -24,7 +32,10 @@
             }
             else if (selectedAssignment != null)
             {
-                <AssignmentContent Assignment="@selectedAssignment" CurUserId="@CurUserId" />
+                <AssignmentContent Assignment="@selectedAssignment" 
+                    CurUserId="@CurUserId" 
+                    UpdateLessonProgress="UpdateLessonProgress" 
+                    AssignmentCompleted="@AssignmentCompleted"/>
             }
         </div>
     </div>
@@ -38,26 +49,38 @@
     private Lesson selectedLesson;
     private Quiz selectedQuiz;
     private Assignment selectedAssignment;
+    private Lesson currentLessonOpen { get; set; }
+    private List<Lesson> lessons;
+    public bool AssignmentCompleted { get; set; }
 
     private async Task HandleLessonClicked(Lesson lesson)
     {
         selectedLesson = lesson;
         selectedQuiz = null; // Reset other selections
         selectedAssignment = null;
+        currentLessonOpen = lesson;
     }
 
-    private async Task HandleQuizClicked(Quiz quiz)
+    private async Task HandleQuizClicked(Lesson lesson)
     {
         selectedLesson = null; // Reset other selections
-        selectedQuiz = quiz;
+        selectedQuiz = lesson.Quiz;
         selectedAssignment = null;
+        currentLessonOpen = lesson;
     }
 
-    private async Task HandleAssignmentClicked(Assignment assignment)
+    private async Task HandleAssignmentClicked(Lesson lesson)
     {
         selectedLesson = null; // Reset other selections
         selectedQuiz = null;
-        selectedAssignment = assignment;
+        selectedAssignment = lesson.Assignment;
+        currentLessonOpen = lesson;
+        var l = currentLessonOpen.LessonProgresses.ToList();
+        if (l[0].SubmittedAssignment != null)
+        {
+            AssignmentCompleted = true;
+        }
+        else { AssignmentCompleted = false; }
     }
 
     protected override async Task OnInitializedAsync()
@@ -66,5 +89,91 @@
         var user = authState.User;
 
         CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+        await LoadLessons();
+    }
+
+    private async Task LoadLessons()
+    {
+        lessons = new List<Lesson>();
+        var lessonsList = await LessonService.GetAllCourseLessonsQAndLAsync(CourseId, CurUserId);
+        if (lessonsList != null)
+        {
+            lessons.AddRange(lessonsList);
+        }
+    }
+
+    private void UpdateLessonProgress(LessonProgress updatedProgress)
+    {
+        var lessonToUpdate = lessons.FirstOrDefault(l => l.LessonId == updatedProgress.LessonId);
+        if (lessonToUpdate != null)
+        {
+            // Update the LessonProgress property of the lesson
+            var lessonProgressList = lessonToUpdate.LessonProgresses.ToList();
+            lessonProgressList[0] = updatedProgress;
+            lessonToUpdate.LessonProgresses = lessonProgressList;
+        }
+    }
+
+    private async Task GoToNext()
+    {
+        if (currentLessonOpen.IsAutograded == false && currentLessonOpen.IsAssessed == false)
+        {
+            var lessonCompleted = new LessonProgress
+            {
+                UserId = CurUserId,
+                LessonId = currentLessonOpen.LessonId,
+                LessonStatus = "Completed"
+            };
+            await NextLesson(lessonCompleted);
+        }
+        //need to go to quiz or assignment and check if they are submitted
+    }
+
+    private async Task NextLesson(LessonProgress updLesson)
+    {
+        await LessonProgressService.FinishLessonAsync(updLesson);
+        int nextLessonOrder = currentLessonOpen.LessonOrder + 1;
+        var nextLesson = lessons.FirstOrDefault(l => l.LessonOrder == nextLessonOrder);
+        if (nextLesson != null)
+        {
+            // Invoke the lesson clicked event callback to render the next lesson content
+            //need to update enrollment data as well
+            var enrollmentUpd = new Enrollment
+            {
+                UserId = CurUserId,
+                CourseId = CourseId,
+                LatestLessonId = nextLesson.LessonId,
+                EnrollmentStatus = "In Progress"
+            };
+            await EnrollmentService.UpdateEnrollmentDetailsAsync(enrollmentUpd);
+
+            var lessonProgressUpd = new LessonProgress
+            {
+                UserId = CurUserId,
+                LessonId = nextLesson.LessonId,
+                LessonStatus = "In Progress"
+            };
+            var result = await LessonProgressService.AddLessonProgressRecordAsync(lessonProgressUpd);
+            nextLesson.LessonProgresses.Add(result);
+            await HandleLessonClicked(nextLesson);
+        }
+    }
+
+    private async Task GoBack()
+    {
+        if (currentLessonOpen.LessonOrder == 1)
+        {
+            return;
+        }
+        else
+        {
+            int previousLessonOrder = currentLessonOpen.LessonOrder - 1;
+            var prevLesson = lessons.FirstOrDefault(l => l.LessonOrder == previousLessonOrder);
+            if (prevLesson != null)
+            {
+                // Invoke the lesson clicked event callback to render the next lesson content
+                await HandleLessonClicked(prevLesson);
+            }
+        }
     }
 }

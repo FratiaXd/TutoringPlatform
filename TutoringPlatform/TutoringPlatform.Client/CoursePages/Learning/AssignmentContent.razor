@@ -3,28 +3,49 @@
 <br />
 <p>Desription: @Assignment.TaskDescription</p>
 
-<EditForm Model="Input" FormName="assignment" OnValidSubmit="SubmitAssignment" method="post">
-    <DataAnnotationsValidator />
-    <ValidationSummary class="text-danger" role="alert" />
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.AssignmentAnswer" class="form-control" placeholder="Assignment answer." />
-        <label for="answer" class="form-label">Your Answer</label>
-        <ValidationMessage For="() => Input.AssignmentAnswer" class="text-danger" />
-    </div>
-    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-</EditForm>
+@if (!AssignmentCompleted)
+{
+    <EditForm Model="Input" FormName="assignment" OnValidSubmit="SubmitAssignment" method="post">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" role="alert" />
+        <div class="form-floating mb-3">
+            <InputText @bind-Value="Input.AssignmentAnswer" class="form-control" placeholder="Assignment answer." />
+            <label for="answer" class="form-label">Your Answer</label>
+            <ValidationMessage For="() => Input.AssignmentAnswer" class="text-danger" />
+        </div>
+        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+    </EditForm>
+}
+else
+{
+    <p>You already completed this assignment.</p>
+}
+
 
 @code {
     [Parameter]
     public Assignment Assignment { get; set; }
     [Parameter]
     public string CurUserId { get; set; }
+    [Parameter]
+    public bool AssignmentCompleted { get; set; }
+    [Parameter]
+    public EventCallback<LessonProgress> UpdateLessonProgress { get; set; }
 
     private InputModel Input { get; set; } = new();
 
     private async Task SubmitAssignment()
     {
-        
+        var addAssignment = new LessonProgress
+        {
+            UserId = CurUserId,
+            LessonId = Assignment.LessonId,
+            SubmittedAssignment = Input.AssignmentAnswer
+        };
+
+        var updatedLessonProgress = await LessonProgressService.SubmitAssignmentAsync(addAssignment);
+        await UpdateLessonProgress.InvokeAsync(updatedLessonProgress);
+        AssignmentCompleted = true;
     }
 
     private sealed class InputModel

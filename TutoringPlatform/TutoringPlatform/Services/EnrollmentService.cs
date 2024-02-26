@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlazorBootstrap;
+using Microsoft.EntityFrameworkCore;
 using TutoringPlatform.Data;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Shared.Models;
@@ -69,6 +70,23 @@ namespace TutoringPlatform.Services
             });
 
             return serializedEnrollments;
+        }
+
+        public async Task<Enrollment> UpdateEnrollmentDetailsAsync(Enrollment enrollment)
+        {
+            if (enrollment == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingEnrollment = await context.Enrollments
+                .FirstOrDefaultAsync(e => e.UserId == enrollment.UserId && e.CourseId == enrollment.CourseId);
+
+            if (existingEnrollment == null) return null;
+
+            existingEnrollment.LatestLessonId = enrollment.LatestLessonId;
+            existingEnrollment.EnrollmentStatus = enrollment.EnrollmentStatus;
+
+            await context.SaveChangesAsync();
+            return existingEnrollment;
         }
     }
 }

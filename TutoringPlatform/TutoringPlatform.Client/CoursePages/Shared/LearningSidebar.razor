@@ -9,7 +9,7 @@
     }
     @foreach (var lesson in lessons)
     {
-        if (lesson != null)
+        if (lesson != null && lesson.LessonProgresses.Count != 0)
         {
             <li class="nav-item">
                 <NavLink class="nav-link" @onclick="() => HandleLessonClick(lesson)">@lesson.LessonTitle</NavLink>
@@ -17,13 +17,33 @@
                     @if (lesson.Quiz.QuizName != null)
                     {
                         <li>
-                            <NavLink class="nav-link" @onclick="() => HandleQuizClick(lesson.Quiz)">@lesson.Quiz.QuizName</NavLink>
+                            <NavLink class="nav-link" @onclick="() => HandleQuizClick(lesson)">@lesson.Quiz.QuizName</NavLink>
                         </li>
                     }
                     @if (lesson.Assignment.TaskName != null)
                     {
                         <li>
-                            <NavLink class="nav-link" @onclick="() => HandleAssignmentClick(lesson.Assignment)">@lesson.Assignment.TaskName</NavLink>
+                            <NavLink class="nav-link" @onclick="() => HandleAssignmentClick(lesson)">@lesson.Assignment.TaskName</NavLink>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <NavLink class="nav-link disabled" style="background-color: #d3d3d3">@lesson.LessonTitle</NavLink>
+                    <ul>
+                        @if (lesson.Quiz.QuizName != null)
+                    {
+                        <li>
+                            <NavLink class="nav-link disabled" style="background-color: #d3d3d3">@lesson.Quiz.QuizName</NavLink>
+                        </li>
+                    }
+                    @if (lesson.Assignment.TaskName != null)
+                    {
+                        <li>
+                            <NavLink class="nav-link disabled" style="background-color: #d3d3d3">@lesson.Assignment.TaskName</NavLink>
                         </li>
                     }
                 </ul>
@@ -39,34 +59,35 @@
     public Course currentCourse { get; set; }
     [Parameter]
     public string CurUserId { get; set; }
-    List<Lesson> lessons;
+    [Parameter]
+    public List<Lesson> lessons { get; set; }
 
     [Parameter]
     public EventCallback<Lesson> OnLessonClicked { get; set; }
     [Parameter]
-    public EventCallback<Quiz> OnQuizClicked { get; set; }
+    public EventCallback<Lesson> OnQuizClicked { get; set; }
     [Parameter]
-    public EventCallback<Assignment> OnAssignmentClicked { get; set; }
+    public EventCallback<Lesson> OnAssignmentClicked { get; set; }
 
     private async Task HandleLessonClick(Lesson lesson)
     {
         await OnLessonClicked.InvokeAsync(lesson);
     }
 
-    private async Task HandleQuizClick(Quiz quiz)
+    private async Task HandleQuizClick(Lesson lesson)
     {
-        var quizInfo = await QuizService.GetQuizWithQandOAsync(quiz.QuizId);
-        await OnQuizClicked.InvokeAsync(quizInfo);
+        var quizInfo = await QuizService.GetQuizWithQandOAsync(lesson.Quiz.QuizId);
+        lesson.Quiz = quizInfo;
+        await OnQuizClicked.InvokeAsync(lesson);
     }
 
-    private async Task HandleAssignmentClick(Assignment assignment)
+    private async Task HandleAssignmentClick(Lesson lesson)
     {
-        await OnAssignmentClicked.InvokeAsync(assignment);
+        await OnAssignmentClicked.InvokeAsync(lesson);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadLessons();
         currentCourse = await CourseService.GetCourseByIdAsync(CourseId);
 
         var inProgressLesson = lessons.FirstOrDefault(l =>
@@ -76,16 +97,6 @@
         {
             // Invoke the lesson clicked event callback to render the lesson content
             await HandleLessonClick(inProgressLesson);
-        }
-    }
-
-    private async Task LoadLessons()
-    {
-        lessons = new List<Lesson>();
-        var lessonsList = await LessonService.GetAllCourseLessonsQAndLAsync(CourseId, CurUserId);
-        if (lessonsList != null)
-        {
-            lessons.AddRange(lessonsList);
         }
     }
 }

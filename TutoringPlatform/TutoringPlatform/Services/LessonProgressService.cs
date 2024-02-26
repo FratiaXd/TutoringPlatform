@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlazorBootstrap;
+using Microsoft.EntityFrameworkCore;
 using TutoringPlatform.Data;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Shared.Models;
@@ -27,6 +28,38 @@ namespace TutoringPlatform.Services
             var newLessonProgress = context.LessonProgresses.Add(lessonProgress).Entity;
             await context.SaveChangesAsync();
             return newLessonProgress;
+        }
+
+        public async Task<LessonProgress> SubmitAssignmentAsync(LessonProgress lessonProgress)
+        {
+            if (lessonProgress == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingProgress = await context.LessonProgresses
+                .FirstOrDefaultAsync(lp => lp.UserId == lessonProgress.UserId && lp.LessonId == lessonProgress.LessonId);
+
+            if (existingProgress == null) return null;
+
+            existingProgress.SubmittedAssignment = lessonProgress.SubmittedAssignment;
+
+            await context.SaveChangesAsync();
+            return existingProgress;
+        }
+
+        public async Task<LessonProgress> FinishLessonAsync(LessonProgress lessonProgress)
+        {
+            if (lessonProgress == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingProgress = await context.LessonProgresses
+                .FirstOrDefaultAsync(lp => lp.UserId == lessonProgress.UserId && lp.LessonId == lessonProgress.LessonId);
+
+            if (existingProgress == null) return null;
+
+            existingProgress.LessonStatus = lessonProgress.LessonStatus;
+
+            await context.SaveChangesAsync();
+            return existingProgress;
         }
     }
 }
