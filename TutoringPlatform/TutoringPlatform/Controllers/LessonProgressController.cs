@@ -46,7 +46,7 @@ namespace TutoringPlatform.Controllers
         }
 
         [HttpGet("User-Assignments/{userId}")]
-        public async Task<ActionResult<IEnumerable<LessonProgress>>> GetUserProgressForAssignments(string userId)
+        public async Task<ActionResult<IEnumerable<LessonProgress>>> GetUserProgressForAssignmentsAsync(string userId)
         {
             var progresses = await lessonProgressService.GetUserLessonProgressesAssessedAsync(userId);
             return Ok(progresses);
@@ -57,6 +57,13 @@ namespace TutoringPlatform.Controllers
         {
             var updProgress = await lessonProgressService.SubmitFeedbackAsync(lessonProgress);
             return Ok(updProgress);
+        }
+
+        [HttpGet("Get-Lesson-Progress/{id}")]
+        public async Task<ActionResult<LessonProgress>> GetUserProgressByIdAsync(int id)
+        {
+            var progresses = await lessonProgressService.GetLessonProgressByIdAsync(id);
+            return Ok(progresses);
         }
     }
 }

@@ -99,6 +99,7 @@ namespace TutoringPlatform.Services
             var existingProgress = await context.LessonProgresses
                 .Include(lp => lp.User)
                 .Include(lp => lp.Lesson)
+                .ThenInclude(l => l.Course)
                 .FirstOrDefaultAsync(lp => lp.LessonProgressId == id);
 
             if (existingProgress == null) return null;

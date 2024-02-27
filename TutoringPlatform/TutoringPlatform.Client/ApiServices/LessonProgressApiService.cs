@@ -46,9 +46,11 @@ namespace TutoringPlatform.Client.ApiServices
             throw new NotImplementedException();
         }
 
-        public Task<LessonProgress> GetLessonProgressByIdAsync(int id)
+        public async Task<LessonProgress> GetLessonProgressByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var progress = await httpClient.GetAsync($"api/LessonProgress/Get-Lesson-Progress/{id}");
+            var response = await progress.Content.ReadFromJsonAsync<LessonProgress>();
+            return response!;
         }
 
         public async Task<LessonProgress> SubmitFeedbackAsync(LessonProgress lessonProgress)

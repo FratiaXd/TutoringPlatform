@@ -1,17 +1,28 @@
-﻿@page "/readfeedback"
+﻿@page "/readfeedback/{ProgressId:int}"
 @using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveAuto
 @attribute [Authorize]
 
 <h4>Feedback Details</h4>
-
-<p>Course: </p>
-<p>Lesson: </p>
-<p>Feedback: </p>
+@if (progress != null)
+{
+    <p>Course: @progress.Lesson.Course.Title</p>
+    <p>Lesson: @progress.Lesson.LessonTitle</p>
+    <p>Feedback: @progress.TutorFeedback</p>
+}
 
 @code {
     [Parameter]
-    public LessonProgress LessonProgress { get; set; }
+    public int ProgressId { get; set; }
+    public LessonProgress progress { get; set; }
 
-    //submitfeedbackasync
+    protected override async Task OnInitializedAsync()
+    {
+        progress = await LessonProgressService.GetLessonProgressByIdAsync(ProgressId);
+        if (progress.FeedbackStatus != "Seen")
+        {
+            progress.FeedbackStatus = "Seen";
+            await LessonProgressService.SubmitFeedbackAsync(progress);
+        }
+    }
 }
