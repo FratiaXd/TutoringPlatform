@@ -1,0 +1,17 @@
+﻿@page "/readfeedback"
+@using Microsoft.AspNetCore.Authorization
+@rendermode InteractiveAuto
+@attribute [Authorize]
+
+<h4>Feedback Details</h4>
+
+<p>Course: </p>
+<p>Lesson: </p>
+<p>Feedback: </p>
+
+@code {
+    [Parameter]
+    public LessonProgress LessonProgress { get; set; }
+
+    //submitfeedbackasync
+}

@@ -34,7 +34,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Course ID</th>
+            <th>Course Title</th>
             <th>User</th>
             <th>Lesson Title</th>
             <th>Status</th>
@@ -45,7 +45,7 @@
         @foreach (var record in FeedbackHistory)
         {
             <tr>
-                <td>@record.Lesson.CourseId</td>
+                <td>@record.Lesson.Course.Title</td>
                 <td>@record.User.Email</td>
                 <td>@record.Lesson.LessonTitle</td>
                 <td>@record.FeedbackStatus</td>

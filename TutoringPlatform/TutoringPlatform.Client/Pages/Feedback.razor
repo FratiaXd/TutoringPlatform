@@ -3,8 +3,55 @@
 @rendermode InteractiveAuto
 @attribute [Authorize]
 
-<h3>Feedback</h3>
+<h4>New Feedback:</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course Title</th>
+            <th>Lesson Title</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in UserLessonProgressesReviewed)
+        {
+            <tr>
+                <td>@record.Lesson.Course.Title</td>
+                <td>@record.Lesson.LessonTitle</td>
+                <td>@record.FeedbackStatus</td>
+                <td><button class="btn btn-primary" @onclick="(e => OpenReadFeedback(record))">Read Feedback</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
+    private string CurUserId { get; set; }
+    private List<LessonProgress> UserLessonProgressesReviewed { get; set; } = new List<LessonProgress>();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        await LoadProgresses();
+    }
+
+    public async Task LoadProgresses()
+    {
+        var progresses = await LessonProgressService.GetUserLessonProgressesAssessedAsync(CurUserId);
+        UserLessonProgressesReviewed?.Clear();
+        if (progresses == null) return;
+        UserLessonProgressesReviewed = progresses.Where(lp => lp.FeedbackStatus == "Reviewed").ToList();
+        //FeedbackHistory = feedback.Where(lp => lp.FeedbackStatus != "Waiting").ToList();
+    }
+
+    public void OpenReadFeedback(LessonProgress lessonProgress)
+    {
+        NavigationManager.NavigateTo($"/readfeedback", true);
+    }
 }

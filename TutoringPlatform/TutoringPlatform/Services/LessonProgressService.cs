@@ -85,6 +85,7 @@ namespace TutoringPlatform.Services
             var lessonProgresses = await context.LessonProgresses
                                         .Include(lp => lp.User)
                                         .Include(lp => lp.Lesson)
+                                        .ThenInclude(l => l.Course)
                                         .Where(lp => lp.FeedbackStatus != null)
                                         .ToListAsync();
             return lessonProgresses;
@@ -119,6 +120,22 @@ namespace TutoringPlatform.Services
             
             await context.SaveChangesAsync();
             return existingProgress;
+        }
+
+        public async Task<IEnumerable<LessonProgress>> GetUserLessonProgressesAssessedAsync(string userId)
+        {
+            if (userId == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var lessonProgresses = await context.LessonProgresses
+                            .Include(lp => lp.User)
+                            .Include(lp => lp.Lesson)
+                            .ThenInclude(l => l.Course)
+                            .Where(lp => lp.UserId == userId && lp.SubmittedAssignment != null)
+                            .ToListAsync();
+
+            if (lessonProgresses == null) return null; 
+            return lessonProgresses;
         }
     }
 }

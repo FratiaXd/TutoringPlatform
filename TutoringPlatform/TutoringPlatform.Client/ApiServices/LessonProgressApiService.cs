@@ -51,9 +51,18 @@ namespace TutoringPlatform.Client.ApiServices
             throw new NotImplementedException();
         }
 
-        public Task<LessonProgress> SubmitFeedbackAsync(LessonProgress lessonProgress)
+        public async Task<LessonProgress> SubmitFeedbackAsync(LessonProgress lessonProgress)
         {
-            throw new NotImplementedException();
+            var updProgress = await httpClient.PostAsJsonAsync("api/LessonProgress/Update-Status", lessonProgress);
+            var response = await updProgress.Content.ReadFromJsonAsync<LessonProgress>();
+            return response!;
+        }
+
+        public async Task<IEnumerable<LessonProgress>> GetUserLessonProgressesAssessedAsync(string userId)
+        {
+            var progresses = await httpClient.GetAsync($"api/LessonProgress/User-Assignments/{userId}");
+            var response = await progresses.Content.ReadFromJsonAsync<IEnumerable<LessonProgress>>();
+            return response!;
         }
     }
 }

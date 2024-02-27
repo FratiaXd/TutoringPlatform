@@ -44,5 +44,19 @@ namespace TutoringPlatform.Controllers
             var updProgress = await lessonProgressService.FinishLessonAsync(lessonProgress);
             return Ok(updProgress);
         }
+
+        [HttpGet("User-Assignments/{userId}")]
+        public async Task<ActionResult<IEnumerable<LessonProgress>>> GetUserProgressForAssignments(string userId)
+        {
+            var progresses = await lessonProgressService.GetUserLessonProgressesAssessedAsync(userId);
+            return Ok(progresses);
+        }
+
+        [HttpPost("Update-Status")]
+        public async Task<ActionResult<LessonProgress>> UpdateFeedbackStatusAsync(LessonProgress lessonProgress)
+        {
+            var updProgress = await lessonProgressService.SubmitFeedbackAsync(lessonProgress);
+            return Ok(updProgress);
+        }
     }
 }
