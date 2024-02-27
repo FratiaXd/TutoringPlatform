@@ -1,8 +1,36 @@
 ﻿@page "/profile/profilepages/profilecourses"
 @page "/admin/profilepages/profilecourses/{Id}"
+@rendermode InteractiveServer
 <h3>Profile Courses</h3>
+
+@foreach (var enrollment in UserEnrollments)
+{
+    <h4>@enrollment.Course.Title - @enrollment.EnrollmentStatus</h4>
+    <ul>
+        @foreach (var progress in SortedProgresses.Where(lp => lp.Lesson.CourseId == enrollment.Course.CourseId))
+        {
+            <li>@progress.Lesson.LessonTitle - @progress.LessonStatus - @progress.Lesson.LessonOrder</li>
+        }
+    </ul>
+}
 
 @code {
     [Parameter]
     public string Id { get; set; }
+    public List<Enrollment> UserEnrollments { get; set; } = new List<Enrollment>();
+    public List<LessonProgress> SortedProgresses { get; set; } = new List<LessonProgress>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(Id))
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var userPrincipal = authState.User;
+            Id = UserManager.GetUserId(userPrincipal);
+        }
+        var enrollments = await EnrollmentService.GetAllUserEnrollmentsAsync(Id);
+        var progresses = await LessonProgressService.GetUserLessonProgressesAsync(Id);
+        UserEnrollments = enrollments.ToList();
+        SortedProgresses = progresses.ToList();
+    }
 }

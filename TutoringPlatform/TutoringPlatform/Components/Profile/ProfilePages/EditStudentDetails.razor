@@ -1,10 +1,4 @@
-﻿@using System.ComponentModel.DataAnnotations
-@using TutoringPlatform.Components.Admin.AdminPages
-@inject UserManager<TutoringPlatformUser> UserManager
-@inject RoleManager<IdentityRole> RoleManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-<EditForm Model="Input" FormName="editprofile" OnValidSubmit="OnValidSubmitAsync" method="post">
+﻿<EditForm Model="Input" FormName="editprofile" OnValidSubmit="OnValidSubmitAsync" method="post">
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
     <div class="form-floating mb-3">

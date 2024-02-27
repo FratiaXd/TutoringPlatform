@@ -1,9 +1,4 @@
-﻿@using System.ComponentModel.DataAnnotations
-@inject UserManager<TutoringPlatformUser> UserManager
-@inject IEmailSender<TutoringPlatformUser> EmailSender
-@inject NavigationManager NavigationManager
-
-<EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
+﻿<EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
     <div class="form-floating mb-3">

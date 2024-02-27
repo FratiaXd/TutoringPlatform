@@ -34,7 +34,7 @@ namespace TutoringPlatform.Services
         {
             if (id == null) return null;
             using var context = _contextFactory.CreateDbContext();
-            return await context.Enrollments.Where(e => e.UserId == id).ToListAsync();
+            return await context.Enrollments.Include(e => e.Course).Where(e => e.UserId == id).ToListAsync();
         }
 
         public async Task<IEnumerable<Enrollment>> GetUserEnrollmentDataAsync(string id)

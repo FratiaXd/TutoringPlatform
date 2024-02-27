@@ -138,5 +138,24 @@ namespace TutoringPlatform.Services
             if (lessonProgresses == null) return null; 
             return lessonProgresses;
         }
+
+        public async Task<IEnumerable<LessonProgress>> GetUserLessonProgressesAsync(string userId)
+        {
+            if (userId == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var lessonProgresses = await context.LessonProgresses
+                            .Include(lp => lp.User)
+                            .Include(lp => lp.Lesson)
+                            .ThenInclude(l => l.Course)
+                            .Where(lp => lp.UserId == userId)
+                            .ToListAsync();
+
+            if (lessonProgresses == null) return null;
+
+            var sortedLessonProgresses = lessonProgresses.OrderBy(lp => lp.Lesson.CourseId);
+
+            return sortedLessonProgresses;
+        }
     }
 }

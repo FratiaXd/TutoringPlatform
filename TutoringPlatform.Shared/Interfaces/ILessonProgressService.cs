@@ -17,5 +17,6 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<LessonProgress> GetLessonProgressByIdAsync(int id);
         Task<LessonProgress> SubmitFeedbackAsync(LessonProgress lessonProgress);
         Task<IEnumerable<LessonProgress>> GetUserLessonProgressesAssessedAsync(string userId);
+        Task<IEnumerable<LessonProgress>> GetUserLessonProgressesAsync(string userId);
     }
 }

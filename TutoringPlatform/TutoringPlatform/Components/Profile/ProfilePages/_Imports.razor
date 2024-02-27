@@ -1,5 +1,21 @@
 ﻿@using TutoringPlatform.Components.Profile.Shared
 @using TutoringPlatform.Shared.Models
 @using TutoringPlatform.Shared.InputModels
+@using TutoringPlatform.Shared.Interfaces
+@using TutoringPlatform.Components.Account.Shared
+@using TutoringPlatform.Components.Account
+@using System.ComponentModel.DataAnnotations
+@using TutoringPlatform.Components.Admin.AdminPages
+@inject IEnrollmentService EnrollmentService
+@inject ILessonProgressService LessonProgressService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject UserManager<TutoringPlatformUser> UserManager
+@inject NavigationManager NavigationManager
+@inject ILogger<EditStudentPassword> Logger
+@inject SignInManager<TutoringPlatformUser> SignInManager
+@inject IEmailSender<TutoringPlatformUser> EmailSender
+@inject RoleManager<IdentityRole> RoleManager
+@inject ILogger<DeleteStudent> Logger
+@inject IdentityRedirectManager RedirectManager
 @layout ManageProfileLayout
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]

@@ -1,11 +1,7 @@
 ﻿@page "/profile/profilepages"
 @page "/admin/profilepages/{Id}"
-@using TutoringPlatform.Components.Account.Shared
 @rendermode InteractiveServer
 @attribute [Authorize]
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject UserManager<TutoringPlatformUser> UserManager
-@inject NavigationManager NavigationManager
 <h3>Student Details</h3>
 
 <p>Student id: @Id</p>
