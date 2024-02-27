@@ -1,0 +1,86 @@
+﻿@page "/admin/adminpages/processfeedback/{LessonProgressId:int}"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+<h3>Process Feedback</h3>
+
+@if (lessonProgress.User != null)
+{
+    <h3>User: @lessonProgress.User.Email</h3>
+}
+else
+{
+    <h3>User: N/A</h3>
+}
+<h4>Task: @assignment.TaskDescription</h4>
+<br />
+<p>Submission:</p>
+<p>@lessonProgress.SubmittedAssignment</p>
+
+
+@if (lessonProgress.TutorFeedback == null || activateEdit)
+{
+    <EditForm Model="Input" FormName="submitfeedback" OnValidSubmit="SubmitFeedback" method="post">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" role="alert" />
+        <div class="form-floating mb-3">
+            <InputText @bind-Value="Input.Feedback" class="form-control" placeholder="Feedback." />
+            <label for="feedback" class="form-label">Feedback</label>
+            <ValidationMessage For="() => Input.Feedback" class="text-danger" />
+        </div>
+        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit Feedback</button>
+    </EditForm>
+
+    if (activateEdit)
+    {
+        <Button Color="ButtonColor.Secondary" @onclick="CancelEdit">Cancel</Button>
+    }
+}
+else
+{
+    <p>Your feedback:</p>
+    <p>@lessonProgress.TutorFeedback</p>
+    <Button Color="ButtonColor.Primary" @onclick="EditFeedback">Edit Feedback</Button>
+}
+
+@code {
+    [Parameter]
+    public int LessonProgressId { get; set; }
+    public LessonProgress lessonProgress { get; set; } = new LessonProgress();
+    public Assignment assignment { get; set; } = new Assignment();
+    private InputModel Input { get; set; } = new InputModel();
+    public bool activateEdit { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        lessonProgress = await LessonProgressService.GetLessonProgressByIdAsync(LessonProgressId);
+        assignment = await AssignmentService.GetAssignmentByLessonId(lessonProgress.LessonId);
+    }
+
+    private async Task SubmitFeedback()
+    {
+        var newFeedback = new LessonProgress
+        {
+            LessonProgressId = LessonProgressId,
+            TutorFeedback = Input.Feedback,
+            FeedbackStatus = "Reviewed"
+        };
+        await LessonProgressService.SubmitFeedbackAsync(newFeedback);
+        lessonProgress.TutorFeedback = Input.Feedback;
+        activateEdit = false;
+    }
+
+    private void EditFeedback()
+    {
+        activateEdit = true;
+    }
+
+    private void CancelEdit()
+    {
+        activateEdit = false;
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        public string? Feedback { get; set; }
+    }
+}

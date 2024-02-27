@@ -78,5 +78,47 @@ namespace TutoringPlatform.Services
             await context.SaveChangesAsync();
             return existingProgress;
         }
+
+        public async Task<IEnumerable<LessonProgress>> GetLessonProgressesForFeedbackAsync()
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var lessonProgresses = await context.LessonProgresses
+                                        .Include(lp => lp.User)
+                                        .Include(lp => lp.Lesson)
+                                        .Where(lp => lp.FeedbackStatus != null)
+                                        .ToListAsync();
+            return lessonProgresses;
+        }
+
+        public async Task<LessonProgress> GetLessonProgressByIdAsync(int id)
+        {
+            if (id == 0) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingProgress = await context.LessonProgresses
+                .Include(lp => lp.User)
+                .Include(lp => lp.Lesson)
+                .FirstOrDefaultAsync(lp => lp.LessonProgressId == id);
+
+            if (existingProgress == null) return null;
+
+            return existingProgress;
+        }
+
+        public async Task<LessonProgress> SubmitFeedbackAsync(LessonProgress lessonProgress)
+        {
+            if (lessonProgress == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingProgress = await context.LessonProgresses.FirstOrDefaultAsync(lp => lp.LessonProgressId == lessonProgress.LessonProgressId);
+
+            if (existingProgress == null) return null;
+
+            existingProgress.TutorFeedback = lessonProgress.TutorFeedback;
+            existingProgress.FeedbackStatus = lessonProgress.FeedbackStatus;
+            
+            await context.SaveChangesAsync();
+            return existingProgress;
+        }
     }
 }

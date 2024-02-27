@@ -60,5 +60,15 @@ namespace TutoringPlatform.Services
             await context.SaveChangesAsync();
             return assignment;
         }
+
+        public async Task<Assignment> GetAssignmentByLessonId(int lessonId)
+        {
+            if (lessonId == 0) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var assignment = await context.Assignments.FirstOrDefaultAsync(a => a.LessonId == lessonId);
+            if (assignment == null) { return null; }
+            return assignment;
+        }
     }
 }

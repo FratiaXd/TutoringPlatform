@@ -13,5 +13,6 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<Assignment> DeleteAssignmentAsync(int id);
         Task<Assignment> GetAssignmentByIdAsync(int id);
         Task<Assignment> UpdateAssignmentAsync(Assignment assignment);
+        Task<Assignment> GetAssignmentByLessonId(int lessonId);
     }
 }

@@ -40,5 +40,20 @@ namespace TutoringPlatform.Client.ApiServices
             var response = await updProgress.Content.ReadFromJsonAsync<LessonProgress>();
             return response!;
         }
+
+        public async Task<IEnumerable<LessonProgress>> GetLessonProgressesForFeedbackAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LessonProgress> GetLessonProgressByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<LessonProgress> SubmitFeedbackAsync(LessonProgress lessonProgress)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
