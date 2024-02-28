@@ -1,5 +1,5 @@
 ﻿@implements IDisposable
-
+@rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
@@ -69,7 +69,8 @@
                 </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="feedback">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Feedback
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Feedback    
+                        <Badge class="ms-2">New</Badge>
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
