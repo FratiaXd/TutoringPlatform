@@ -105,7 +105,7 @@ namespace TutoringPlatform.Client.ApiServices
             CartAction?.Invoke();
         }
 
-        public async Task<List<Order>> MyOrders()
+        public async Task<List<Order>> MyOrders(string userId)
         {
             //throw new NotImplementedException();
             IsCartLoaderVisible = true;
@@ -122,6 +122,7 @@ namespace TutoringPlatform.Client.ApiServices
                 cartList.Add(new Order()
                 {
                     CourseId = course.CourseId,
+                    UserId = userId,
                     Name = course.Title,
                     Quantity = cartItem.Quantity,
                     Price = course.Price,

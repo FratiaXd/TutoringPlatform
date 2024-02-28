@@ -70,8 +70,17 @@
 
     private async Task AddToCart(Course course)
     {
-        var response = await CartService.AddToCart(course);
-        ShowMessage(ToastType.Secondary, response.Message);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            var response = await CartService.AddToCart(course);
+            ShowMessage(ToastType.Secondary, response.Message);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("Account/Login");
+        }
     }
 
     private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));

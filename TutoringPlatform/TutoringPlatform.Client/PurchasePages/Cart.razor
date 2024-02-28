@@ -2,6 +2,8 @@
 @using TutoringPlatform.Shared.Responses
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
 @if (CartService.IsCartLoaderVisible)
 {
     <p>Loading...</p>
@@ -37,9 +39,7 @@ else
                         <td>@item.Quantity</td>
                         <td>@item.SubTotal</td>
                         <td>
-@*                             <a id="changeCursor" @onclick="async () => await DeleteCart(item)">
-                                <i class="fa fa-trash text-danger"></i>
-                            </a> *@
+                            <Button Color="ButtonColor.Danger" @onclick="async () => await DeleteCart(item)">Delete</Button>
                         </td>
                     </tr>
                     count++;
@@ -53,20 +53,11 @@ else
     <Button Color="ButtonColor.Success">Proceed To Checkout</Button>
 }
 
-<h4>@result</h4>
-
-<style>
-    #changeCursor {
-        cursor: pointer;
-    }
-</style>
-
 @code {
     private string CurUserId { get; set; }
     public int SkipValue;
     public int TakeValue = 3;
-    public string? result;
-
+    List<ToastMessage> messages = new List<ToastMessage>();
     List<Order> MyCartOrders = new();
 
     protected override async Task OnInitializedAsync()
@@ -75,11 +66,22 @@ else
         var user = authState.User;
         CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        MyCartOrders = await CartService.MyOrders();      
+        MyCartOrders = await CartService.MyOrders(CurUserId);      
     }
 
-    private void DisplayResponse(ServiceResponse serviceResponse)
+    public async Task DeleteCart(Order cart)
     {
-        result = serviceResponse.Message;
+        MyCartOrders.Remove(MyCartOrders.FirstOrDefault(c => c.CourseId == cart.CourseId)!);
+        var response = await CartService.DeleteCart(cart);
+        ShowMessage(ToastType.Secondary, response.Message);
     }
+
+    private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string message)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Message = message,
+        };
 }
