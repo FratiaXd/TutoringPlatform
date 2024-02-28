@@ -13,5 +13,6 @@ namespace TutoringPlatform.Shared.Interfaces
         Task<IEnumerable<Enrollment>> GetAllUserEnrollmentsAsync(string id);
         Task<IEnumerable<Enrollment>> GetUserEnrollmentDataAsync(string id);
         Task<Enrollment> UpdateEnrollmentDetailsAsync(Enrollment enrollment);
+        Task<Enrollment> UpdateLastAccessedTimeAsync(Enrollment enrollment);
     }
 }

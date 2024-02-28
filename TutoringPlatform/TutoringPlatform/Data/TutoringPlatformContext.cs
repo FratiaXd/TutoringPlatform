@@ -20,6 +20,7 @@ public class TutoringPlatformContext : IdentityDbContext<TutoringPlatformUser>
     public DbSet<QuizQuestion> QuizQuestions { get; set; }
     public DbSet<QuizOption> QuizOptions { get; set; }
     public DbSet<Assignment> Assignments { get; set; }
+    public DbSet<Order> Orders { get; set; }
 
 protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -97,6 +98,20 @@ protected override void OnModelCreating(ModelBuilder builder)
             .HasOne(qo => qo.QuizQuestion)
             .WithMany(qq => qq.QuizOptions)
             .HasForeignKey(qo => qo.QuizQuestionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        //Order to User relationship (many to one)
+        builder.Entity<Order>()
+            .HasOne(o => o.User)
+            .WithMany(u => u.Orders)
+            .HasForeignKey(o => o.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        //Order to Course relationship (many to one)
+        builder.Entity<Order>()
+            .HasOne(o => o.Course)
+            .WithMany(c => c.Orders)
+            .HasForeignKey(o => o.CourseId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

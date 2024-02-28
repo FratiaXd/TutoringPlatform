@@ -54,6 +54,7 @@ namespace TutoringPlatform.Services
                 CourseId = e.CourseId,
                 LatestLessonId = e.LatestLessonId,
                 EnrollmentStatus = e.EnrollmentStatus,
+                LastAccessed = e.LastAccessed,
 
                 Course = new Course
                 {
@@ -84,6 +85,22 @@ namespace TutoringPlatform.Services
 
             existingEnrollment.LatestLessonId = enrollment.LatestLessonId;
             existingEnrollment.EnrollmentStatus = enrollment.EnrollmentStatus;
+
+            await context.SaveChangesAsync();
+            return existingEnrollment;
+        }
+
+        public async Task<Enrollment> UpdateLastAccessedTimeAsync(Enrollment enrollment)
+        {
+            if (enrollment == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingEnrollment = await context.Enrollments
+                .FirstOrDefaultAsync(e => e.UserId == enrollment.UserId && e.CourseId == enrollment.CourseId);
+
+            if (existingEnrollment == null) return null;
+
+            existingEnrollment.LastAccessed = enrollment.LastAccessed;
 
             await context.SaveChangesAsync();
             return existingEnrollment;

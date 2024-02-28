@@ -40,5 +40,12 @@ namespace TutoringPlatform.Client.ApiServices
             var response = await updEnrollment.Content.ReadFromJsonAsync<Enrollment>();
             return response!;
         }
+
+        public async Task<Enrollment> UpdateLastAccessedTimeAsync(Enrollment enrollment)
+        {
+            var updEnrollment = await httpClient.PostAsJsonAsync("api/Enrollment/Update-Time", enrollment);
+            var response = await updEnrollment.Content.ReadFromJsonAsync<Enrollment>();
+            return response!;
+        }
     }
 }

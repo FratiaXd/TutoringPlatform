@@ -18,5 +18,6 @@ public class TutoringPlatformUser : IdentityUser
     //Relationships
     public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     public ICollection<LessonProgress> LessonProgresses { get; set; } = new List<LessonProgress>();
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
 }
 

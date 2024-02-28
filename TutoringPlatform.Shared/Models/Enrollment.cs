@@ -12,6 +12,7 @@ namespace TutoringPlatform.Shared.Models
         public string UserId { get; set; }
         public int CourseId { get; set; }
         public int? LatestLessonId { get; set; }
+        public DateTime LastAccessed { get; set; }
 
         //Properties
         [MaxLength(20)]

@@ -22,5 +22,6 @@ namespace TutoringPlatform.Shared.Models
         //Relationships
         public ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
         public ICollection<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
     }
 }
