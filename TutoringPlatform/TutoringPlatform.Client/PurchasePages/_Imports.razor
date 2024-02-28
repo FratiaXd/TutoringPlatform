@@ -1,2 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Authorization
+@using TutoringPlatform.Client.PrivateInterfaces
+@inject ICart CartService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]

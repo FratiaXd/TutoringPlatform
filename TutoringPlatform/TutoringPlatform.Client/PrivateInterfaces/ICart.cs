@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TutoringPlatform.Shared.Models;
+﻿using TutoringPlatform.Shared.Models;
 using TutoringPlatform.Shared.Responses;
 
-namespace TutoringPlatform.Shared.Interfaces
+namespace TutoringPlatform.Client.PrivateInterfaces
 {
     public interface ICart
     {

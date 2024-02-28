@@ -1,5 +1,9 @@
 ﻿@page "/browse"
-@rendermode @(new InteractiveAutoRenderMode(prerender: false))
+@using TutoringPlatform.Client.PrivateInterfaces
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@inject ICart CartService
+
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
 <h3>BrowseCourses</h3>
 
@@ -31,7 +35,7 @@
                             <td>
                                 @if (course.Price > 0)
                                 {
-                                    <Button Color="ButtonColor.Success">Add to cart</Button>
+                                    <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
                                 }
                             </td>
                         </tr>
@@ -44,6 +48,7 @@
 
 @code {
     private List<Course> Courses { get; set; } = new List<Course>();
+    List<ToastMessage> messages = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -62,4 +67,19 @@
     {
         NavigationManager.NavigateTo($"coursepreview/{course.CourseId}");
     }
+
+    private async Task AddToCart(Course course)
+    {
+        var response = await CartService.AddToCart(course);
+        ShowMessage(ToastType.Secondary, response.Message);
+    }
+
+    private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string message)
+    => new ToastMessage
+        {
+            Type = toastType,
+            Message = message,
+        };
 }

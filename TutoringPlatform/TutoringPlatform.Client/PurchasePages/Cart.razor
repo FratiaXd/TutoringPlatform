@@ -1,6 +1,85 @@
 ﻿@page "/cart"
-<h3>Cart</h3>
+@using TutoringPlatform.Shared.Responses
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@if (CartService.IsCartLoaderVisible)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h3>Cart</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Course Title</th>
+                <th>Image</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (MyCartOrders is not null)
+            {
+                var listData = MyCartOrders.Skip(SkipValue).Take(TakeValue).ToList();
+                int count = 1;
+                foreach (var item in listData)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.Name</td>
+                        <td>@item.Image</td>
+                        <td>@item.Price</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.SubTotal</td>
+                        <td>
+@*                             <a id="changeCursor" @onclick="async () => await DeleteCart(item)">
+                                <i class="fa fa-trash text-danger"></i>
+                            </a> *@
+                        </td>
+                    </tr>
+                    count++;
+                }
+            }
+        </tbody>
+    </table>
+    <br />
+    <p>Total Items: @MyCartOrders!.Count</p>
+    <p>Total Price: @MyCartOrders.Sum(c => c.SubTotal).ToString("#.##")</p>
+    <Button Color="ButtonColor.Success">Proceed To Checkout</Button>
+}
+
+<h4>@result</h4>
+
+<style>
+    #changeCursor {
+        cursor: pointer;
+    }
+</style>
 
 @code {
+    private string CurUserId { get; set; }
+    public int SkipValue;
+    public int TakeValue = 3;
+    public string? result;
 
+    List<Order> MyCartOrders = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        MyCartOrders = await CartService.MyOrders();      
+    }
+
+    private void DisplayResponse(ServiceResponse serviceResponse)
+    {
+        result = serviceResponse.Message;
+    }
 }
