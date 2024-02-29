@@ -42,6 +42,7 @@ namespace TutoringPlatform.Services
 
             existingProgress.SubmittedAssignment = lessonProgress.SubmittedAssignment;
             existingProgress.FeedbackStatus = lessonProgress.FeedbackStatus;
+            existingProgress.FeedbackTimeStamp = lessonProgress.FeedbackTimeStamp;
 
             await context.SaveChangesAsync();
             return existingProgress;
@@ -87,6 +88,7 @@ namespace TutoringPlatform.Services
                                         .Include(lp => lp.Lesson)
                                         .ThenInclude(l => l.Course)
                                         .Where(lp => lp.FeedbackStatus != null)
+                                        .OrderByDescending(lp => lp.FeedbackTimeStamp)
                                         .ToListAsync();
             return lessonProgresses;
         }
@@ -118,6 +120,7 @@ namespace TutoringPlatform.Services
 
             existingProgress.TutorFeedback = lessonProgress.TutorFeedback;
             existingProgress.FeedbackStatus = lessonProgress.FeedbackStatus;
+            existingProgress.FeedbackTimeStamp = lessonProgress.FeedbackTimeStamp;
             
             await context.SaveChangesAsync();
             return existingProgress;
@@ -133,6 +136,7 @@ namespace TutoringPlatform.Services
                             .Include(lp => lp.Lesson)
                             .ThenInclude(l => l.Course)
                             .Where(lp => lp.UserId == userId && lp.SubmittedAssignment != null)
+                            .OrderByDescending(lp => lp.FeedbackTimeStamp)
                             .ToListAsync();
 
             if (lessonProgresses == null) return null; 

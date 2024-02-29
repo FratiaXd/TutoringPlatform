@@ -41,7 +41,8 @@ else
             UserId = CurUserId,
             LessonId = Assignment.LessonId,
             SubmittedAssignment = Input.AssignmentAnswer,
-            FeedbackStatus = "Waiting"
+            FeedbackStatus = "Waiting",
+            FeedbackTimeStamp = DateTime.Now
         };
 
         var updatedLessonProgress = await LessonProgressService.SubmitAssignmentAsync(addAssignment);

@@ -19,6 +19,7 @@ namespace TutoringPlatform.Shared.Models
         public string? LessonStatus { get; set; }
         [MaxLength(20)]
         public string? FeedbackStatus { get; set; }
+        public DateTime FeedbackTimeStamp { get; set; }
 
         //Relationships
         public TutoringPlatformUser? User { get; set; }

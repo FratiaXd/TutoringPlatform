@@ -61,7 +61,8 @@ else
         {
             LessonProgressId = LessonProgressId,
             TutorFeedback = Input.Feedback,
-            FeedbackStatus = "Reviewed"
+            FeedbackStatus = "Reviewed",
+            FeedbackTimeStamp = DateTime.Now
         };
         await LessonProgressService.SubmitFeedbackAsync(newFeedback);
         lessonProgress.TutorFeedback = Input.Feedback;
