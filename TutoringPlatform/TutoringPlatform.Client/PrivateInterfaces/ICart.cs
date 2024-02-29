@@ -12,5 +12,6 @@ namespace TutoringPlatform.Client.PrivateInterfaces
         Task<List<Order>> MyOrders(string userId);
         Task<ServiceResponse> DeleteCart(Order cart);
         bool IsCartLoaderVisible { get; set; }
+        Task<string> Checkout(List<Order> cartItems);
     }
 }

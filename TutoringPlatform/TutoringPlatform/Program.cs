@@ -9,6 +9,7 @@ using TutoringPlatform.Shared.Models;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Services;
 using System.Text.Json.Serialization;
+using TutoringPlatform.PrivateInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IQuizService, QuizService>();
 builder.Services.AddScoped<IAssignmentService, AssignmentService>();
 builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 builder.Services.AddScoped<ILessonProgressService, LessonProgressService>();
+builder.Services.AddScoped<IPayment, PaymentService>();
 builder.Services.AddScoped<BuilderStateService>();
 
 builder.Services.AddScoped(http => new HttpClient

@@ -50,7 +50,7 @@ else
     <br />
     <p>Total Items: @MyCartOrders!.Count</p>
     <p>Total Price: @MyCartOrders.Sum(c => c.SubTotal).ToString("#.##")</p>
-    <Button Color="ButtonColor.Success">Proceed To Checkout</Button>
+    <Button Color="ButtonColor.Success" @onclick="Checkout">Proceed To Checkout</Button>
 }
 
 @code {
@@ -74,6 +74,17 @@ else
         MyCartOrders.Remove(MyCartOrders.FirstOrDefault(c => c.CourseId == cart.CourseId)!);
         var response = await CartService.DeleteCart(cart);
         ShowMessage(ToastType.Secondary, response.Message);
+    }
+
+    public async Task Checkout()
+    {
+        if (MyCartOrders is null)
+        {
+            ShowMessage(ToastType.Secondary, "No items in the cart.");
+        }
+
+        var url = await CartService.Checkout(MyCartOrders!);
+        NavigationManager.NavigateTo(url);
     }
 
     private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
