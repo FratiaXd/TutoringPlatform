@@ -19,5 +19,10 @@ namespace TutoringPlatform.Client.ApiServices
             var response = await newOrder.Content.ReadFromJsonAsync<Order>();
             return response!;
         }
+
+        public Task<IEnumerable<Order>> GetUserOrderHistoryAsync(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

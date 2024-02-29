@@ -10,5 +10,6 @@ namespace TutoringPlatform.Shared.Interfaces
     public interface IOrderService
     {
         Task<Order> AddOrderAsync(Order order);
+        Task<IEnumerable<Order>> GetUserOrderHistoryAsync(string id);
     }
 }

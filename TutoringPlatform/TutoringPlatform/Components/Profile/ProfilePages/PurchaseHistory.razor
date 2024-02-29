@@ -1,0 +1,44 @@
+﻿@page "/profile/profilepages/purchasehistory"
+@page "/admin/profilepages/purchasehistory/{Id}"
+@rendermode InteractiveServer
+<h3>Purchase History</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course Title</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Order time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var record in UserOrders)
+        {
+            <tr>
+                <td>@record.Name</td>
+                <td>@record.Price</td>
+                <td>@record.Quantity</td>
+                <td>@record.OrderTime</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    public List<Order> UserOrders { get; set; } = new List<Order>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(Id))
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var userPrincipal = authState.User;
+            Id = UserManager.GetUserId(userPrincipal);
+        }
+        var userOrders = await OrderService.GetUserOrderHistoryAsync(Id);
+        UserOrders = userOrders.ToList();
+    }
+}

@@ -12,6 +12,9 @@
     <li class="nav-item">
         <NavLink class="nav-link" href="@GetCoursesLink()">Courses</NavLink>
     </li>
+    <li class="nav-item">
+        <NavLink class="nav-link" href="@GetPurchasesLink()">Purchase History</NavLink>
+    </li>
 </ul>
 
 @code {
@@ -65,7 +68,11 @@
 
     private string GetCoursesLink()
     {
-        // Similarly, adjust for courses link
         return IsAdminViewingAnotherUserProfile() ? $"Admin/ProfilePages/ProfileCourses/{selectedUserId}" : "Profile/ProfilePages/ProfileCourses";
+    }
+
+    private string GetPurchasesLink()
+    {
+        return IsAdminViewingAnotherUserProfile() ? $"Admin/ProfilePages/purchasehistory/{selectedUserId}" : "Profile/ProfilePages/purchasehistory";
     }
 }

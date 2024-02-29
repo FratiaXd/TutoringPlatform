@@ -23,5 +23,21 @@ namespace TutoringPlatform.Services
             await context.SaveChangesAsync();
             return newOrder;
         }
+
+        public async Task<IEnumerable<Order>> GetUserOrderHistoryAsync(string id)
+        {
+            if (id == null) return null;
+            using var context = _contextFactory.CreateDbContext();
+
+            var existingOrders = await context.Orders
+                .Include(o => o.Course)
+                .Where(o => o.UserId == id)
+                .OrderByDescending(o => o.OrderTime)
+                .ToListAsync();
+
+            if (existingOrders == null) return null;
+
+            return existingOrders;
+        }
     }
 }
