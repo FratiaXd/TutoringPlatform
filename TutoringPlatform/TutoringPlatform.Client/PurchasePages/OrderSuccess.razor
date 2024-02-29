@@ -5,9 +5,37 @@
 <h2>Thank you for your order. Purchased course is now available in My Courses library.</h2>
 
 @code {
+    List<Order> MyCartOrders = new();
+    private string CurUserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        MyCartOrders = await CartService.MyOrders(CurUserId);
+
+        await ProcessOrdersAndEnrollments();
+
         await CartService.DeleteAllCartOrders();
+    }
+
+    public async Task ProcessOrdersAndEnrollments()
+    {
+        foreach (var order in MyCartOrders)
+        {
+            order.OrderTime = DateTime.Now;
+
+            var enrollment = new Enrollment()
+            {
+                UserId = CurUserId,
+                CourseId = order.CourseId,
+                EnrollmentStatus = "In Progress"
+            };
+
+            await EnrollmentService.EnrollUserAsync(enrollment);
+            await OrderService.AddOrderAsync(order);
+        }
     }
 }

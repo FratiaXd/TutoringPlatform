@@ -81,9 +81,27 @@
 
     public async Task OpenCourse(Enrollment enrollment)
     {
+        if (enrollment.LatestLessonId == null)
+        {
+            var firstLessonId = await CourseService.GetLessonIdForCourseAsync(enrollment.CourseId, 1);
+            enrollment.LatestLessonId = firstLessonId;
+            await CreateProgressRecord(firstLessonId);
+        }
         enrollment.LastAccessed = DateTime.Now;
         await EnrollmentService.UpdateLastAccessedTimeAsync(enrollment);
         var id = enrollment.CourseId;
         NavigationManager.NavigateTo($"/coursepages/learning/{id}");
+    }
+
+    private async Task<LessonProgress> CreateProgressRecord(int lessonId)
+    {
+        var newProgress = new LessonProgress
+            {
+                UserId = CurUserId,
+                LessonId = lessonId,
+                LessonStatus = "In Progress"
+            };
+
+        return await LessonProgressService.AddLessonProgressRecordAsync(newProgress);
     }
 }

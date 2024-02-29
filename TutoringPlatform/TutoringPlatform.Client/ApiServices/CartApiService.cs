@@ -150,10 +150,6 @@ namespace TutoringPlatform.Client.ApiServices
 
         public async Task<string> Checkout(List<Order> cartItems)
         {
-            foreach (var cartItem in cartItems)
-            {
-                cartItem.OrderTime = DateTime.Now;
-            }
             var response = await httpClient.PostAsync("api/Payment/Checkout", GenerateStringContent(SerializeObj(cartItems)));
 
             var url = await response.Content.ReadAsStringAsync();

@@ -101,6 +101,7 @@ namespace TutoringPlatform.Services
             if (existingEnrollment == null) return null;
 
             existingEnrollment.LastAccessed = enrollment.LastAccessed;
+            existingEnrollment.LatestLessonId = enrollment.LatestLessonId;
 
             await context.SaveChangesAsync();
             return existingEnrollment;

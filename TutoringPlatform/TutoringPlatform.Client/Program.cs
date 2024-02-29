@@ -23,6 +23,7 @@ builder.Services.AddScoped<ILessonProgressService, LessonProgressApiService>();
 builder.Services.AddScoped<ILessonService, LessonApiService>();
 builder.Services.AddScoped<IQuizService, QuizApiService>();
 builder.Services.AddScoped<ICart, CartApiService>();
+builder.Services.AddScoped<IOrderService, OrderApiService>();
 
 builder.Services.AddBlazorBootstrap();
 builder.Services.AddBlazoredLocalStorage();
