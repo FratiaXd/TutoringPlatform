@@ -33,7 +33,18 @@
                                 <Button Color="ButtonColor.Success" @onclick="() => OpenCourse(course)">Open</Button>
                             </td>
                             <td>
-                                @if (course.Price > 0)
+                                @if (user.Identity.IsAuthenticated)
+                                {
+                                    if (course.Price > 0 && !IsCoursePurchased(course.CourseId))
+                                    {
+                                        <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
+                                    }
+                                    else if (IsCoursePurchased(course.CourseId))
+                                    {
+                                        <p>In your library.</p>
+                                    }
+                                }
+                                else if (course.Price > 0)
                                 {
                                     <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
                                 }
@@ -48,11 +59,22 @@
 
 @code {
     private List<Course> Courses { get; set; } = new List<Course>();
+    private List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     List<ToastMessage> messages = new List<ToastMessage>();
+    private string CurUserId { get; set; }
+    private ClaimsPrincipal? user { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await LoadCourses();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        if (user.Identity?.IsAuthenticated == true)
+        {
+            CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await EnrollmentService.GetAllUserEnrollmentsAsync(CurUserId);
+            Enrollments = result.ToList();
+        }
     }
 
     private async Task LoadCourses()
@@ -70,8 +92,6 @@
 
     private async Task AddToCart(Course course)
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
         if (user.Identity?.IsAuthenticated == true)
         {
             var response = await CartService.AddToCart(course);
@@ -81,6 +101,11 @@
         {
             NavigationManager.NavigateTo("Account/Login");
         }
+    }
+
+    private bool IsCoursePurchased(int courseId)
+    {
+        return Enrollments.Any(e => e.CourseId == courseId);
     }
 
     private void ShowMessage(ToastType toastType, string message) => messages.Add(CreateToastMessage(toastType, message));
