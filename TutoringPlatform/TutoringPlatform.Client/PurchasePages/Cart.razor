@@ -4,7 +4,7 @@
 
 <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
-@if (CartService.IsCartLoaderVisible)
+@if (!load)
 {
     <p>Loading...</p>
 }
@@ -48,8 +48,11 @@ else
         </tbody>
     </table>
     <br />
-    <p>Total Items: @MyCartOrders!.Count</p>
-    <p>Total Price: @MyCartOrders.Sum(c => c.SubTotal).ToString("#.##")</p>
+    @if (MyCartOrders is not null)
+    {
+        <p>Total Items: @MyCartOrders!.Count</p>
+        <p>Total Price: @MyCartOrders.Sum(c => c.SubTotal).ToString("#.##")</p>
+    }
     <Button Color="ButtonColor.Success" @onclick="Checkout">Proceed To Checkout</Button>
 }
 
@@ -59,6 +62,7 @@ else
     public int TakeValue = 3;
     List<ToastMessage> messages = new List<ToastMessage>();
     List<Order> MyCartOrders = new();
+    public bool load = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,9 +82,10 @@ else
 
     public async Task Checkout()
     {
-        if (MyCartOrders is null)
+        if (MyCartOrders.Count == 0)
         {
             ShowMessage(ToastType.Secondary, "No items in the cart.");
+            return;
         }
 
         var url = await CartService.Checkout(MyCartOrders!);

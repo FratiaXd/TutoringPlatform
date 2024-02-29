@@ -90,6 +90,20 @@ namespace TutoringPlatform.Client.ApiServices
             return new ServiceResponse(true, "Course removed successfully");
         }
 
+        public async Task<ServiceResponse> DeleteAllCartOrders()
+        {
+            try
+            {
+                await RemoveCartFromLocalStorage();
+                await GetCartCount();
+                return new ServiceResponse(true, "All orders removed successfully");
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse(false, $"Failed to remove orders: {ex.Message}");
+            }
+        }
+
         public async Task GetCartCount()
         {
             //throw new NotImplementedException();
@@ -136,6 +150,10 @@ namespace TutoringPlatform.Client.ApiServices
 
         public async Task<string> Checkout(List<Order> cartItems)
         {
+            foreach (var cartItem in cartItems)
+            {
+                cartItem.OrderTime = DateTime.Now;
+            }
             var response = await httpClient.PostAsync("api/Payment/Checkout", GenerateStringContent(SerializeObj(cartItems)));
 
             var url = await response.Content.ReadAsStringAsync();

@@ -1,8 +1,13 @@
 ﻿@page "/order-success"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 <h1>Order Success</h1>
 <h2>Thank you for your order. Purchased course is now available in My Courses library.</h2>
 
 @code {
 
+    protected override async Task OnInitializedAsync()
+    {
+        await CartService.DeleteAllCartOrders();
+    }
 }
