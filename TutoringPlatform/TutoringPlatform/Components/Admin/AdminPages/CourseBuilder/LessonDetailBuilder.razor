@@ -109,6 +109,12 @@
         Input.IsAutograded = updatedLesson.IsAutograded;
         Input.IsAssessed = updatedLesson.IsAssessed;
         Input.LessonOrder = updatedLesson.LessonOrder;
+        
+        if (updatedLesson.LessonVideoUrl is not null)
+        {
+            SearchVideo();
+        }
+
         QuizExists = IsQuizCreated();
         AssignmentExists = IsAssignmentCreated();
     }
@@ -118,6 +124,11 @@
         if (await LessonService.IsTitleUsedAsync(LessonId.Value, Input.LessonTitle))
         {
             message = "The lesson with this title already exists.";
+            return;
+        }
+        if (lessonVideo is null || updatedLesson.LessonVideoUrl != Input.LessonVideoUrl)
+        {
+            message = "Please search your video first";
             return;
         }
         updatedLesson.LessonTitle = Input.LessonTitle;
@@ -172,6 +183,7 @@
         {
             message = string.Empty;
             lessonVideo = videoInfo;
+            StateHasChanged();
         }
     }
 
