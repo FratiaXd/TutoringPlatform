@@ -1,8 +1,19 @@
-﻿<h3>LessonContent</h3>
+﻿@rendermode InteractiveAuto
+<h3>LessonContent</h3>
 <h4>Title: @Lesson.LessonTitle</h4>
 <br />
 <p>Description: @Lesson.LessonDescription</p>
-<p>Video: @Lesson.LessonVideoUrl</p>
+
+@if (EmbedLink is not null)
+{
+    <iframe width="560" height="315"
+            src="@EmbedLink"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+}
+
 <p>Image: @Lesson.LessonImageUrl</p>
 <p>Content: @Lesson.LessonContent</p>
 
@@ -11,4 +22,52 @@
     public Lesson Lesson { get; set; }
     [Parameter]
     public string CurUserId { get; set; }
+    public string EmbedLink { get; set; }
+
+    protected async Task FetchEmbedLink()
+    {
+        EmbedLink = null;
+        var videoId = GetYouTubeVideoId(Lesson.LessonVideoUrl);
+        if (videoId is not null)
+        {
+            EmbedLink = "https://www.youtube.com/embed/" + videoId;
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await FetchEmbedLink();
+    }
+
+    public string GetYouTubeVideoId(string youtubeUrl)
+    {
+        // Check if the URL is valid
+        if (Uri.TryCreate(youtubeUrl, UriKind.Absolute, out Uri uriResult) &&
+            (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+        {
+            // Split the URL by '?' and '&', then find the parameter with key 'v'
+            string[] queryParams = uriResult.Query.TrimStart('?').Split('&');
+            foreach (string param in queryParams)
+            {
+                string[] keyValue = param.Split('=');
+                if (keyValue.Length == 2 && keyValue[0] == "v")
+                {
+                    // Return the value of the 'v' parameter (YouTube video ID)
+                    string videoId = keyValue[1];
+
+                    // If there's additional text after the video ID (e.g., &t=312s), remove it
+                    int index = videoId.IndexOf('&');
+                    if (index != -1)
+                    {
+                        videoId = videoId.Substring(0, index);
+                    }
+
+                    return videoId;
+                }
+            }
+        }
+
+        // If no 'v' parameter found or URL is invalid, return null
+        return null;
+    }
 }

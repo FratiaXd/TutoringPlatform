@@ -118,7 +118,7 @@
         QuizExists = IsQuizCreated();
         AssignmentExists = IsAssignmentCreated();
     }
-
+    //TODO NEED TO ADD CHECK FOR CHANGING THE VIDEO
     private async Task UpdateLesson()
     {
         if (await LessonService.IsTitleUsedAsync(LessonId.Value, Input.LessonTitle))
@@ -126,7 +126,7 @@
             message = "The lesson with this title already exists.";
             return;
         }
-        if (lessonVideo is null || updatedLesson.LessonVideoUrl != Input.LessonVideoUrl)
+        if (lessonVideo is null)
         {
             message = "Please search your video first";
             return;
