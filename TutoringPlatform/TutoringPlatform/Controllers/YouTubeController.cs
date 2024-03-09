@@ -2,6 +2,7 @@
 using Google.Apis.YouTube.v3;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TutoringPlatform.Shared.Models;
 
 namespace TutoringPlatform.Controllers
 {
@@ -23,7 +24,14 @@ namespace TutoringPlatform.Controllers
 
             var videoResponse = await videoRequest.ExecuteAsync();
 
-            return Ok(videoResponse);
+            var video = videoResponse.Items.Select(item => new VideoDetails
+            {
+                title = item.Snippet.Title,
+                thumbnail = item.Snippet.Thumbnails.Medium.Url,
+                publishedAt = item.Snippet.PublishedAtDateTimeOffset
+            });
+
+            return Ok(video);
         }
     }
 }

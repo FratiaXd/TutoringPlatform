@@ -103,6 +103,6 @@ app.UseSwaggerUI();
 //    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
 //    options.RoutePrefix = string.Empty;
 //    options.DocumentTitle = "My Swagger";
-//})
+//}
 
 app.Run();

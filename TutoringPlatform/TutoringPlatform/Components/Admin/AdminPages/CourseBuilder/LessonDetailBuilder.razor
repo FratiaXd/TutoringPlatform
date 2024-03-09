@@ -38,6 +38,24 @@
             <Button Color="ButtonColor.Primary" @onclick="SearchVideo">Search</Button>
         </div>
     </div>
+    @if (lessonVideo != null)
+    {
+        <div class="card mt-3">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img class="card-img" style="max-width: 200px;" src="@lessonVideo.thumbnail" alt="Video Thumbnail">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Video Details</h5>
+                        <p class="card-text">Video Title: @lessonVideo.title</p>
+                        <p class="card-text">Published At: @lessonVideo.publishedAt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+    }
     <div class="form-floating mb-3">
         <InputText @bind-Value="Input.LessonImageUrl" class="form-control" placeholder="Please add course image." />
         <label for="image-url" class="form-label">Lesson Image</label>
@@ -77,6 +95,8 @@
     private LessonInput Input { get; set; } = new LessonInput();
 
     private Modal deleteModal = default!;
+
+    public VideoDetails? lessonVideo { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -141,7 +161,50 @@
 
     private async Task SearchVideo()
     {
-        
+        lessonVideo = null;
+        var videoId = GetYouTubeVideoId(Input.LessonVideoUrl);
+        var videoInfo = await YouTubeService.GetVideoByIdAsync(videoId);
+        if (videoInfo is null)
+        {
+            message = "Video not found. Check the link.";
+        }
+        else
+        {
+            message = string.Empty;
+            lessonVideo = videoInfo;
+        }
+    }
+
+    public string GetYouTubeVideoId(string youtubeUrl)
+    {
+        // Check if the URL is valid
+        if (Uri.TryCreate(youtubeUrl, UriKind.Absolute, out Uri uriResult) &&
+            (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
+        {
+            // Split the URL by '?' and '&', then find the parameter with key 'v'
+            string[] queryParams = uriResult.Query.TrimStart('?').Split('&');
+            foreach (string param in queryParams)
+            {
+                string[] keyValue = param.Split('=');
+                if (keyValue.Length == 2 && keyValue[0] == "v")
+                {
+                    // Return the value of the 'v' parameter (YouTube video ID)
+                    string videoId = keyValue[1];
+
+                    // If there's additional text after the video ID (e.g., &t=312s), remove it
+                    int index = videoId.IndexOf('&');
+                    if (index != -1)
+                    {
+                        videoId = videoId.Substring(0, index);
+                    }
+
+                    return videoId;
+                }
+            }
+        }
+
+        // If no 'v' parameter found or URL is invalid, return null
+        return null;
     }
 
     private async Task ShowDelete()
