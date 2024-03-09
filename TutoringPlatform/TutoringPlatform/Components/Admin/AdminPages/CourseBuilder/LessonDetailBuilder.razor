@@ -26,10 +26,17 @@
         <label for="description" class="form-label">Lesson Description</label>
         <ValidationMessage For="() => Input.LessonDescription" class="text-danger" />
     </div>
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.LessonVideoUrl" class="form-control" placeholder="Please add course video." />
-        <label for="video-url" class="form-label">Lesson Video</label>
-        <ValidationMessage For="() => Input.LessonVideoUrl" class="text-danger" />
+    <div class="row">
+        <div class="col-md-11">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.LessonVideoUrl" class="form-control" placeholder="Please add course video." />
+                <label for="video-url" class="form-label">Lesson Video</label>
+                <ValidationMessage For="() => Input.LessonVideoUrl" class="text-danger" />
+            </div>
+        </div>
+        <div class="col-md-1">
+            <Button Color="ButtonColor.Primary" @onclick="SearchVideo">Search</Button>
+        </div>
     </div>
     <div class="form-floating mb-3">
         <InputText @bind-Value="Input.LessonImageUrl" class="form-control" placeholder="Please add course image." />
@@ -130,6 +137,11 @@
             BuilderState.UpdateLesson(LessonId.Value, updatedLesson);
             message = "Lesson updated successfully";
         }
+    }
+
+    private async Task SearchVideo()
+    {
+        
     }
 
     private async Task ShowDelete()

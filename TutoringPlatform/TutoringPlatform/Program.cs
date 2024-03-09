@@ -13,6 +13,8 @@ using TutoringPlatform.PrivateInterfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddBlazorBootstrap();
 
 // Add services to the container.
@@ -44,6 +46,7 @@ builder.Services.AddScoped<IEnrollmentService, EnrollmentService>();
 builder.Services.AddScoped<ILessonProgressService, LessonProgressService>();
 builder.Services.AddScoped<IPayment, PaymentService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IYouTube, YouTubeService>();
 builder.Services.AddScoped<BuilderStateService>();
 
 builder.Services.AddScoped(http => new HttpClient
@@ -92,5 +95,14 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(TutoringPlatform.Client._Imports).Assembly);
 
 app.MapAdditionalIdentityEndpoints();
+app.UseSwagger();
+app.UseSwaggerUI();
+
+//options =>
+//{
+//    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+//    options.RoutePrefix = string.Empty;
+//    options.DocumentTitle = "My Swagger";
+//})
 
 app.Run();
