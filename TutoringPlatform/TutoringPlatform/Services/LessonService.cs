@@ -101,6 +101,7 @@ namespace TutoringPlatform.Services
 
             using var context = _contextFactory.CreateDbContext();
             var lesson = await context.Lessons
+                .Include(l => l.Course)
                 .Include(l => l.Quiz)
                 .Include(l => l.Assignment)
                 .FirstOrDefaultAsync(l => l.LessonId == id);

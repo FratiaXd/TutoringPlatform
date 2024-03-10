@@ -77,13 +77,13 @@
     <div class="mb-3">
         <Switch @bind-Value="Input.IsAssessed" Label="Make Assignment Visible" Disabled="@(!AssignmentExists)" />
     </div>
-    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+    <button type="submit" class="w-100 btn btn-lg btn-primary" disabled="@IsCoursePublished">Save</button>
 </EditForm>
 
 <Button Color="ButtonColor.Success" @onclick="AddQuiz" Disabled="@QuizExists">Add Quiz</Button>
 <Button Color="ButtonColor.Success" @onclick="AddAssignment" Disabled="@AssignmentExists">Add Assignment</Button>
 
-<Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Lesson</Button>
+<Button Color="ButtonColor.Danger" @onclick="ShowDelete" disabled="@IsCoursePublished">Delete Lesson</Button>
 
 @code {
     [Parameter]
@@ -107,6 +107,8 @@
 
     const long maxFileSize = 2 * 1024 * 1024;
 
+    public bool? IsCoursePublished;
+
     protected override async Task OnInitializedAsync()
     {
         updatedLesson = await LessonService.GetLessonByIdAsync(LessonId.Value);
@@ -117,6 +119,8 @@
         Input.IsAutograded = updatedLesson.IsAutograded;
         Input.IsAssessed = updatedLesson.IsAssessed;
         Input.LessonOrder = updatedLesson.LessonOrder;
+
+        IsCoursePublished = updatedLesson.Course.IsActive;
 
         if (updatedLesson.LessonVideoUrl is not null)
         {

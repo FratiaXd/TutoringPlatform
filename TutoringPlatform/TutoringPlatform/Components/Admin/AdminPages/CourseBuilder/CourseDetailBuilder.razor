@@ -47,10 +47,10 @@
         <img style="max-width: 400px;" src="@updateCourse.ImageUrl" alt="Course Image" />
         <br />
     }
-    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+    <button type="submit" class="w-100 btn btn-lg btn-primary" disabled="@IsCoursePublished">Save</button>
 </EditForm>
 <br />
-<Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Course</Button>
+<Button Color="ButtonColor.Danger" @onclick="ShowDelete" disabled="@IsCoursePublished">Delete Course</Button>
 
 @code {
     [Parameter]
@@ -62,11 +62,14 @@
 
     [SupplyParameterFromForm]
     private CourseInput Input { get; set; } = new CourseInput();
+
     private string? message;
 
     private IBrowserFile selectedFile;
 
     const long maxFileSize = 2 * 1024 * 1024;
+
+    public bool? IsCoursePublished;
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,6 +81,7 @@
             Input.Description = updateCourse.Description;
             Input.AccessLevel = updateCourse.AccessLevel;
             BuilderState.CourseTitle = updateCourse.Title;
+            IsCoursePublished = updateCourse.IsActive;
         }
     }
 

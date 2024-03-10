@@ -98,5 +98,13 @@
             // Invoke the lesson clicked event callback to render the lesson content
             await HandleLessonClick(inProgressLesson);
         }
+        else
+        {
+            var enrollments = await EnrollmentService.GetAllUserEnrollmentsAsync(CurUserId);
+            var currentEnrollment = enrollments.FirstOrDefault(e => e.CourseId == currentCourse.CourseId);
+            var lastestProgressLesson = lessons.FirstOrDefault(l =>
+                l.LessonProgresses.Any(lp => lp.UserId == CurUserId && lp.LessonId == currentEnrollment.LatestLessonId));
+            await HandleLessonClick(lastestProgressLesson);
+        }
     }
 }

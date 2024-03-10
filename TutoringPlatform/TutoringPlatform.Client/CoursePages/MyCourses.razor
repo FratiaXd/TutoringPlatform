@@ -22,7 +22,14 @@
                 <td>@enrollment.LatestLesson.LessonOrder</td>
                 <td>@enrollment.Course.Duration</td>
                 <td>@enrollment.EnrollmentStatus</td>
-                <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment)">Open</button></td>
+                @if (enrollment.Course.IsActive)
+                {
+                    <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment)">Open</button></td>
+                }
+                else
+                {
+                    <td>Under maintainance</td>
+                }
             </tr>
         }
     </tbody>
@@ -49,7 +56,14 @@
                 <td>@enrollment.LatestLesson.LessonOrder</td>
                 <td>@enrollment.Course.Duration</td>
                 <td>@enrollment.EnrollmentStatus</td>
-                <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment)">Open</button></td>
+                @if (enrollment.Course.IsActive)
+                {
+                    <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment)">Open</button></td>
+                }
+                else
+                {
+                    <td>Under maintainance</td>
+                }
             </tr>
         }
     </tbody>
