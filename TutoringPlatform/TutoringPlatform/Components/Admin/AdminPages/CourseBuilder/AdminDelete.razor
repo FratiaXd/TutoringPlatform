@@ -29,6 +29,9 @@
     [Parameter]
     public Modal ModalRef { get; set; }
 
+    [Parameter]
+    public string? ImageUrl { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         if (RecordType == "CoursePublish")
@@ -64,11 +67,13 @@
             message = string.Empty;
             if (RecordType == "Course")
             {
+                await BlobRepositoryService.DeleteBlobsByCourseIdAsync(RecordId.ToString());
                 var deleted = await CourseService.DeleteCourseAsync(RecordId);
                 RedirectManager.RedirectToCourseManager();
             }
             else if (RecordType == "Lesson")
             {
+                if (ImageUrl != null) await BlobRepositoryService.DeleteBlobFileAsync(ImageUrl);
                 var deleted = await LessonService.DeleteLessonAsync(RecordId);
                 //Need to automatically close the modal and point to coursedetail
                 BuilderState.DeleteLesson(RecordId);

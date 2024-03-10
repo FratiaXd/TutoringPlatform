@@ -27,5 +27,19 @@ namespace TutoringPlatform.Repositories
             var response = await blobClient.DeleteIfExistsAsync();
             return response.Value;
         }
+
+        public async Task DeleteBlobsByCourseIdAsync(string courseId)
+        {
+            string pattern = $"course{courseId}";
+            await foreach (var blobItem in client.GetBlobsAsync())
+            {
+                if (blobItem.Name.Contains(pattern))
+                {
+                    // If the blob's name contains the pattern, delete the blob
+                    var blobClient = client.GetBlobClient(blobItem.Name);
+                    await blobClient.DeleteIfExistsAsync();
+                }
+            }
+        }
     }
 }

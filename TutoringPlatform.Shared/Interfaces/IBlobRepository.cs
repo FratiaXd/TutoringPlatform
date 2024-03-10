@@ -10,5 +10,6 @@ namespace TutoringPlatform.Shared.Interfaces
     {
         Task<string> UploadBlobFileAsync(string fileName, Stream content);
         Task<bool> DeleteBlobFileAsync(string fileName);
+        Task DeleteBlobsByCourseIdAsync(string courseId);
     }
 }

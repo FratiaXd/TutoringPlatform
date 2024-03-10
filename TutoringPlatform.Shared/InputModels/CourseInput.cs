@@ -17,7 +17,5 @@ namespace TutoringPlatform.Shared.InputModels
         public string? Description { get; set; }
         [Required]
         public string? AccessLevel { get; set; }
-        [Required]
-        public string? ImageUrl { get; set; }
     }
 }

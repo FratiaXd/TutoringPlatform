@@ -38,10 +38,15 @@
         <ValidationMessage For="() => Input.Description" class="text-danger" />
     </div>
     <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.ImageUrl" class="form-control" placeholder="Please add course image." />
-        <label for="image-url" class="form-label">Course Image</label>
-        <ValidationMessage For="() => Input.ImageUrl" class="text-danger" />
+        <InputFile OnChange="HandleFileSelected" />
     </div>
+    @if (!string.IsNullOrWhiteSpace(updateCourse?.ImageUrl))
+    {
+        <br />
+        <p>Image: </p>
+        <img style="max-width: 400px;" src="@updateCourse.ImageUrl" alt="Course Image" />
+        <br />
+    }
     <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
 </EditForm>
 <br />
@@ -59,6 +64,10 @@
     private CourseInput Input { get; set; } = new CourseInput();
     private string? message;
 
+    private IBrowserFile selectedFile;
+
+    const long maxFileSize = 2 * 1024 * 1024;
+
     protected override async Task OnInitializedAsync()
     {
         if (CourseId.HasValue)
@@ -68,7 +77,6 @@
             Input.Price = updateCourse.Price;
             Input.Description = updateCourse.Description;
             Input.AccessLevel = updateCourse.AccessLevel;
-            Input.ImageUrl = updateCourse.ImageUrl;
             BuilderState.CourseTitle = updateCourse.Title;
         }
     }
@@ -87,8 +95,9 @@
             updateCourse.Price = Input.Price;
             updateCourse.Description = Input.Description;
             updateCourse.AccessLevel = Input.AccessLevel.ToString();
-            updateCourse.ImageUrl = Input.ImageUrl;
             updateCourse.Duration = await CountLessons();
+
+            await UploadBlobFile();
 
             var updateResult = await CourseService.UpdateCourseAsync(updateCourse);
             if (updateResult == null)
@@ -100,6 +109,44 @@
                 BuilderState.CourseTitle = updateCourse.Title;
                 message = "Course updated successfully";
             }
+        }
+    }
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File; // If expecting single file. For multiple files, use e.GetMultipleFiles()
+    }
+
+    private async Task UploadBlobFile()
+    {
+        if (selectedFile is null)
+        {
+            return;
+        }
+        if (selectedFile.Size > maxFileSize)
+        {
+            message = "File is too big. Maximum allowed size 2 MB.";
+            return;
+        }
+        await DeleteBlobFile();
+        var uniqueId = Guid.NewGuid().ToString();
+        var originalExtension = Path.GetExtension(selectedFile.Name);
+        var fileName = $"course{updateCourse.CourseId}img{uniqueId}{originalExtension}";
+        using (var stream = selectedFile.OpenReadStream())
+        {
+            var fileUrl = await BlobRepositoryService.UploadBlobFileAsync(fileName, stream);
+            updateCourse.ImageUrl = fileUrl;
+        }
+    }
+
+    private async Task DeleteBlobFile()
+    {
+        string previousFileUrl = updateCourse.ImageUrl;
+        if (previousFileUrl != null)
+        {
+            var uri = new Uri(previousFileUrl);
+            var previousFileName = Path.GetFileName(uri.LocalPath);
+            await BlobRepositoryService.DeleteBlobFileAsync(previousFileName);
         }
     }
 

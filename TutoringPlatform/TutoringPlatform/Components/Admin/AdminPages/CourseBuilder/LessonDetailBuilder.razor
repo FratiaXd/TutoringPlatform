@@ -269,9 +269,17 @@
 
     private async Task ShowDelete()
     {
+        string currentFileUrl = updatedLesson.LessonImageUrl;
+        string currentFileName = null;
+        if (currentFileUrl != null)
+        {
+            var uri = new Uri(currentFileUrl);
+            currentFileName = Path.GetFileName(uri.LocalPath);
+        }
         var parameters = new Dictionary<string, object>();
         parameters.Add("RecordId", LessonId);
         parameters.Add("RecordType", "Lesson");
+        parameters.Add("ImageUrl", currentFileName);
         await deleteModal.ShowAsync<AdminDelete>(title: "Delete Lesson", parameters: parameters);       
     }
 
