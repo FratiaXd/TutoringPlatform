@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,8 +18,6 @@ namespace TutoringPlatform.Shared.InputModels
         public bool IsAutograded { get; set; }
         [Required]
         public string? LessonVideoUrl { get; set; }
-        [Required]
-        public string? LessonImageUrl { get; set; }
         [Required]
         public string? LessonContent { get; set; }
         public bool IsAssessed { get; set; }

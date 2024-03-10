@@ -10,6 +10,8 @@ using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Services;
 using System.Text.Json.Serialization;
 using TutoringPlatform.PrivateInterfaces;
+using Microsoft.Extensions.Azure;
+using TutoringPlatform.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +30,13 @@ builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
 var connectionString = builder.Configuration["ConnectionStrings:MySqlDb:TutoringPlatform"];
+var storageString = builder.Configuration["ConnectionStrings:BlobStorage:TutoringPlatform"];
 
 builder.Services.AddDbContextFactory<TutoringPlatformContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddAzureClients(azureBuilder =>
+{
+    azureBuilder.AddBlobServiceClient(storageString);
+});
 
 builder.Services.AddIdentity<TutoringPlatformUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<TutoringPlatformContext>()
@@ -47,6 +54,7 @@ builder.Services.AddScoped<ILessonProgressService, LessonProgressService>();
 builder.Services.AddScoped<IPayment, PaymentService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IYouTube, YouTubeService>();
+builder.Services.AddScoped<IBlobRepository, BlobRepository>();
 builder.Services.AddScoped<BuilderStateService>();
 
 builder.Services.AddScoped(http => new HttpClient

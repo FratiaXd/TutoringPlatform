@@ -1,5 +1,5 @@
 ﻿@layout ManageCourseBuilderLayout
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @page "/admin/adminpages/coursebuilder/lessondetailbuilder/{LessonId:int}"
 
 <h3>Lesson Builder</h3>
@@ -57,10 +57,12 @@
         <br/>
     }
     <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.LessonImageUrl" class="form-control" placeholder="Please add course image." />
-        <label for="image-url" class="form-label">Lesson Image</label>
-        <ValidationMessage For="() => Input.LessonImageUrl" class="text-danger" />
+        <InputFile OnChange="HandleFileSelected" />
     </div>
+    @if (!string.IsNullOrWhiteSpace(updatedLesson?.LessonImageUrl))
+    {
+        <img style="max-width: 400px;" src="@updatedLesson.LessonImageUrl" alt="Lesson Image"/>
+    }
     <div class="form-floating mb-3">
         <InputText @bind-Value="Input.LessonContent" class="form-control" placeholder="Please add course video." />
         <label for="content" class="form-label">Lesson Content</label>
@@ -98,18 +100,21 @@
 
     public VideoDetails? lessonVideo { get; set; }
 
+    private IBrowserFile selectedFile;
+
+    const long maxFileSize = 2 * 1024 * 1024;
+
     protected override async Task OnInitializedAsync()
     {
         updatedLesson = await LessonService.GetLessonByIdAsync(LessonId.Value);
         Input.LessonTitle = updatedLesson.LessonTitle;
         Input.LessonDescription = updatedLesson.LessonDescription;
         Input.LessonVideoUrl = updatedLesson.LessonVideoUrl;
-        Input.LessonImageUrl = updatedLesson.LessonImageUrl;
         Input.LessonContent = updatedLesson.LessonContent;
         Input.IsAutograded = updatedLesson.IsAutograded;
         Input.IsAssessed = updatedLesson.IsAssessed;
         Input.LessonOrder = updatedLesson.LessonOrder;
-        
+
         if (updatedLesson.LessonVideoUrl is not null)
         {
             SearchVideo();
@@ -118,6 +123,7 @@
         QuizExists = IsQuizCreated();
         AssignmentExists = IsAssignmentCreated();
     }
+
     //TODO NEED TO ADD CHECK FOR CHANGING THE VIDEO
     private async Task UpdateLesson()
     {
@@ -134,10 +140,11 @@
         updatedLesson.LessonTitle = Input.LessonTitle;
         updatedLesson.LessonDescription = Input.LessonDescription;
         updatedLesson.LessonVideoUrl = Input.LessonVideoUrl;
-        updatedLesson.LessonImageUrl = Input.LessonImageUrl;
         updatedLesson.LessonContent = Input.LessonContent;
         updatedLesson.IsAutograded = Input.IsAutograded;
         updatedLesson.IsAssessed = Input.IsAssessed;
+
+        await UploadBlobFile();
 
         if (updatedLesson.Quiz != null)
         {
@@ -217,6 +224,46 @@
 
         // If no 'v' parameter found or URL is invalid, return null
         return null;
+    }
+
+    private void HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File; // If expecting single file. For multiple files, use e.GetMultipleFiles()
+    }
+
+    private async Task UploadBlobFile()
+    {
+        if (selectedFile is null)
+        {
+            return;
+        }
+        if (selectedFile.Size > maxFileSize)
+        {
+            message = "File is too big. Maximum allowed size 2 MB.";
+            return;
+        }
+        await DeleteBlobFile();
+        var originalExtension = Path.GetExtension(selectedFile.Name);
+        var fileName = "course" + updatedLesson.CourseId + "lesson" + updatedLesson.LessonId + "img" + originalExtension;
+        using (var stream = selectedFile.OpenReadStream())
+        {
+            var fileUrl = await BlobRepositoryService.UploadBlobFileAsync(fileName, stream);
+            updatedLesson.LessonImageUrl = fileUrl;
+        }
+    }
+
+    private async Task DeleteBlobFile()
+    {
+        string previousFileUrl = updatedLesson.LessonImageUrl;
+        if (previousFileUrl != null)
+        {
+            var uri = new Uri(previousFileUrl);
+            var previousFileName = Path.GetFileName(uri.LocalPath);
+            var previousFileExtension = Path.GetExtension(previousFileName);
+            var baseFileName = "course" + updatedLesson.CourseId + "lesson" + updatedLesson.LessonId + "img";
+            var newFileName = baseFileName + previousFileExtension;
+            await BlobRepositoryService.DeleteBlobFileAsync(newFileName);
+        }
     }
 
     private async Task ShowDelete()
