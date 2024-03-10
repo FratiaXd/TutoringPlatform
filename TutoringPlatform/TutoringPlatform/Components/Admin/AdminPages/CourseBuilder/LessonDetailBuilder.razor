@@ -61,7 +61,10 @@
     </div>
     @if (!string.IsNullOrWhiteSpace(updatedLesson?.LessonImageUrl))
     {
+        <br />
+        <p>Image: </p>
         <img style="max-width: 400px;" src="@updatedLesson.LessonImageUrl" alt="Lesson Image"/>
+        <br />
     }
     <div class="form-floating mb-3">
         <InputText @bind-Value="Input.LessonContent" class="form-control" placeholder="Please add course video." />
@@ -243,8 +246,9 @@
             return;
         }
         await DeleteBlobFile();
+        var uniqueId = Guid.NewGuid().ToString();
         var originalExtension = Path.GetExtension(selectedFile.Name);
-        var fileName = "course" + updatedLesson.CourseId + "lesson" + updatedLesson.LessonId + "img" + originalExtension;
+        var fileName = $"course{updatedLesson.CourseId}lesson{updatedLesson.LessonId}img{uniqueId}{originalExtension}";
         using (var stream = selectedFile.OpenReadStream())
         {
             var fileUrl = await BlobRepositoryService.UploadBlobFileAsync(fileName, stream);
@@ -259,10 +263,7 @@
         {
             var uri = new Uri(previousFileUrl);
             var previousFileName = Path.GetFileName(uri.LocalPath);
-            var previousFileExtension = Path.GetExtension(previousFileName);
-            var baseFileName = "course" + updatedLesson.CourseId + "lesson" + updatedLesson.LessonId + "img";
-            var newFileName = baseFileName + previousFileExtension;
-            await BlobRepositoryService.DeleteBlobFileAsync(newFileName);
+            await BlobRepositoryService.DeleteBlobFileAsync(previousFileName);
         }
     }
 
