@@ -10,7 +10,7 @@ using TutoringPlatform.Client.PrivateInterfaces;
 
 namespace TutoringPlatform.Client.ApiServices
 {
-    public class CartApiService : ICart
+    public class CartApiService : ICartService
     {
         private static string SerializeObj(object modelObject) => JsonSerializer.Serialize(modelObject, JsonOptions());
         private static T DeserializeJsonString<T>(string jsonString) => JsonSerializer.Deserialize<T>(jsonString, JsonOptions())!;

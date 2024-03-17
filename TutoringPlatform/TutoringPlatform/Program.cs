@@ -12,6 +12,7 @@ using System.Text.Json.Serialization;
 using TutoringPlatform.PrivateInterfaces;
 using Microsoft.Extensions.Azure;
 using TutoringPlatform.Repositories;
+using TutoringPlatform.Client.ApiServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +57,7 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IYouTube, YouTubeService>();
 builder.Services.AddScoped<IBlobRepository, BlobRepository>();
 builder.Services.AddScoped<BuilderStateService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddScoped(http => new HttpClient
 {

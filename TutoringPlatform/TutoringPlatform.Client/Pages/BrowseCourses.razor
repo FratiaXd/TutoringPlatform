@@ -1,61 +1,71 @@
 ﻿@page "/browse"
 @using TutoringPlatform.Client.PrivateInterfaces
-@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
-@inject ICart CartService
+@* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false)) *@
+@rendermode InteractiveWebAssembly
+@inject ICartService CartService
 
-<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
-<h3>BrowseCourses</h3>
+@if (isClientSide)
+{
 
-<div class="card">
-    @if (Courses.Count > 0)
-    {
-        <div class="card-header">Course List</div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Course Id</th>
-                        <th>Course Title</th>
-                        <th>Course Price</th>
-                        <th>Actions</th>
-                        <th>Cart</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var course in Courses)
-                    {
+    <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
+    <h3>BrowseCourses</h3>
+
+    <div class="card">
+        @if (Courses.Count > 0)
+        {
+            <div class="card-header">Course List</div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>@course.CourseId</td>
-                            <td>@course.Title</td>
-                            <td>@course.Price</td>
-                            <td>
-                                <Button Color="ButtonColor.Success" @onclick="() => OpenCourse(course)">Open</Button>
-                            </td>
-                            <td>
-                                @if (user.Identity.IsAuthenticated)
-                                {
-                                    if (course.Price > 0 && !IsCoursePurchased(course.CourseId))
+                            <th>Course Id</th>
+                            <th>Course Title</th>
+                            <th>Course Price</th>
+                            <th>Actions</th>
+                            <th>Cart</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var course in Courses)
+                        {
+                            <tr>
+                                <td>@course.CourseId</td>
+                                <td>@course.Title</td>
+                                <td>@course.Price</td>
+                                <td>
+                                    <Button Color="ButtonColor.Success" @onclick="() => OpenCourse(course)">Open</Button>
+                                </td>
+                                <td>
+                                    @if (user.Identity.IsAuthenticated)
+                                    {
+                                        if (course.Price > 0 && !IsCoursePurchased(course.CourseId))
+                                        {
+                                            <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
+                                        }
+                                        else if (IsCoursePurchased(course.CourseId))
+                                        {
+                                            <p>In your library.</p>
+                                        }
+                                    }
+                                    else if (course.Price > 0)
                                     {
                                         <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
                                     }
-                                    else if (IsCoursePurchased(course.CourseId))
-                                    {
-                                        <p>In your library.</p>
-                                    }
-                                }
-                                else if (course.Price > 0)
-                                {
-                                    <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
-</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <h3>Loading</h3>
+}
 
 @code {
     private List<Course> Courses { get; set; } = new List<Course>();
@@ -63,6 +73,7 @@
     List<ToastMessage> messages = new List<ToastMessage>();
     private string CurUserId { get; set; }
     private ClaimsPrincipal? user { get; set; }
+    private bool isClientSide = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,6 +85,15 @@
             CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await EnrollmentService.GetAllUserEnrollmentsAsync(CurUserId);
             Enrollments = result.ToList();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            isClientSide = true;
+            StateHasChanged(); // Re-render the component now that we're past the initial prerendering phase
         }
     }
 
