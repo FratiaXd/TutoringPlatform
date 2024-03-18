@@ -38,33 +38,33 @@
         <div class="@GetNavbarClass()" id="navbar-sticky">
             <ul class="t-flex t-flex-col t-p-4 lg:t-p-0 t-mt-4 t-font-medium t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 lg:t-space-x-8 rtl:t-space-x-reverse lg:t-flex-row lg:t-mt-0 lg:t-border-0 lg:t-bg-white dark:t-bg-gray-800 lg:dark:t-bg-gray-900 dark:t-border-gray-700">
                 <li>
-                    <a href="#" class="t-block t-py-2 t-px-3 t-text-white t-bg-blue-700 t-rounded lg:t-bg-transparent lg:t-text-blue-700 lg:t-p-0 lg:dark:t-text-blue-500" aria-current="page">Home</a>
+                    <a href="#" class="@GetNavLinkClass("#")">Home</a>
                 </li>
                 <li>
-                    <a href="browse" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Courses</a>
+                    <a href="browse" class="@GetNavLinkClass("browse")">Courses</a>
                 </li>
                 <AuthorizeView>
                     <Authorized>
                         <li>
-                            <a href="mycourses" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">My Courses</a>
+                            <a href="mycourses" class="@GetNavLinkClass("mycourses")">My Courses</a>
                         </li>
                         <li>
-                            <a href="feedback" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Feedback</a>
+                            <a href="feedback" class="@GetNavLinkClass("feedback")">Feedback</a>
                         </li>
                         <li>
-                            <a href="cart" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Cart</a>
+                            <a href="cart" class="@GetNavLinkClass("cart")">Cart</a>
                         </li>
                     </Authorized>
                 </AuthorizeView>
                 <li>
-                    <a href="about" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">About</a>
+                    <a href="about" class="@GetNavLinkClass("about")">About</a>
                 </li>
                 <li>
-                    <a href="contacts" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Contacts</a>
+                    <a href="contacts" class="@GetNavLinkClass("contacts")">Contacts</a>
                 </li>
                 <AuthorizeView Roles="Admin">
                     <li>
-                        <a href="/admin/adminpages" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Admin Panel</a>
+                        <a href="/admin/adminpages" class="@GetNavLinkClass("admin")">Admin Panel</a>
                     </li>
                 </AuthorizeView>
             </ul>
@@ -93,6 +93,13 @@
         {
             return baseClasses;
         }
+    }
+
+    private string GetNavLinkClass(string href)
+    {
+        return currentUrl.Contains(href, StringComparison.OrdinalIgnoreCase) ? 
+        "t-block t-py-2 t-px-3 t-text-white t-bg-blue-700 t-rounded lg:t-bg-transparent lg:t-text-blue-700 lg:t-p-0 lg:dark:t-text-blue-500" : 
+        "t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700";
     }
 
     protected override void OnInitialized()
