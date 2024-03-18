@@ -8,7 +8,7 @@
             @* <img src="https://flowbite.com/docs/images/logo.svg" class="t-h-8" alt="Flowbite Logo"> *@
             <span class="t-self-center t-text-2xl t-font-semibold t-whitespace-nowrap dark:t-text-white">Tutoring</span>
         </a>
-        <div class="t-flex t-items-center md:t-order-2 t-space-x-1 md:t-space-x-2 rtl:t-space-x-reverse">
+        <div class="t-flex t-items-center lg:t-order-2 t-space-x-1 lg:t-space-x-2 rtl:t-space-x-reverse">
             <AuthorizeView>
                 <Authorized>
                     <form>
@@ -28,43 +28,43 @@
                     <a href="Account/Register" class="t-text-white t-bg-blue-700 hover:t-bg-blue-800 focus:t-ring-4 focus:t-ring-blue-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:t-bg-blue-600 dark:hover:t-bg-blue-700 focus:t-outline-none dark:focus:t-ring-blue-800">Sign up</a>
                 </NotAuthorized>
             </AuthorizeView>
-            <button data-collapse-toggle="navbar-sticky" type="button" class="t-inline-flex t-items-center t-p-2 t-w-10 t-h-10 t-justify-center t-text-sm t-text-gray-500 t-rounded-lg lg:t-hidden hover:t-bg-gray-100 focus:t-outline-none focus:t-ring-2 focus:t-ring-gray-200 dark:t-text-gray-400 dark:hover:t-bg-gray-700 dark:focus:t-ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
+            <button @onclick="ToggleNavbar" data-collapse-toggle="navbar-sticky" type="button" class="t-inline-flex t-items-center t-p-2 t-w-10 t-h-10 t-justify-center t-text-sm t-text-gray-500 t-rounded-lg lg:t-hidden hover:t-bg-gray-100 focus:t-outline-none focus:t-ring-2 focus:t-ring-gray-200 dark:t-text-gray-400 dark:hover:t-bg-gray-700 dark:focus:t-ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
                 <span class="t-sr-only">Open main menu</span>
                 <svg class="t-w-5 t-h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
                 </svg>
             </button>
         </div>
-        <div class="t-items-center t-justify-between t-hidden t-w-full lg:t-flex md:t-w-auto md:t-order-1" id="navbar-sticky">
-            <ul class="t-flex t-flex-col t-p-4 md:t-p-0 t-mt-4 t-font-medium t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 md:t-space-x-8 rtl:t-space-x-reverse md:t-flex-row md:t-mt-0 md:t-border-0 md:t-bg-white dark:t-bg-gray-800 md:dark:t-bg-gray-900 dark:t-border-gray-700">
+        <div class="@GetNavbarClass()" id="navbar-sticky">
+            <ul class="t-flex t-flex-col t-p-4 lg:t-p-0 t-mt-4 t-font-medium t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 lg:t-space-x-8 rtl:t-space-x-reverse lg:t-flex-row lg:t-mt-0 lg:t-border-0 lg:t-bg-white dark:t-bg-gray-800 lg:dark:t-bg-gray-900 dark:t-border-gray-700">
                 <li>
-                    <a href="#" class="t-block t-py-2 t-px-3 t-text-white t-bg-blue-700 t-rounded md:t-bg-transparent md:t-text-blue-700 md:t-p-0 md:dark:t-text-blue-500" aria-current="page">Home</a>
+                    <a href="#" class="t-block t-py-2 t-px-3 t-text-white t-bg-blue-700 t-rounded lg:t-bg-transparent lg:t-text-blue-700 lg:t-p-0 lg:dark:t-text-blue-500" aria-current="page">Home</a>
                 </li>
                 <li>
-                    <a href="browse" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Courses</a>
+                    <a href="browse" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Courses</a>
                 </li>
                 <AuthorizeView>
                     <Authorized>
                         <li>
-                            <a href="mycourses" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">My Courses</a>
+                            <a href="mycourses" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">My Courses</a>
                         </li>
                         <li>
-                            <a href="feedback" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Feedback</a>
+                            <a href="feedback" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Feedback</a>
                         </li>
                         <li>
-                            <a href="cart" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Cart</a>
+                            <a href="cart" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Cart</a>
                         </li>
                     </Authorized>
                 </AuthorizeView>
                 <li>
-                    <a href="about" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">About</a>
+                    <a href="about" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">About</a>
                 </li>
                 <li>
-                    <a href="contacts" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Contacts</a>
+                    <a href="contacts" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Contacts</a>
                 </li>
                 <AuthorizeView Roles="Admin">
                     <li>
-                        <a href="/admin/adminpages" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Admin Panel</a>
+                        <a href="/admin/adminpages" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700">Admin Panel</a>
                     </li>
                 </AuthorizeView>
             </ul>
@@ -74,6 +74,26 @@
 
 @code {
     private string? currentUrl;
+
+    private bool isNavbarCollapsed = true;
+
+    private void ToggleNavbar()
+    {
+        isNavbarCollapsed = !isNavbarCollapsed;
+    }
+
+    private string GetNavbarClass()
+    {
+        string baseClasses = "t-items-center t-justify-between t-w-full lg:t-flex lg:t-w-auto lg:t-order-1";
+        if (isNavbarCollapsed)
+        {
+            return $"{baseClasses} t-hidden";
+        }
+        else
+        {
+            return baseClasses;
+        }
+    }
 
     protected override void OnInitialized()
     {
