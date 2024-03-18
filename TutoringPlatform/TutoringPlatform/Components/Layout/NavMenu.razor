@@ -2,111 +2,75 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">TutoringPlatform</a>
-    </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="browse">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Courses
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="about">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> About
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="contacts">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Contacts
-            </NavLink>
-        </div>
-
-        <AuthorizeView Roles="Admin">
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="admin/adminpages/dashboard">
-                    <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Student Dashboard
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="admin/adminpages/feedbackdashboard">
-                    <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Feedback Dashboard
-                </NavLink>
-            </div>
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="admin/adminpages/coursemanager">
-                    <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Course Manager
-                </NavLink>
-            </div>
-        </AuthorizeView>
-
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="mycourses">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> My Courses
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="feedback">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Feedback    
-                        <Badge class="ms-2">New</Badge>
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="cart">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Cart
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Profile/ProfilePages">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> My Profile
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
+<nav class="t-bg-white dark:t-bg-gray-900 t-fixed t-w-full t-z-20 t-top-0 start-0 t-border-b t-border-gray-200 dark:t-border-gray-600">
+    <div class="t-max-w-screen-xl t-flex t-flex-wrap t-items-center t-justify-between t-mx-auto t-p-4">
+        <a href="#" class="t-flex t-items-center t-space-x-3 rtl:t-space-x-reverse">
+            @* <img src="https://flowbite.com/docs/images/logo.svg" class="t-h-8" alt="Flowbite Logo"> *@
+            <span class="t-self-center t-text-2xl t-font-semibold t-whitespace-nowrap dark:t-text-white">Tutoring</span>
+        </a>
+        <div class="t-flex t-items-center md:t-order-2 t-space-x-1 md:t-space-x-2 rtl:t-space-x-reverse">
+            <AuthorizeView>
+                <Authorized>
+                    <form>
+                        <input type="hidden" />
+                        <a href="Profile/ProfilePages" class="t-text-gray-800 dark:t-text-white hover:t-bg-gray-50 focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:hover:t-bg-gray-700 focus:t-outline-none dark:focus:t-ring-gray-800">My Profile</a>
+                    </form>
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                        <button type="submit" class="t-text-gray-800 dark:t-text-white hover:t-bg-gray-50 focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:hover:t-bg-gray-700 focus:t-outline-none dark:focus:t-ring-gray-800 inline-flex items-center justify-center gap-2">
+                             Logout
                         </button>
                     </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-    </nav>
-</div>
+                </Authorized>
+                <NotAuthorized>
+                    <a href="Account/Login" class="t-text-gray-800 dark:t-text-white hover:t-bg-gray-50 focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:hover:t-bg-gray-700 focus:t-outline-none dark:focus:t-ring-gray-800">Login</a>
+                    <a href="Account/Register" class="t-text-white t-bg-blue-700 hover:t-bg-blue-800 focus:t-ring-4 focus:t-ring-blue-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:t-bg-blue-600 dark:hover:t-bg-blue-700 focus:t-outline-none dark:focus:t-ring-blue-800">Sign up</a>
+                </NotAuthorized>
+            </AuthorizeView>
+            <button data-collapse-toggle="navbar-sticky" type="button" class="t-inline-flex t-items-center t-p-2 t-w-10 t-h-10 t-justify-center t-text-sm t-text-gray-500 t-rounded-lg md:t-hidden hover:t-bg-gray-100 focus:t-outline-none focus:t-ring-2 focus:t-ring-gray-200 dark:t-text-gray-400 dark:hover:t-bg-gray-700 dark:focus:t-ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
+                <span class="t-sr-only">Open main menu</span>
+                <svg class="t-w-5 t-h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
+            </button>
+        </div>
+        <div class="t-items-center t-justify-between t-hidden t-w-full md:t-flex md:t-w-auto md:t-order-1" id="navbar-sticky">
+            <ul class="t-flex t-flex-col t-p-4 md:t-p-0 t-mt-4 t-font-medium t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 md:t-space-x-8 rtl:t-space-x-reverse md:t-flex-row md:t-mt-0 md:t-border-0 md:t-bg-white dark:t-bg-gray-800 md:dark:t-bg-gray-900 dark:t-border-gray-700">
+                <li>
+                    <a href="#" class="t-block t-py-2 t-px-3 t-text-white t-bg-blue-700 t-rounded md:t-bg-transparent md:t-text-blue-700 md:t-p-0 md:dark:t-text-blue-500" aria-current="page">Home</a>
+                </li>
+                <li>
+                    <a href="browse" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Courses</a>
+                </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li>
+                            <a href="mycourses" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">My Courses</a>
+                        </li>
+                        <li>
+                            <a href="feedback" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Feedback</a>
+                        </li>
+                        <li>
+                            <a href="cart" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Cart</a>
+                        </li>
+                    </Authorized>
+                </AuthorizeView>
+                <li>
+                    <a href="about" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">About</a>
+                </li>
+                <li>
+                    <a href="contacts" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Contacts</a>
+                </li>
+                <AuthorizeView Roles="Admin">
+                    <li>
+                        <a href="/admin/adminpages" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 md:hover:t-bg-transparent md:hover:t-text-blue-700 md:t-p-0 md:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white md:dark:hover:t-bg-transparent dark:t-border-gray-700">Admin Panel</a>
+                    </li>
+                </AuthorizeView>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 @code {
     private string? currentUrl;
