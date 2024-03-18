@@ -1056,6 +1056,14 @@ input:checked + .toggle-bg {
   margin-left: 0.625rem;
 }
 
+.t-mt-16 {
+  margin-top: 4rem;
+}
+
+.t-mt-20 {
+  margin-top: 5rem;
+}
+
 .t-block {
   display: block;
 }
@@ -1622,6 +1630,16 @@ input:checked + .toggle-bg {
   :is(.t-dark .md\:dark\:hover\:t-text-blue-500:hover) {
     --tw-text-opacity: 1;
     color: rgb(63 131 248 / var(--tw-text-opacity));
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:t-flex {
+    display: flex;
+  }
+
+  .lg\:t-hidden {
+    display: none;
   }
 }
 
