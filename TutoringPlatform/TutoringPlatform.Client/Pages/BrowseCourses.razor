@@ -1,84 +1,82 @@
 ﻿@page "/browse"
 @using TutoringPlatform.Client.PrivateInterfaces
 @* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false)) *@
-@rendermode InteractiveWebAssembly
-@inject ICartService CartService
+@* @inject ICartService CartService *@
+@rendermode InteractiveAuto
 
+
+<div class="t-flex t-flex-col text-center t-mt-8">
+    <h3 class="t-text-4xl t-font-extrabold">Browse Courses</h3>
+    <p class="t-mb-4 t-mt-1 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400">Select any course from our library and start learning <strong class="t-font-semibold t-text-gray-900 dark:t-text-white">now.</strong></p>
+</div>
 
 @if (isClientSide)
 {
 
     <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
-    <h3>BrowseCourses</h3>
-
-    <div class="card">
-        @if (Courses.Count > 0)
-        {
-            <div class="card-header">Course List</div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Course Id</th>
-                            <th>Course Title</th>
-                            <th>Course Price</th>
-                            <th>Actions</th>
-                            <th>Cart</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var course in Courses)
+    @if (Courses.Count > 0)
+    {
+        <div class="t-mt-5">
+            @foreach (var course in Courses)
+            {
+                <div @onclick="() => OpenCourse(course)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
+                    <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-64 md:t-rounded-none md:t-rounded-l-lg" src="@course.ImageUrl" alt="">
+                    <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
+                        <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@course.Title</h5>
+                        @if (course.Price > 0)
                         {
-                            <tr>
-                                <td>@course.CourseId</td>
-                                <td>@course.Title</td>
-                                <td>@course.Price</td>
-                                <td>
-                                    <Button Color="ButtonColor.Success" @onclick="() => OpenCourse(course)">Open</Button>
-                                </td>
-                                <td>
-                                    @if (user.Identity.IsAuthenticated)
-                                    {
-                                        if (course.Price > 0 && !IsCoursePurchased(course.CourseId))
-                                        {
-                                            <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
-                                        }
-                                        else if (IsCoursePurchased(course.CourseId))
-                                        {
-                                            <p>In your library.</p>
-                                        }
-                                    }
-                                    else if (course.Price > 0)
-                                    {
-                                        <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
-                                    }
-                                </td>
-                            </tr>
+                            <p class="t-mb-2 t-text-gray-500 t-italic t-font-bold">£@decimal.Round(course.Price, 2)</p>
                         }
-                    </tbody>
-                </table>
-            </div>
+                        else
+                        {
+                            <p class="t-mb-2 t-text-gray-500 t-italic t-font-bold">Free</p>
+                        }
+                        <p class="t-mb-3 t-font-normal t-text-gray-700 dark:t-text-gray-400">@course.Description</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+@*     @if (user.Identity.IsAuthenticated)
+    {
+        if (course.Price > 0 && !IsCoursePurchased(course.CourseId))
+        {
+            <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
         }
-    </div>
+        else if (IsCoursePurchased(course.CourseId))
+        {
+            <p>In your library.</p>
+        }
+    }
+    else if (course.Price > 0)
+    {
+        <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
+    } *@
 }
 else
 {
-    <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
-        <div class="flex items-center justify-center w-full h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
-            <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-            </svg>
-        </div>
-        <div class="w-full">
-            <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[480px] mb-2.5"></div>
-            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[440px] mb-2.5"></div>
-            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[460px] mb-2.5"></div>
-            <div class="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
-        </div>
-        <span class="sr-only">Loading...</span>
+    <div class="t-mt-5">
+        @for (int i=0; i < Courses.Count; i++)
+        {
+            <div role="status" class="t-mb-5 t-overflow-hidden t-space-y-8 t-animate-pulse md:t-space-y-0 md:t-space-x-8 rtl:t-space-x-reverse md:t-flex md:t-items-center md:t-h-40 t-min-h-40 md:t-max-w-5xl t-mx-auto md:t-flex-row">
+                <div class="t-flex t-items-center t-justify-center t-w-full t-h-40 t-bg-gray-300 t-rounded dark:t-bg-gray-700 md:t-w-89 md:t-min-w-64">
+                    <svg class="t-w-10 t-h-10 t-text-gray-200 dark:t-text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                    </svg>
+                </div>
+                <div class="t-w-full">
+                    <div class="t-h-2.5 t-bg-gray-200 t-rounded-full dark:t-bg-gray-700 t-w-48 t-mb-4"></div>
+                    <div class="t-h-2 t-bg-gray-200 t-rounded-full dark:t-bg-gray-700 max-w-[480px] t-mb-2.5"></div>
+                    <div class="t-h-2 t-bg-gray-200 t-rounded-full dark:t-bg-gray-700 t-mb-2.5"></div>
+                    <div class="t-h-2 t-bg-gray-200 t-rounded-full dark:t-bg-gray-700 max-w-[440px] t-mb-2.5"></div>
+                    <div class="t-h-2 t-bg-gray-200 t-rounded-full dark:t-bg-gray-700 max-w-[460px] t-mb-2.5"></div>
+                    <div class="t-h-2 t-bg-gray-200 t-rounded-full dark:t-bg-gray-700 max-w-[360px]"></div>
+                </div>
+                <span class="t-sr-only">Loading...</span>
+            </div>
+        }
     </div>
 }
 
@@ -125,18 +123,18 @@ else
         NavigationManager.NavigateTo($"coursepreview/{course.CourseId}");
     }
 
-    private async Task AddToCart(Course course)
-    {
-        if (user.Identity?.IsAuthenticated == true)
-        {
-            var response = await CartService.AddToCart(course);
-            ShowMessage(ToastType.Secondary, response.Message);
-        }
-        else
-        {
-            NavigationManager.NavigateTo("Account/Login");
-        }
-    }
+    // private async Task AddToCart(Course course)
+    // {
+    //     if (user.Identity?.IsAuthenticated == true)
+    //     {
+    //         var response = await CartService.AddToCart(course);
+    //         ShowMessage(ToastType.Secondary, response.Message);
+    //     }
+    //     else
+    //     {
+    //         NavigationManager.NavigateTo("Account/Login");
+    //     }
+    // }
 
     private bool IsCoursePurchased(int courseId)
     {
