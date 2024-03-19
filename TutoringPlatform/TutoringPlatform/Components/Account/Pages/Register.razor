@@ -19,11 +19,22 @@
 
 <div>
     <div>
-        <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
             <p class="t-mt-4 t-mb-4 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400 text-center">Create a new account.</p>
             <hr />
+            @if (!string.IsNullOrEmpty(Message))
+            {
+                <div class="t-flex t-justify-center t-items-center t-p-4 t-mt-4 t-text-sm t-text-red-800 t-border t-border-red-300 t-rounded-lg t-bg-red-50" role="alert">
+                    <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="t-sr-only">Info</span>
+                    <div>
+                        <span class="t-font-medium">@Message</span> Change a few things up and try submitting again.
+                    </div>
+                </div>
+            }
             <div class="t-flex t-justify-center">
                 <div class="t-mt-4 t-mb-3">
                     <label for="email" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Email</label>
@@ -60,7 +71,7 @@
                 </div>
             </div>
             <div class="t-flex t-justify-center">
-                <div class="t-mt-4 t-flex t-justify-center">
+                <div class="t-mt-4 t-mb-8 t-flex t-justify-center">
                     <button type="submit" class="t-text-white t-bg-blue-700 hover:t-bg-blue-800 focus:t-ring-4 focus:t-outline-none focus:t-ring-blue-300 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5 t-text-center">Register</button>
                 </div>
             </div>
