@@ -10,7 +10,7 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<h2 class="t-mt-16 t-text-4xl t-font-bold dark:t-text-black text-center">Log in</h2>
+<h2 class="t-mt-8 t-text-4xl t-font-bold dark:t-text-black text-center">Log in</h2>
 
 <div>
     <section>
@@ -20,16 +20,16 @@
                 <p class="t-mt-4 t-mb-4 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400 text-center">Use a local account to log in.</p>
                 <hr />
                 <div class="t-flex t-justify-center">
-                <div class="t-mt-4 t-mb-4">
+                <div class="t-mt-4 t-mb-3">
                     <label for="email" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Email</label>
-                    <InputText type="email" @bind-Value="Input.Email" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3.5" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <InputText type="email" @bind-Value="Input.Email" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                     <ValidationMessage For="() => Input.Email" class="text-red-500" />
                 </div>
                 </div>
                 <div class="t-flex t-justify-center">
-                <div class="t-mb-4">
+                <div class="t-mb-3">
                 <label for="password" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Password</label>
-                    <InputText class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3.5" type="password" @bind-Value="Input.Password" autocomplete="current-password" aria-required="true" placeholder="•••••••••" />
+                    <InputText class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" type="password" @bind-Value="Input.Password" autocomplete="current-password" aria-required="true" placeholder="•••••••••" />
                 <ValidationMessage For="() => Input.Password" class="text-red-500" />
                 </div>
                 </div>

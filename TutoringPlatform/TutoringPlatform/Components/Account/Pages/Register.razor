@@ -15,42 +15,55 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<h2 class="t-text-4xl t-font-bold dark:t-text-black">Sign up</h2>
+<h2 class="t-mt-8 t-text-4xl t-font-bold dark:t-text-black text-center">Sign up</h2>
 
 <div>
     <div>
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
-            <p class="t-mb-4 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400">Create a new account.</p>
+            <p class="t-mt-4 t-mb-4 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400 text-center">Create a new account.</p>
             <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            <div class="t-flex t-justify-center">
+                <div class="t-mt-4 t-mb-3">
+                    <label for="email" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Email</label>
+                    <InputText type="email" @bind-Value="Input.Email" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
+            <div class="t-flex t-justify-center">
+                <div class="t-mb-3">
+                    <label for="password" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Password</label>
+                    <InputText type="password" @bind-Value="Input.Password" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" autocomplete="new-password" aria-required="true" placeholder="•••••••••" />
+                    <ValidationMessage For="() => Input.Password" class="text-red-500" />
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+            <div class="t-flex t-justify-center">
+                <div class="t-mb-3">
+                    <label for="confirm-password" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Confirm Password</label>
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" autocomplete="new-password" aria-required="true" placeholder="•••••••••" />
+                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-red-500" />
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="Input.FirstName" @bind-Value="Input.FirstName" class="form-control" autocomplete="first-name" aria-required="true" placeholder="first name" />
-                <label for="first-name">First Name</label>
-                <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+            <div class="t-flex t-justify-center">
+                <div class="t-mb-3">
+                    <label for="first-name" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">First Name</label>
+                    <InputText type="text" @bind-Value="Input.FirstName" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" autocomplete="first-name" aria-required="true" placeholder="first name" />
+                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="Input.LastName" @bind-Value="Input.LastName" class="form-control" autocomplete="last-name" aria-required="true" placeholder="last name" />
-                <label for="last-name">Last Name</label>
-                <ValidationMessage For="() => Input.LastName" class="text-danger" />
+            <div class="t-flex t-justify-center">
+                <div class="t-mb-3">
+                    <label for="last-name" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Last Name</label>
+                    <InputText type="text" @bind-Value="Input.LastName" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" autocomplete="last-name" aria-required="true" placeholder="last name" />
+                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                </div>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <div class="t-flex t-justify-center">
+                <div class="t-mt-4 t-flex t-justify-center">
+                    <button type="submit" class="t-text-white t-bg-blue-700 hover:t-bg-blue-800 focus:t-ring-4 focus:t-outline-none focus:t-ring-blue-300 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5 t-text-center">Register</button>
+                </div>
+            </div>
         </EditForm>
     </div>
 </div>
