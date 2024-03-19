@@ -10,58 +10,47 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Log in</PageTitle>
+<h2 class="t-mt-16 t-text-4xl t-font-bold dark:t-text-black text-center">Log in</h2>
 
-<h1>Log in</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
+<div>
+    <section>
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
+                <p class="t-mt-4 t-mb-4 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400 text-center">Use a local account to log in.</p>
                 <hr />
-                <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="email" class="form-label">Email</label>
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                <div class="t-flex t-justify-center">
+                <div class="t-mt-4 t-mb-4">
+                    <label for="email" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Email</label>
+                    <InputText type="email" @bind-Value="Input.Email" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3.5" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <ValidationMessage For="() => Input.Email" class="text-red-500" />
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
-                <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
-                    </label>
+                <div class="t-flex t-justify-center">
+                <div class="t-mb-4">
+                <label for="password" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Password</label>
+                    <InputText class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3.5" type="password" @bind-Value="Input.Password" autocomplete="current-password" aria-required="true" placeholder="•••••••••" />
+                <ValidationMessage For="() => Input.Password" class="text-red-500" />
                 </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
                 </div>
-                <div>
-                    <p>
+                <div class="t-flex t-justify-center">
+                <div class="t-mt-4 t-flex t-justify-center">
+                    <button type="submit" class="t-text-white t-bg-blue-700 hover:t-bg-blue-800 focus:t-ring-4 focus:t-outline-none focus:t-ring-blue-300 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5 t-text-center">Submit</button>
+                </div>
+                </div>
+                <div class="t-mt-5 t-flex t-flex-col t-items-center t-justify-center">
+                    <p class="t-mb-1 t-text-md t-font-normal t-text-gray-500">
                         <a href="Account/ForgotPassword">Forgot your password?</a>
                     </p>
-                    <p>
+                    <p class="t-mb-1 t-text-md t-font-normal t-text-gray-500">
                         <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
                     </p>
-                    <p>
+                    <p class="t-mb-1 t-text-md t-font-normal t-text-gray-500">
                         <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
                     </p>
                 </div>
             </EditForm>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
+    </section>
 </div>
 
 @code {
