@@ -21,7 +21,7 @@
             @foreach (var course in Courses)
             {
                 <div @onclick="() => OpenCourse(course)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
-                    <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-64 md:t-rounded-none md:t-rounded-l-lg" src="@course.ImageUrl" alt="">
+                    <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-60 md:t-rounded-none md:t-rounded-l-lg" src="@course.ImageUrl" alt="">
                     <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
                         <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@course.Title</h5>
                         @if (course.Price > 0)
@@ -32,7 +32,7 @@
                         {
                             <p class="t-mb-2 t-text-gray-500 t-italic t-font-bold">Free</p>
                         }
-                        <p class="t-mb-3 t-font-normal t-text-gray-700 dark:t-text-gray-400">@course.Description</p>
+                        <p class="t-line-clamp-2 t-mb-3 t-font-normal t-text-gray-700 dark:t-text-gray-400">@course.Description</p>
                     </div>
                 </div>
             }
@@ -61,7 +61,7 @@ else
         @for (int i=0; i < Courses.Count; i++)
         {
             <div role="status" class="t-mb-5 t-overflow-hidden t-space-y-8 t-animate-pulse md:t-space-y-0 md:t-space-x-8 rtl:t-space-x-reverse md:t-flex md:t-items-center md:t-h-40 t-min-h-40 md:t-max-w-5xl t-mx-auto md:t-flex-row">
-                <div class="t-flex t-items-center t-justify-center t-w-full t-h-40 t-bg-gray-300 t-rounded dark:t-bg-gray-700 md:t-w-89 md:t-min-w-64">
+                <div class="t-flex t-items-center t-justify-center t-w-full t-h-40 t-bg-gray-300 t-rounded dark:t-bg-gray-700 md:t-w-64 md:t-min-w-60">
                     <svg class="t-w-10 t-h-10 t-text-gray-200 dark:t-text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                         <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
                     </svg>

@@ -16,32 +16,34 @@
         </div>
     </div>
     <hr />
-    <div class="t-flex t-flex-col lg:t-flex-row t-flex-wrap">
+    <div class="t-flex t-flex-col lg:t-flex-row t-flex-wrap lg:t-gap-6">
         <div class="t-basis-1/4">
             <LearningSidebar CourseId="@CourseId" CurUserId="@CurUserId" Lessons="@lessons"
                 OnLessonClicked="HandleLessonClicked"
                 OnQuizClicked="HandleQuizClicked"
                 OnAssignmentClicked="HandleAssignmentClicked" />
         </div>
-        <div class="t-basis-9/12">
-            @if (selectedLesson != null)
-            {
-                <LessonContent Lesson="@selectedLesson" CurUserId="@CurUserId" />
-            }
-            else if (selectedQuiz != null)
-            {
-                <QuizContent Quiz="@selectedQuiz" CurUserId="@CurUserId"
-                    QuizScore="@QuizScore"
-                    UpdateLessonProgress="UpdateLessonProgress"
-                    QuizCompleted="@QuizCompleted"/>
-            }
-            else if (selectedAssignment != null)
-            {
-                <AssignmentContent Assignment="@selectedAssignment" 
-                    CurUserId="@CurUserId" 
-                    UpdateLessonProgress="UpdateLessonProgress" 
-                    AssignmentCompleted="@AssignmentCompleted"/>
-            }
+        <div class="t-basis-[calc(75%-1.5rem)] t-my-4">
+            <div class="t-border t-border-gray-100 t-rounded-lg">
+                @if (selectedLesson != null)
+                {
+                    <LessonContent Lesson="@selectedLesson" CurUserId="@CurUserId" />
+                }
+                else if (selectedQuiz != null)
+                {
+                    <QuizContent Quiz="@selectedQuiz" CurUserId="@CurUserId"
+                                 QuizScore="@QuizScore"
+                                 UpdateLessonProgress="UpdateLessonProgress"
+                                 QuizCompleted="@QuizCompleted" />
+                }
+                else if (selectedAssignment != null)
+                {
+                    <AssignmentContent Assignment="@selectedAssignment"
+                                       CurUserId="@CurUserId"
+                                       UpdateLessonProgress="UpdateLessonProgress"
+                                       AssignmentCompleted="@AssignmentCompleted" />
+                }
+            </div>
         </div>
     </div>
 </div>

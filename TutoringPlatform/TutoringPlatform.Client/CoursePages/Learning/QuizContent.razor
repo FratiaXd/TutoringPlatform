@@ -1,60 +1,84 @@
-﻿<h3>@Quiz.QuizName</h3>
-@if (!QuizCompleted)
-{
-    @if (currentQuestionIndex >= 0 && currentQuestionIndex < Quiz.QuizQuestions.Count)
+﻿<div class="t-py-4 t-px-8">
+
+    <h3 class="t-text-center t-mt-3 t-mb-3 md:t-mb-10 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">@Quiz.QuizName</h3>
+
+    @if (!QuizCompleted)
     {
-        <Card Style="width:50rem">
-            @{
-                var currentQuestion = Quiz.QuizQuestions.Skip(currentQuestionIndex).FirstOrDefault();
-            }
-            @if (currentQuestion != null)
-            {
-                <CardBody>
-                    <CardTitle>@currentQuestion.Question</CardTitle>
-                    </CardBody>
-                <ul class="list-group list-group-flush">
+        @if (currentQuestionIndex >= 0 && currentQuestionIndex < Quiz.QuizQuestions.Count)
+        {
+            <div class="t-max-w t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow"> 
+                @{var currentQuestion = Quiz.QuizQuestions.Skip(currentQuestionIndex).FirstOrDefault();}
+            
+                @if (currentQuestion != null)
+                {
+                    <div>
+                        <h5 class="t-mb-2 t-text-center t-text-2xl t-font-bold t-tracking-tight t-text-gray-600">@currentQuestion.Question</h5>
+                    </div>
+                    <hr class="t-h-1 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2 md:t-mb-4">
                     @foreach (var option in currentQuestion.QuizOptions)
                     {
-                        <li class="list-group-item">
-                            <input type="checkbox" id="@option.QuizOptionId"
-                                   checked="@selectedOptions.Contains(option)"
-                                   disabled="@answersChecked"
-                                   @onclick="() => HandleOptionSelected(option)" />
-                            <label for="@option.QuizOptionId">@option.Option</label>
-                        </li>
+                        <div class="t-flex t-items-center ps-4 t-border t-border-gray-200 t-rounded t-mb-2 hover:t-bg-gray-100">
+                            <input id="@option.QuizOptionId" type="checkbox" value="" checked="@selectedOptions.Contains(option)" disabled="@answersChecked" @onclick="() => HandleOptionSelected(option)" name="t-bordered-checkbox" class="t-w-4 t-h-4 t-text-blue-600 t-bg-gray-100 t-border-gray-300 t-rounded focus:t-ring-blue-500 dark:focus:t-ring-blue-600 dark:t-ring-offset-gray-800 focus:t-ring-2 dark:t-bg-gray-700 dark:t-border-gray-600">
+                            <label for="@option.QuizOptionId" class="t-w-full t-py-4 ms-2 t-text-sm t-font-medium t-text-gray-700 dark:t-text-gray-300">@option.Option</label>
+                        </div>
                     }
-                </ul>
-                <br />
-                <Button Color="ButtonColor.Primary" @onclick="CheckAnswer">Check Answer</Button>
-                <br />
-                @if (showNextButton)
-                {
-                    @if (currentQuestionIndex == Quiz.QuizQuestions.Count - 1)
+                    <div class="t-mt-4 t-flex t-flex-col md:t-grid md:t-grid-cols-6 t-gap-1">
+                        <button type="button" disabled="@answersChecked" @onclick="CheckAnswer" class="disabled:t-cursor-not-allowed md:t-col-start-3 md:t-col-span-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-mb-3 md:t-mb-0 t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Check Answer</button>
+                        @if (showNextButton)
+                        {
+                            @if (currentQuestionIndex == Quiz.QuizQuestions.Count - 1)
+                            {
+                                <button type="button" @onclick="SubmitQuiz" class="md:t-col-start-6 md:t-col-span-1 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Submit Quiz</button>
+                            }
+                            else
+                            {
+                                <button type="button" @onclick="NextQuestion" class="md:t-col-start-6 md:t-col-span-1 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Next</button>
+                            }
+                        }
+                    </div>
+                    @if (answerFeedback.Contains("Correct"))
                     {
-                        <Button Color="ButtonColor.Primary" @onclick="SubmitQuiz">Submit Quiz</Button>
+                        <div class="t-flex t-items-center t-p-4 t-mt-4 t-text-sm t-text-green-800 t-rounded-lg t-bg-green-50 dark:t-bg-gray-800 dark:t-text-green-400" role="alert">
+                            <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span class="t-sr-only">Info</span>
+                            <div>
+                                <span class="t-font-medium">@answerFeedback</span>
+                            </div>
+                        </div>
                     }
-                    else
+                    else if (answerFeedback.Contains("Incorrect"))
                     {
-                        <Button Color="ButtonColor.Success" @onclick="NextQuestion">Next</Button>
+                        <div class="t-flex t-items-center t-p-4 t-mt-4 t-text-sm t-text-red-800 t-rounded-lg t-bg-red-50 dark:t-bg-gray-800 dark:t-text-green-400" role="alert">
+                            <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span class="t-sr-only">Info</span>
+                            <div>
+                                <span class="t-font-medium">@answerFeedback</span>
+                            </div>
+                        </div>
                     }
                 }
-                <p>@answerFeedback</p>
-            }
-            else
-            {
-                <p>Question not found.</p>
-            }
-        </Card>
+                else
+                {
+                    <p>Question not found.</p>
+                }
+            </div>
+        }
+        else
+        {
+            <p>No quiz questions available.</p>
+        }
     }
     else
     {
-        <p>No quiz questions available.</p>
+        <p class="t-text-center t-mb-1 t-text-gray-600 t-text-xl md:t-text-2xl t-font-semibold">Quiz Completed</p>
+        <p class="t-text-center t-mb-4 t-text-gray-600 t-text-xl md:t-text-2xl t-font-semibold">Your score is:</p>
+        <p class="t-mt-6 t-mb-3 md:t-mb-10 t-text-center t-text-3xl t-font-extrabold t-leading-none t-tracking-tight t-text-gray-900 lg:t-text-4xl dark:t-text-white"><mark class="t-px-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 t-rounded dark:t-bg-blue-500">@QuizScore</mark></p>
     }
-}
-else
-{
-    <p>Quiz Completed. Your score is: @QuizScore</p>
-}
+</div>
 
 @code {
     [Parameter]

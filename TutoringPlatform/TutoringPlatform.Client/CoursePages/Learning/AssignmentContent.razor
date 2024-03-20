@@ -1,26 +1,26 @@
-﻿<h3>AssignmentContent</h3>
-<h4>Title: @Assignment.TaskName</h4>
-<br />
-<p>Desription: @Assignment.TaskDescription</p>
+﻿<div class="t-py-4 t-px-8">
+    <h4 class="t-text-center t-mt-3 t-mb-3 md:t-mb-10 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">@Assignment.TaskName</h4>
+    <br />
+    <p>Desription: @Assignment.TaskDescription</p>
 
-@if (!AssignmentCompleted)
-{
-    <EditForm Model="Input" FormName="assignment" OnValidSubmit="SubmitAssignment" method="post">
-        <DataAnnotationsValidator />
-        <ValidationSummary class="text-danger" role="alert" />
-        <div class="form-floating mb-3">
-            <InputText @bind-Value="Input.AssignmentAnswer" class="form-control" placeholder="Assignment answer." />
-            <label for="answer" class="form-label">Your Answer</label>
-            <ValidationMessage For="() => Input.AssignmentAnswer" class="text-danger" />
-        </div>
-        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
-    </EditForm>
-}
-else
-{
-    <p>Thank you for your submission.</p>
-}
-
+    @if (!AssignmentCompleted)
+    {
+        <EditForm Model="Input" FormName="assignment" OnValidSubmit="SubmitAssignment" method="post">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert" />
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.AssignmentAnswer" class="form-control" placeholder="Assignment answer." />
+                <label for="answer" class="form-label">Your Answer</label>
+                <ValidationMessage For="() => Input.AssignmentAnswer" class="text-danger" />
+            </div>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+        </EditForm>
+    }
+    else
+    {
+        <p>Thank you for your submission.</p>
+    }
+</div>
 
 @code {
     [Parameter]
