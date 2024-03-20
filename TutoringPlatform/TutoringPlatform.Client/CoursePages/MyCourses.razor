@@ -1,74 +1,79 @@
 ﻿@page "/mycourses"
 @rendermode InteractiveAuto
 
-<h3>My Courses</h3>
-<h4>A list of courses you are enrolled to:</h4>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Course Title</th>
-            <th>Your progress</th>
-            <th>Lessons Total</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="t-flex t-flex-col text-center t-mt-8">
+    <h3 class="t-text-4xl t-font-extrabold">My Courses</h3>
+</div>
+
+<div class="t-flex t-flex-col text-center t-mt-8">
+    <h4 class="t-text-2xl t-font-bold t-text-gray-500">A list of courses you are enrolled to:</h4>
+</div>
+
+<div class="t-mt-5">
+    @if(Enrollments.Count > 0)
+    {
         @foreach (var enrollment in Enrollments)
         {
-            <tr>
-                <td>@enrollment.Course.Title</td>
-                <td>@enrollment.LatestLesson.LessonOrder</td>
-                <td>@enrollment.Course.Duration</td>
-                <td>@enrollment.EnrollmentStatus</td>
-                @if (enrollment.Course.IsActive)
-                {
-                    <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment)">Open</button></td>
-                }
-                else
-                {
-                    <td>Under maintainance</td>
-                }
-            </tr>
+            <div @onclick="() => OpenCourse(enrollment)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
+                <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-64 md:t-rounded-none md:t-rounded-l-lg" src="@enrollment.Course.ImageUrl" alt="">
+                <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
+                    <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@enrollment.Course.Title</h5>
+                    <p class="t-mb-2 t-text-gray-500 t-italic t-font-bold">Currently: @enrollment.LatestLesson.LessonOrder/@enrollment.Course.Duration</p>
+                </div>
+                <div class="md:t-ml-auto t-p-4 md:t-pr-10">
+                    <p class="t-text-green-500 t-font-bold t-uppercase t-subpixel-antialiased">@enrollment.EnrollmentStatus</p>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    }
+    else
+    {
+        <div class="t-min-h-40 t-mb-5 t-flex t-items-center t-justify-center t-bg-gray-100 t-border t-border-gray-200 t-rounded-lg t-shadow md:t-max-w-5xl md:t-h-auto t-mx-auto">
+            <p class="t-text-gray-500">Empty</p>
+        </div>
+    }
+</div>
 
-<br />
-<h4>A list of courses you completed:</h4>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Course Title</th>
-            <th>Your progress</th>
-            <th>Lessons Total</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="t-flex t-flex-col text-center t-mt-8">
+    <h4 class="t-text-2xl t-font-bold t-text-gray-500">A list of courses you completed:</h4>
+</div>
+
+<div class="t-mt-5">
+    @if (EnrollmentsCompleted.Count > 0)
+    {
         @foreach (var enrollment in EnrollmentsCompleted)
         {
-            <tr>
-                <td>@enrollment.Course.Title</td>
-                <td>@enrollment.LatestLesson.LessonOrder</td>
-                <td>@enrollment.Course.Duration</td>
-                <td>@enrollment.EnrollmentStatus</td>
-                @if (enrollment.Course.IsActive)
-                {
-                    <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment)">Open</button></td>
-                }
-                else
-                {
-                    <td>Under maintainance</td>
-                }
-            </tr>
+            <div @onclick="() => OpenCourse(enrollment)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
+                <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-64 md:t-rounded-none md:t-rounded-l-lg" src="@enrollment.Course.ImageUrl" alt="">
+                <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
+                    <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@enrollment.Course.Title</h5>
+                    <p class="t-mb-2 t-text-gray-500 t-italic t-font-bold">Currently: @enrollment.LatestLesson.LessonOrder/@enrollment.Course.Duration</p>
+                </div>
+                <div class="md:t-ml-auto t-p-4 md:t-pr-10">
+                    <p class="t-text-green-500 t-font-bold t-uppercase t-subpixel-antialiased">@enrollment.EnrollmentStatus</p>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    }
+    else
+    {
+        <div class="t-min-h-40 t-mb-5 t-flex t-items-center t-justify-center t-bg-gray-100 t-border t-border-gray-200 t-rounded-lg t-shadow md:t-max-w-5xl md:t-h-auto t-mx-auto">
+            <p class="t-text-gray-500">Empty</p>
+        </div>
+    }
+</div>
 
+@* @if (enrollment.Course.IsActive)
+{
+    <td><button class="btn btn-primary" @onclick="() => OpenCourse(enrollment)">Open</button></td>
+}
+else
+{
+    <td>Under maintainance</td>
+}
+ *@
 @code {
     private string CurUserId { get; set; }
     private List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();

@@ -61,7 +61,8 @@ namespace TutoringPlatform.Services
                     CourseId = e.Course?.CourseId ?? 0,
                     Title = e.Course?.Title,
                     Duration = e.Course?.Duration ?? 0,
-                    IsActive = e.Course?.IsActive ?? false
+                    IsActive = e.Course?.IsActive ?? false,
+                    ImageUrl = e.Course?.ImageUrl,
                 },
                 LatestLesson = new Lesson
                 {
