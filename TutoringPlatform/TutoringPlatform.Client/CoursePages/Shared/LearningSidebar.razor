@@ -1,57 +1,80 @@
 ﻿@rendermode @(new InteractiveAutoRenderMode(prerender: false))
 
-<ul class="nav nav-pills flex-column">
-    @if (currentCourse != null)
-    {
-        <li class="nav-item">
-            <h4>@currentCourse.Title</h4>
-        </li>
-    }
-    @foreach (var lesson in lessons)
-    {
-        if (lesson != null && lesson.LessonProgresses.Count != 0)
+<div class="t-flex t-justify-end"> 
+    <button @onclick="ToggleSidebar" class="lg:t-hidden t-my-1 t-inline-flex t-items-center t-p-2 t-w-10 t-h-10 t-justify-center t-text-sm t-text-gray-500 t-rounded-lg hover:t-bg-gray-100 focus:t-outline-none focus:t-ring-2 focus:t-ring-gray-200" type="button">
+        <svg class="t-w-4 t-h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4" />
+        </svg>
+    </button>
+</div>
+<hr class="lg:t-hidden"/>
+
+
+
+<div class="@GetSidebarClass()">
+    <ul class="t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 t-p-2 t-font-semibold lg:t-my-4">
+        @foreach (var lesson in lessons)
         {
-            <li class="nav-item">
-                <NavLink class="nav-link" @onclick="() => HandleLessonClick(lesson)">@lesson.LessonTitle</NavLink>
-                    <ul>
-                    @if (lesson.Quiz.QuizName != null)
-                    {
-                        <li>
-                            <NavLink class="nav-link" @onclick="() => HandleQuizClick(lesson)">@lesson.Quiz.QuizName</NavLink>
-                        </li>
-                    }
-                    @if (lesson.Assignment.TaskName != null)
-                    {
-                        <li>
-                            <NavLink class="nav-link" @onclick="() => HandleAssignmentClick(lesson)">@lesson.Assignment.TaskName</NavLink>
-                        </li>
-                    }
-                </ul>
-            </li>
-        }
-        else
-        {
-            <li class="nav-item">
-                <NavLink class="nav-link disabled" style="background-color: #d3d3d3">@lesson.LessonTitle</NavLink>
+            if (lesson != null && lesson.LessonProgresses.Count != 0)
+            {
+                <li>
+                    <div @onclick="() => HandleLessonClick(lesson)" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                        <p>@lesson.LessonTitle</p>
+                    </div>
                     <ul>
                         @if (lesson.Quiz.QuizName != null)
-                    {
-                        <li>
-                            <NavLink class="nav-link disabled" style="background-color: #d3d3d3">@lesson.Quiz.QuizName</NavLink>
-                        </li>
-                    }
-                    @if (lesson.Assignment.TaskName != null)
-                    {
-                        <li>
-                            <NavLink class="nav-link disabled" style="background-color: #d3d3d3">@lesson.Assignment.TaskName</NavLink>
-                        </li>
-                    }
-                </ul>
-            </li>
+                        {
+                            <li>
+                                <div @onclick="() => HandleQuizClick(lesson)" class="t-py-2 t-ml-5 t-pl-4 t-pr-5 t-text-gray-900 t-rounded t-font-normal hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                                    <p>@lesson.Quiz.QuizName</p>
+                                </div>
+                            </li>
+                        }
+                        @if (lesson.Assignment.TaskName != null)
+                        {
+                            <li>
+                                <div @onclick="() => HandleAssignmentClick(lesson)" class="t-py-2 t-ml-5 t-pl-4 t-pr-5 t-text-gray-900 t-rounded t-font-normal hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                                    <p>@lesson.Assignment.TaskName</p>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <div class="t-flex t-items-center t-justify-between t-py-2 t-px-3 t-text-gray-400 t-rounded t-bg-gray-200 t-cursor-not-allowed">
+                        <p>@lesson.LessonTitle</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="14" width="12.25" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#9ca3af" d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z" /></svg>
+                    </div>
+                    <ul>
+                        @if (lesson.Quiz.QuizName != null)
+                        {
+                            <li>
+                                <div class="t-flex t-items-center t-justify-between t-py-2 t-px-3 t-text-gray-400 t-rounded t-bg-gray-200 t-cursor-not-allowed">
+                                    <p>@lesson.Quiz.QuizName</p>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="12.25" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#9ca3af" d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z" /></svg>
+                                </div>
+                            </li>
+                        }
+                        @if (lesson.Assignment.TaskName != null)
+                        {
+                            <li>
+                                <div class="t-flex t-items-center t-justify-between t-py-2 t-px-3 t-text-gray-400 t-rounded t-bg-gray-200 t-cursor-not-allowed">
+                                    <p>@lesson.Assignment.TaskName</p>
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="14" width="12.25" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#9ca3af" d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z" /></svg>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
         }
-    }
-</ul>
+    </ul>
+</div>
 
+<hr />
 
 @code {
     [Parameter]
@@ -68,6 +91,26 @@
     public EventCallback<Lesson> OnQuizClicked { get; set; }
     [Parameter]
     public EventCallback<Lesson> OnAssignmentClicked { get; set; }
+
+    private bool isSidebarCollapsed = true;
+
+    private void ToggleSidebar()
+    {
+        isSidebarCollapsed = !isSidebarCollapsed;
+    }
+
+    private string GetSidebarClass()
+    {
+        string baseClasses = "t-flex t-flex-col lg:t-flex";
+        if (isSidebarCollapsed)
+        {
+            return $"{baseClasses} t-hidden";
+        }
+        else
+        {
+            return baseClasses;
+        }
+    }
 
     private async Task HandleLessonClick(Lesson lesson)
     {
