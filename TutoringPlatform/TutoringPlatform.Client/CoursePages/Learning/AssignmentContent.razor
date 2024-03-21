@@ -1,24 +1,30 @@
 ﻿<div class="t-py-4 t-px-8">
     <h4 class="t-text-center t-mt-3 t-mb-3 md:t-mb-10 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">@Assignment.TaskName</h4>
-    <br />
-    <p>Desription: @Assignment.TaskDescription</p>
 
     @if (!AssignmentCompleted)
     {
+        <h4 class="t-mt-8 t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Task Description</h4>
+        <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+        <p class="t-text-gray-500 t-mx-4 md:t-mx-20">@Assignment.TaskDescription</p>
         <EditForm Model="Input" FormName="assignment" OnValidSubmit="SubmitAssignment" method="post">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.AssignmentAnswer" class="form-control" placeholder="Assignment answer." />
-                <label for="answer" class="form-label">Your Answer</label>
+            <div class="t-mx-4 md:t-mx-20">
+                <label for="answer" class="t-mt-8 t-mb-2 md:t-mb-0.5 t-text-gray-600 text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Your Answer</label>
+                <hr class="t-h-1 t-my-2 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+                <div class="t-mt-5 md:t-mt-4">
+                    <InputTextArea @bind-Value="Input.AssignmentAnswer" class="form-control" placeholder="Assignment answer." />
+                </div>
                 <ValidationMessage For="() => Input.AssignmentAnswer" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Submit</button>
+            <div class="t-mx-4 md:t-mx-20 t-mt-4 md:t-mt-8 t-flex t-justify-center">
+                <button type="submit" class="t-text-white t-mx-auto t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Submit</button>
+            </div>
         </EditForm>
     }
     else
     {
-        <p>Thank you for your submission.</p>
+        <p class="t-text-center t-mb-3 t-text-gray-600 t-text-xl md:t-text-2xl t-font-semibold">Thank you for your submission.</p>
+        <p class="t-text-center t-mb-3 t-text-gray-500">Personal Feedback will be available soon in the Feedback section.</p>
     }
 </div>
 
