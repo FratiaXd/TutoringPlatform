@@ -1,12 +1,11 @@
 ﻿<EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
     <DataAnnotationsValidator />
-    <ValidationSummary class="text-danger" role="alert" />
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-        <label for="new-email" class="form-label">New email</label>
+    <div class="t-mb-3">
+        <label for="new-email" class="t-block t-mb-1 t-ml-1 t-text-base t-font-medium t-text-gray-600 dark:t-text-white">New email</label>
+        <InputText type="text" @bind-Value="Input.NewEmail" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full md:t-min-w-112 t-p-3" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
         <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
     </div>
-    <button type="submit" class="w-100 btn btn-lg btn-primary">Change email</button>
+    <button type="submit" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2">Change email</button>
 </EditForm>
 
 @code {

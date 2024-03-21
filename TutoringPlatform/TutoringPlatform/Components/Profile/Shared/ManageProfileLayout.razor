@@ -1,16 +1,14 @@
 ﻿@inherits LayoutComponentBase
 @layout ProfileLayout
 
-<h1>Manage account</h1>
-
 <div>
-    <h2>User Profile</h2>
+    <h2 class="text-2xl t-font-semibold t-my-2 t-ml-2 t-leading-none t-tracking-tight t-text-gray-600 md:t-text-3xl">User Profile</h2>
     <hr />
-    <div class="row">
-        <div class="col-md-3">
+    <div class="md:t-flex">
+        <div class="t-flex-column space-y t-space-y-4 t-font-medium t-text-gray-500 dark:t-text-gray-400 md:me-4 t-mb-4 md:t-mb-0">
             <ManageProfileNavMenu />
         </div>
-        <div class="col-md-9">
+        <div class="t-my-3 t-p-6 t-pb-16 t-bg-gray-50 text-medium t-text-gray-500 dark:t-text-gray-400 dark:t-bg-gray-800 t-rounded-lg t-w-full">
             @Body
         </div>
     </div>

@@ -1,24 +1,107 @@
 ﻿@page "/profile/profilepages/profilecourses"
 @page "/admin/profilepages/profilecourses/{Id}"
 @rendermode InteractiveServer
-<h3>Profile Courses</h3>
 
-@foreach (var enrollment in UserEnrollments)
-{
-    <h4>@enrollment.Course.Title - @enrollment.EnrollmentStatus</h4>
-    <ul>
-        @foreach (var progress in SortedProgresses.Where(lp => lp.Lesson.CourseId == enrollment.Course.CourseId))
-        {
-            <li>@progress.Lesson.LessonTitle - @progress.LessonStatus - @progress.Lesson.LessonOrder</li>
-        }
-    </ul>
-}
+<div>
+    <h3 class="t-text-gray-600 t-text-center text-2xl t-mb-4 md:t-mb-10 t-font-bold t-leading-none t-tracking-tight md:t-text-3xl">Courses</h3>
+
+    @if (UserEnrollments.Count == 0)
+    {
+        <p class="t-text-center t-mb-1 t-text-gray-500 t-text-xl md:t-text-2xl t-font-semibold">No course history recorded.</p>
+    }
+
+    @foreach (var enrollment in UserEnrollments)
+    {
+        <div id="accordion-collapse" class="t-mb-8" data-accordion="collapse">
+            <h2 id="accordion-collapse-heading-1">
+                <button @onclick="() => ToggleDrawer(enrollment.EnrollmentId)" type="button" class="t-flex t-text-lg t-items-center t-justify-between t-w-full t-p-5 t-font-medium rtl:t-text-right t-text-gray-700 t-border t-border-2 t-border-gray-200 t-rounded-t-xl focus:t-ring-4 focus:t-ring-gray-200 dark:focus:t-ring-gray-800 dark:t-border-gray-700 dark:t-text-gray-400 hover:t-bg-gray-100 dark:hover:t-bg-gray-800 t-gap-3" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true" aria-controls="accordion-collapse-body-1">
+                    <span class="t-inline-flex t-items-center">
+                        @enrollment.Course.Title -
+                        @if (@enrollment.EnrollmentStatus == "Completed")
+                        {
+                            <svg class="t-w-4 t-h-4 t-ms-3 t-me-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                                <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                            </svg>
+                        }
+                        else
+                        {
+                            <svg class="t-w-4 t-h-4 t-ms-3 t-me-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                                <path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                            </svg>
+                        }
+                        @enrollment.EnrollmentStatus</span>
+                    <svg data-accordion-icon class="t-w-3 t-h-3 t-rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5 5 1 1 5" />
+                    </svg>
+                </button>
+            </h2>
+            @foreach (var progress in SortedProgresses.Where(lp => lp.Lesson.CourseId == enrollment.Course.CourseId))
+            {
+                <div id="accordion-collapse-body-1" class="@GetDrawerClass(enrollment.EnrollmentId)" aria-labelledby="accordion-collapse-heading-1">
+                    <ol class="t-divide-y divider-gray-200 dark:t-divide-gray-700">
+                        <li>
+                            <a class="t-items-center t-block t-p-3 sm:t-flex hover:t-bg-gray-100 dark:hover:t-bg-gray-700">
+                                <div class="t-text-gray-600 dark:t-text-gray-400 t-min-h-30 t-pl-5">
+                                    <div class="t-text-sm t-mb-1.5 t-font-normal">Lesson @progress.Lesson.LessonOrder: <span class="t-font-medium t-text-base t-text-gray-500 dark:t-text-white">@progress.Lesson.LessonTitle</span></div>
+                                    @if (progress.Lesson.IsAutograded)
+                                    {
+                                        @if (progress.QuizGrade is null)
+                                        {
+                                            <div class="t-text-sm t-font-normal">Quiz Score: Not Submitted</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="t-text-sm t-font-normal">Quiz Score: @progress.QuizGrade</div>
+                                        }
+                                    }
+                                    @if (progress.Lesson.IsAssessed)
+                                    {
+                                        @if (progress.FeedbackStatus is null)
+                                        {
+                                            <div class="t-text-sm t-font-normal">Assignment Status: Not Submitted</div>
+                                        }
+                                        else
+                                        {
+                                            <div class="t-text-sm t-font-normal">Assignment Status: @progress.FeedbackStatus</div>
+                                        }
+                                    }
+                                    @if (progress.LessonStatus == "Completed")
+                                    {
+                                        <span class="t-py-2 t-inline-flex t-items-center t-text-xs t-font-normal t-text-green-600 dark:t-text-gray-400">
+                                            <svg class="t-w-3.5 t-h-3.5 me-1.5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                                                <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                            </svg>
+                                            @progress.LessonStatus
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="t-py-2 t-inline-flex t-items-center t-text-xs t-font-normal t-text-amber-600 dark:t-text-gray-400">
+                                            <svg class="t-w-3.5 t-h-3.5 me-1.5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                                                <path d="M304 48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zm0 416a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM48 304a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm464-48a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM142.9 437A48 48 0 1 0 75 369.1 48 48 0 1 0 142.9 437zm0-294.2A48 48 0 1 0 75 75a48 48 0 1 0 67.9 67.9zM369.1 437A48 48 0 1 0 437 369.1 48 48 0 1 0 369.1 437z" />
+                                            </svg>
+                                            @progress.LessonStatus
+                                        </span>
+                                    }
+                                </div>
+                            </a>
+                        </li>
+                    </ol>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+
 
 @code {
     [Parameter]
     public string Id { get; set; }
     public List<Enrollment> UserEnrollments { get; set; } = new List<Enrollment>();
     public List<LessonProgress> SortedProgresses { get; set; } = new List<LessonProgress>();
+    public Dictionary<int, bool> isCollapsed = new Dictionary<int, bool>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,5 +115,28 @@
         var progresses = await LessonProgressService.GetUserLessonProgressesAsync(Id);
         UserEnrollments = enrollments.ToList();
         SortedProgresses = progresses.ToList();
+
+        foreach (var enrollment in UserEnrollments)
+        {
+            isCollapsed[enrollment.EnrollmentId] = true;
+        }
+    }
+
+    private void ToggleDrawer(int id)
+    {
+        isCollapsed[id] = !isCollapsed[id];
+    }
+
+    private string GetDrawerClass(int id)
+    {
+        string baseClasses = "t-border t-border-t-0 t-rounded-b-lg t-border-x-gray-200";
+        if (isCollapsed[id])
+        {
+            return $"{baseClasses} t-hidden";
+        }
+        else
+        {
+            return baseClasses;
+        }
     }
 }

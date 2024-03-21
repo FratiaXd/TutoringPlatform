@@ -1,27 +1,35 @@
-﻿<div class="mt-3 bg-danger text-white bg-opacity-75">
-    @message
-</div>
+﻿@if (!string.IsNullOrEmpty(message))
+{
+    <div class="t-flex t-justify-center t-items-center t-p-4 t-mb-3 t-text-sm t-text-red-800 t-border t-border-red-300 t-rounded-lg t-bg-red-50" role="alert">
+        <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span class="t-sr-only">Info</span>
+        <div>
+            <span class="t-font-medium">@message</span> Change a few things up and try submitting again.
+        </div>
+    </div>
+}
 
 <EditForm Model="Input" FormName="delete-user" OnValidSubmit="OnValidSubmitAsync" method="post">
     <DataAnnotationsValidator />
-    <ValidationSummary class="text-danger" role="alert" />
     @if (!IsUserAdmin)
     {
-        <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
-            <label for="password" class="form-label">Password</label>
+        <div class="t-mb-3">
+            <label for="password" class="t-block t-mb-1 t-ml-1 t-text-base t-font-medium t-text-gray-600 dark:t-text-white">Password</label>
+            <InputText type="password" @bind-Value="Input.Password" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full md:t-min-w-112 t-p-3" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
             <ValidationMessage For="() => Input.Password" class="text-danger" />
         </div>
     } 
     else
     {
-        <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="Input.AdminPassword" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter admin password." />
-            <label for="password" class="form-label">Admin Password</label>
+        <div class="t-mb-3">
+            <label for="password" class="t-block t-mb-1 t-ml-1 t-text-base t-font-medium t-text-gray-600 dark:t-text-white">Admin Password</label>
+            <InputText type="password" @bind-Value="Input.AdminPassword" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full md:t-min-w-112 t-p-3" autocomplete="current-password" aria-required="true" placeholder="Please enter admin password." />
             <ValidationMessage For="() => Input.AdminPassword" class="text-danger" />
         </div>
     }
-    <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close account</button>
+    <button class="t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2" type="submit">Delete data and close account</button>
 </EditForm>
 
 @code {
