@@ -3,29 +3,47 @@
 @rendermode InteractiveServer
 
 <div>
-    <h3 class="t-text-gray-600 t-text-center text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-3xl">Purchase History</h3>
+    <h3 class="t-text-gray-600 t-mb-4 md:t-mb-10 t-text-center text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-3xl">Purchase History</h3>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Course Title</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Order time</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var record in UserOrders)
-            {
+    <div class="t-relative t-overflow-x-auto t-shadow-md t-rounded-lg">
+        <table class="t-w-full t-text-sm t-text-left rtl:t-text-right t-text-gray-500 dark:t-text-gray-400">
+            <thead class="t-text-sm t-text-white t-uppercase t-bg-gradient-to-br t-from-green-400 t-to-blue-600 t-font-medium">
                 <tr>
-                    <td>@record.Name</td>
-                    <td>@record.Price</td>
-                    <td>@record.Quantity</td>
-                    <td>@record.OrderTime</td>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Course name
+                    </th>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Quantity
+                    </th>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Order time
+                    </th>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Price
+                    </th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var record in UserOrders)
+                {
+                    <tr class="t-bg-white t-border-b dark:t-bg-gray-800 dark:t-border-gray-700 hover:t-bg-gray-50 dark:hover:t-bg-gray-600">
+                        <th scope="row" class="t-px-6 t-py-4 t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
+                            @record.Name
+                        </th>
+                        <td class="t-px-6 t-py-4">
+                            @record.Quantity
+                        </td>
+                        <td class="t-px-6 t-py-4">
+                            @record.OrderTime
+                        </td>
+                        <td class="t-px-6 t-py-4">
+                            £@decimal.Round(record.Price, 2)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @code {

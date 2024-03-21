@@ -5,10 +5,10 @@
 <div>
     <h3 class="t-text-gray-600 t-text-center text-2xl t-mb-4 md:t-mb-10 t-font-bold t-leading-none t-tracking-tight md:t-text-3xl">Courses</h3>
 
-    @if (UserEnrollments.Count == 0)
+@*     @if (UserEnrollments.Count == 0)
     {
         <p class="t-text-center t-mb-1 t-text-gray-500 t-text-xl md:t-text-2xl t-font-semibold">No course history recorded.</p>
-    }
+    } *@
 
     @foreach (var enrollment in UserEnrollments)
     {
