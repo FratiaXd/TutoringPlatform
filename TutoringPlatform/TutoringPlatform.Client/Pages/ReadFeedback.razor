@@ -3,13 +3,32 @@
 @rendermode InteractiveAuto
 @attribute [Authorize]
 
-<h4>Feedback Details</h4>
+<h3 class="t-text-center t-mt-3 t-mt-8 md:t-mb-4 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">Feedback Details</h3>
+<hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+
 @if (progress != null)
 {
-    <p>Course: @progress.Lesson.Course.Title</p>
-    <p>Lesson: @progress.Lesson.LessonTitle</p>
-    <p>Submission: @progress.SubmittedAssignment</p>
-    <p>Feedback: @progress.TutorFeedback</p>
+    <div class="t-flex t-flex-col t-items-center t-p-6 t-bg-gray-50 text-medium t-text-gray-500 t-rounded-lg t-w-full">
+        <p class="t-text-center t-text-lg t-font-semibold">Course: @progress.Lesson.Course.Title</p>
+        <p class="t-text-center t-text-lg t-font-semibold">Lesson: @progress.Lesson.LessonTitle</p>
+        <h4 class="t-mt-8 t-text-center t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Your Submission</h4>
+        <hr class="t-w-full t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+        <div class="t-mt-4 md:t-mt-6 t-w-full t-max-w-2xl t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow dark:t-bg-gray-800 dark:t-border-gray-700">
+            <p class="t-p-6">@progress.SubmittedAssignment</p>
+        </div>
+        <h4 class="t-mt-8 t-text-center t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Feedback</h4>
+        <hr class="t-w-full t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+        @if (progress.TutorFeedback is not null)
+        {
+            <div class="t-mt-4 t-mb-10 md:t-mt-6 t-w-full t-max-w-2xl t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow t-shadow-green-500 dark:t-bg-gray-800 dark:t-border-gray-700">
+                <p class="t-p-6">@progress.TutorFeedback</p>
+            </div>
+        }
+        else
+        {
+            <p class="t-my-10 t-text-center t-text-lg t-text-gray-400 t-font-normal">Awaiting Feedback</p>
+        }
+    </div>
 }
 
 @code {
@@ -20,7 +39,7 @@
     protected override async Task OnInitializedAsync()
     {
         progress = await LessonProgressService.GetLessonProgressByIdAsync(ProgressId);
-        if (progress.FeedbackStatus != "Seen")
+        if (progress.FeedbackStatus != "Seen" && progress.FeedbackStatus != "Waiting")
         {
             progress.FeedbackStatus = "Seen";
             await LessonProgressService.SubmitFeedbackAsync(progress);

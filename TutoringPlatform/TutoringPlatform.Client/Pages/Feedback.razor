@@ -6,55 +6,59 @@
 <div class="t-flex t-flex-col text-center t-mt-8">
     <h3 class="t-text-4xl t-font-extrabold">Feedback</h3>
     <p class="t-mb-4 t-mt-1 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400">View your personal feedback for completed Assignments.</p>
+    <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Course Title</th>
-            <th>Lesson Title</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var record in UserLessonProgressesReviewed)
-        {
-            <tr>
-                <td>@record.Lesson.Course.Title</td>
-                <td>@record.Lesson.LessonTitle</td>
-                <td>@record.FeedbackStatus</td>
-                <td><button class="btn btn-primary" @onclick="(e => OpenReadFeedback(record))">Read Feedback</button></td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="t-flex t-flex-col text-center t-mt-3">
+    <h4 class="t-text-2xl t-font-bold t-text-gray-500">New feedback:</h4>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Course Title</th>
-            <th>Lesson Title</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var record in UserLessonProgressesRest)
-        {
-            <tr>
-                <td>@record.Lesson.Course.Title</td>
-                <td>@record.Lesson.LessonTitle</td>
-                <td>@record.FeedbackStatus</td>
-                <td><button class="btn btn-primary" @onclick="(e => OpenReadFeedback(record))">Open</button></td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
+    @foreach (var record in UserLessonProgressesReviewed)
+    {
+        <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
+            <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
+            <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
+            <p class="t-font-medium t-text-green-600 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
+        </a>
+    }
+</div>
+
+
+<div class="t-flex t-flex-col text-center t-mt-3">
+    <h4 class="t-text-2xl t-font-bold t-text-gray-500">Awaiting feedback:</h4>
+</div>
+
+<div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
+    @foreach (var record in UserLessonProgressesAwait)
+    {
+        <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
+            <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
+            <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
+            <p class="t-font-medium t-text-amber-600 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
+        </a>
+    }
+</div>
+
+<div class="t-flex t-flex-col text-center t-mt-3">
+    <h4 class="t-text-2xl t-font-bold t-text-gray-500">History:</h4>
+</div>
+
+<div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
+    @foreach (var record in UserLessonProgressesRest)
+    {
+        <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
+            <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
+            <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
+            <p class="t-font-medium t-text-gray-700 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
+        </a>
+    }
+</div>
 
 @code {
     private string CurUserId { get; set; }
     private List<LessonProgress> UserLessonProgressesReviewed { get; set; } = new List<LessonProgress>();
+    private List<LessonProgress> UserLessonProgressesAwait { get; set; } = new List<LessonProgress>();
     private List<LessonProgress> UserLessonProgressesRest { get; set; } = new List<LessonProgress>();
 
     protected override async Task OnInitializedAsync()
@@ -73,7 +77,8 @@
         UserLessonProgressesReviewed?.Clear();
         if (progresses == null) return;
         UserLessonProgressesReviewed = progresses.Where(lp => lp.FeedbackStatus == "Reviewed").ToList();
-        UserLessonProgressesRest = progresses.Where(lp => lp.FeedbackStatus != "Reviewed").ToList();
+        UserLessonProgressesAwait = progresses.Where(lp => lp.FeedbackStatus == "Waiting").ToList();
+        UserLessonProgressesRest = progresses.Where(lp => lp.FeedbackStatus == "Seen").ToList();
     }
 
     public void OpenReadFeedback(LessonProgress lessonProgress)
