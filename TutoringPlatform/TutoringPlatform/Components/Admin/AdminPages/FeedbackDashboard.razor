@@ -1,59 +1,111 @@
 ﻿@page "/admin/adminpages/feedbackdashboard"
 @rendermode InteractiveServer
-<h3>Feedback Dashboard</h3>
 
-<h4>Awaiting Feedback:</h4>
+<div class="t-flex t-flex-col text-center t-mt-8">
+    <h3 class="t-text-gray-600 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">Feedback Dashboard</h3>
+    <p class="t-mb-4 t-mt-1 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400">Leave feedback for submitted assignments.</p>
+    <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Course ID</th>
-            <th>User</th>
-            <th>Lesson Title</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var record in AwaitingFeedback)
-        {
+<div class="t-mt-4 t-relative t-overflow-x-auto t-shadow-md sm:t-rounded-lg">
+    <table class="t-w-full t-text-sm t-text-left rtl:t-text-right t-text-gray-500 dark:t-text-gray-400">
+        <caption class="t-caption-top t-p-5 t-text-lg t-font-semibold t-border t-rounded-t-lg t-text-left rtl:t-text-right t-text-gray-900 t-bg-white dark:t-text-white dark:t-bg-gray-800">
+            Awaiting Feedback
+            <p class="t-mt-1 t-text-sm t-font-normal t-text-gray-500 dark:t-text-gray-400">Browse a list of Flowbite products designed to help you work and play, stay organized, get answers, keep in touch, grow your business, and more.</p>
+        </caption>
+        <thead class="t-text-xs t-text-gray-700 t-uppercase t-bg-gray-50 dark:t-bg-gray-700 dark:t-text-gray-400">
             <tr>
-                <td>@record.Lesson.CourseId</td>
-                <td>@record.User.Email</td>
-                <td>@record.Lesson.LessonTitle</td>
-                <td>@record.FeedbackStatus</td>
-                <td><button class="btn btn-primary" @onclick="() => ProcessFeedback(record.LessonProgressId)">Open</button></td>
+                <th scope="col" class="t-px-6 t-py-3">
+                    Course Title
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    Lesson Title
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    User
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    Status
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    <span class="t-sr-only">Edit</span>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var record in AwaitingFeedback)
+            {
+                <tr class="t-bg-white t-border-b dark:t-bg-gray-800 hover:t-bg-gray-50 dark:t-border-gray-700">
+                    <th scope="row" class="t-px-6 t-py-4 t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
+                        @record.Lesson.Course.Title
+                    </th>
+                    <td class="t-px-6 t-py-4">
+                        @record.Lesson.LessonTitle
+                    </td>
+                    <td class="t-px-6 t-py-4">
+                        @record.User.Email
+                    </td>
+                    <td class="t-px-6 t-py-4">
+                        @record.FeedbackStatus
+                    </td>
+                    <td class="t-px-6 t-py-4 t-text-right">
+                        <a @onclick="() => ProcessFeedback(record.LessonProgressId)" class="t-font-medium t-text-blue-600 t-cursor-pointer dark:t-text-blue-500 hover:t-underline">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-<br />
-<h4>Feedback History:</h4>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Course Title</th>
-            <th>User</th>
-            <th>Lesson Title</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var record in FeedbackHistory)
-        {
+<div class="t-mt-14 t-relative t-overflow-x-auto t-shadow-md sm:t-rounded-lg">
+    <table class="t-w-full t-text-sm t-text-left rtl:t-text-right t-text-gray-500 dark:t-text-gray-400">
+        <caption class="t-caption-top t-p-5 t-text-lg t-font-semibold t-border t-rounded-t-lg t-text-left rtl:t-text-right t-text-gray-900 t-bg-white dark:t-text-white dark:t-bg-gray-800">
+            Feedback History
+            <p class="t-mt-1 t-text-sm t-font-normal t-text-gray-500 dark:t-text-gray-400">Browse a list of Flowbite products designed to help you work and play, stay organized, get answers, keep in touch, grow your business, and more.</p>
+        </caption>
+        <thead class="t-text-xs t-text-gray-700 t-uppercase t-bg-gray-50 dark:t-bg-gray-700 dark:t-text-gray-400">
             <tr>
-                <td>@record.Lesson.Course.Title</td>
-                <td>@record.User.Email</td>
-                <td>@record.Lesson.LessonTitle</td>
-                <td>@record.FeedbackStatus</td>
-                <td><button class="btn btn-primary" @onclick="() => ProcessFeedback(record.LessonProgressId)">View</button></td>
+                <th scope="col" class="t-px-6 t-py-3">
+                    Course Title
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    Lesson Title
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    User
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    Status
+                </th>
+                <th scope="col" class="t-px-6 t-py-3">
+                    <span class="t-sr-only">Edit</span>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var record in FeedbackHistory)
+            {
+                <tr class="t-bg-white t-border-b dark:t-bg-gray-800 hover:t-bg-gray-50 dark:t-border-gray-700">
+                    <th scope="row" class="t-px-6 t-py-4 t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
+                        @record.Lesson.Course.Title
+                    </th>
+                    <td class="t-px-6 t-py-4">
+                        @record.Lesson.LessonTitle
+                    </td>
+                    <td class="t-px-6 t-py-4">
+                        @record.User.Email
+                    </td>
+                    <td class="t-px-6 t-py-4">
+                        @record.FeedbackStatus
+                    </td>
+                    <td class="t-px-6 t-py-4 t-text-right">
+                        <a @onclick="() => ProcessFeedback(record.LessonProgressId)" class="t-font-medium t-text-blue-600 t-cursor-pointer dark:t-text-blue-500 hover:t-underline">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
     private List<LessonProgress> AwaitingFeedback { get; set; } = new List<LessonProgress>();

@@ -1,45 +1,63 @@
 ﻿@page "/admin/adminpages/processfeedback/{LessonProgressId:int}"
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
-<h3>Process Feedback</h3>
 
-@if (lessonProgress.User != null)
-{
-    <h3>User: @lessonProgress.User.Email</h3>
-}
-else
-{
-    <h3>User: N/A</h3>
-}
-<h4>Task: @assignment.TaskDescription</h4>
-<br />
-<p>Submission:</p>
-<p>@lessonProgress.SubmittedAssignment</p>
+<div class="t-flex t-flex-col text-center t-mt-8">
+    <h3 class="t-text-gray-600 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">Process Feedback</h3>
+    <p class="t-mb-4 t-mt-1 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400">Submitted by
+        @if (lessonProgress.User != null)
+        {
+            <strong class="t-font-semibold t-text-gray-600 dark:t-text-white">@lessonProgress.User.Email</strong>
+        }
+        else
+        {
+            <strong class="t-font-semibold t-text-gray-600 dark:t-text-white">N/A</strong>
+        }
+    </p>
+    <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+</div>
 
 
-@if (lessonProgress.TutorFeedback == null || activateEdit)
-{
-    <EditForm Model="Input" FormName="submitfeedback" OnValidSubmit="SubmitFeedback" method="post">
-        <DataAnnotationsValidator />
-        <ValidationSummary class="text-danger" role="alert" />
-        <div class="form-floating mb-3">
-            <InputText @bind-Value="Input.Feedback" class="form-control" placeholder="Feedback." />
-            <label for="feedback" class="form-label">Feedback</label>
-            <ValidationMessage For="() => Input.Feedback" class="text-danger" />
-        </div>
-        <button type="submit" class="w-100 btn btn-lg btn-primary">Submit Feedback</button>
-    </EditForm>
-
-    if (activateEdit)
+<div class="t-flex t-flex-col t-items-center t-p-6 t-mb-8 t-bg-gray-50 text-medium t-text-gray-500 t-rounded-lg t-w-full">
+    <h4 class="t-mt-2 t-text-center t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Task</h4>
+    <hr class="t-w-full t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+    <div class="t-mt-4 md:t-mt-6 t-w-full t-max-w-2xl t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow dark:t-bg-gray-800 dark:t-border-gray-700">
+        <p class="t-p-6">@assignment.TaskDescription</p>
+    </div>
+    <h4 class="t-mt-5 t-text-center t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Submission</h4>
+    <hr class="t-w-full t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+    <div class="t-mt-4 md:t-mt-6 t-w-full t-max-w-2xl t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow t-shadow-green-500 dark:t-bg-gray-800 dark:t-border-gray-700">
+        <p class="t-p-6">@lessonProgress.SubmittedAssignment</p>
+    </div>
+    <h4 class="t-mt-5 t-text-center t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Your Feedback</h4>
+    <hr class="t-w-full t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+    @if (lessonProgress.TutorFeedback == null || activateEdit)
     {
-        <Button Color="ButtonColor.Secondary" @onclick="CancelEdit">Cancel</Button>
+        <EditForm Model="Input" FormName="submitfeedback" OnValidSubmit="SubmitFeedback" method="post">
+            <DataAnnotationsValidator />
+            <div class="t-mt-5">
+                <div>
+                    <InputTextArea @bind-Value="Input.Feedback" class="form-control" placeholder="Your feedback." />
+                </div>
+                <ValidationMessage For="() => Input.Feedback" class="text-danger" />
+            </div>
+            <div class="t-mx-4 md:t-mx-20 t-mt-4 md:t-mt-8 t-mb-8 t-flex t-justify-center">
+                <button type="submit" class="t-text-white t-mx-auto t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Submit Feedback</button>
+            </div>
+        </EditForm>
+
+        if (activateEdit)
+        {
+            <button type="submit" @onclick="CancelEdit" class="t-mb-8 t-text-white t-mx-auto t-bg-gray-400 hover:t-bg-gray-700 focus:t-outline-none focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Cancel</button>
+        }
     }
-}
-else
-{
-    <p>Your feedback:</p>
-    <p>@lessonProgress.TutorFeedback</p>
-    <Button Color="ButtonColor.Primary" @onclick="EditFeedback">Edit Feedback</Button>
-}
+    else
+    {
+        <div class="t-mt-4 md:t-mt-6 t-w-full t-max-w-2xl t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow t-shadow-green-500 dark:t-bg-gray-800 dark:t-border-gray-700">
+            <p class="t-p-6">@lessonProgress.TutorFeedback</p>
+        </div>
+        <button type="submit" @onclick="EditFeedback" class="t-mt-8 t-mb-8 t-text-white t-mx-auto t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Edit Feedback</button>
+    }
+</div>
 
 @code {
     [Parameter]

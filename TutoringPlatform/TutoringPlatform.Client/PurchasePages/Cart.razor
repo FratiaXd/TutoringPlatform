@@ -19,10 +19,10 @@ else
             <thead class="t-text-sm t-text-white t-uppercase t-bg-gradient-to-br t-from-green-400 t-to-blue-600 t-font-medium">
                 <tr>
                     <th scope="col" class="t-px-6 t-py-3">
-                        Product name
+                        Image
                     </th>
                     <th scope="col" class="t-px-6 t-py-3">
-                        Image
+                        Product name
                     </th>
                     <th scope="col" class="t-px-6 t-py-3">
                         Quantity
@@ -42,11 +42,11 @@ else
                     foreach (var item in listData)
                     {
                         <tr class="t-bg-white t-border-b dark:t-bg-gray-800 hover:t-bg-gray-50">
+                            <th scope="row" class="t-px-6 t-py-4 t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
+                                <img src="@item.Image" class="w-16 md:w-32 max-w-full max-h-full t-rounded-lg" />
+                            </th>
                             <th scope="row" class="t-px-6 t-py-4 t-text-base t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
                                 @item.Name
-                            </th>
-                            <th scope="row" class="t-px-6 t-py-4 t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
-                                <img src="@item.Image" class="t-rounded-lg t-object-contain t-max-w-full t-h-auto md:t-w-64 md:t-h-48" />
                             </th>
                             <td class="t-px-6 t-py-4">
                                 @item.Quantity
