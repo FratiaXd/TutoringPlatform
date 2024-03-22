@@ -1333,6 +1333,10 @@ input:checked + .toggle-bg {
   max-width: 1280px;
 }
 
+.t-max-w-sm {
+  max-width: 24rem;
+}
+
 .t-flex-shrink-0 {
   flex-shrink: 0;
 }
@@ -1406,6 +1410,10 @@ input:checked + .toggle-bg {
   flex-wrap: wrap;
 }
 
+.t-place-items-center {
+  place-items: center;
+}
+
 .t-items-center {
   align-items: center;
 }
@@ -1432,6 +1440,10 @@ input:checked + .toggle-bg {
 
 .t-gap-3 {
   gap: 0.75rem;
+}
+
+.t-gap-4 {
+  gap: 1rem;
 }
 
 .t-space-x-1 > :not([hidden]) ~ :not([hidden]) {
@@ -2357,6 +2369,10 @@ input:checked + .toggle-bg {
 
   .md\:t-items-center {
     align-items: center;
+  }
+
+  .md\:t-justify-between {
+    justify-content: space-between;
   }
 
   .md\:t-gap-6 {
