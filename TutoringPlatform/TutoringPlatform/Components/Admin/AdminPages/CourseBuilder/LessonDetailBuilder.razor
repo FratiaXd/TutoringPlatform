@@ -2,88 +2,115 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @page "/admin/adminpages/coursebuilder/lessondetailbuilder/{LessonId:int}"
 
-<h3>Lesson Builder</h3>
-
-<h4>@message</h4>
-
-<Modal @ref="deleteModal" IsVerticallyCentered="true" />
-
-<EditForm Model="Input" FormName="editlesson" OnValidSubmit="UpdateLesson" method="post">
-    <DataAnnotationsValidator />
-    <ValidationSummary class="text-danger" role="alert" />
-    <div class="form-floating mb-3">
-        <InputNumber @bind-Value="Input.LessonOrder" class="form-control" placeholder="Lesson order." readonly/>
-        <label for="order" class="form-label">Lesson Order Number</label>
-        <ValidationMessage For="() => Input.LessonOrder" class="text-danger" />
-    </div>
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.LessonTitle" class="form-control" placeholder="Please enter lesson title." />
-        <label for="title" class="form-label">Lesson Title</label>
-        <ValidationMessage For="() => Input.LessonTitle" class="text-danger" />
-    </div>
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.LessonDescription" class="form-control" placeholder="Please enter lesson description." />
-        <label for="description" class="form-label">Lesson Description</label>
-        <ValidationMessage For="() => Input.LessonDescription" class="text-danger" />
-    </div>
-    <div class="row">
-        <div class="col-md-11">
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.LessonVideoUrl" class="form-control" placeholder="Please add course video." />
-                <label for="video-url" class="form-label">Lesson Video</label>
-                <ValidationMessage For="() => Input.LessonVideoUrl" class="text-danger" />
-            </div>
-        </div>
-        <div class="col-md-1">
-            <Button Color="ButtonColor.Primary" @onclick="SearchVideo">Search</Button>
-        </div>
-    </div>
-    @if (lessonVideo != null)
-    {
-        <div class="card mt-3">
-            <div class="row no-gutters">
-                <div class="col-md-4">
-                    <img class="card-img" style="max-width: 200px;" src="@lessonVideo.thumbnail" alt="Video Thumbnail">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Video Details</h5>
-                        <p class="card-text">Video Title: @lessonVideo.title</p>
-                        <p class="card-text">Published At: @lessonVideo.publishedAt</p>
+<div class="t-border t-border-gray-100 t-rounded-lg">
+    <div class="t-py-4 t-px-8">
+        <h3 class="t-text-center t-mt-3 t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">Edit Lesson Details</h3>
+        <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+        @if (!string.IsNullOrEmpty(message))
+        {
+            if (message.Contains("success"))
+            {
+                <div class="t-flex t-justify-center t-items-center t-p-4 t-mt-4 t-text-sm t-text-green-800 t-border t-border-green-300 t-rounded-lg t-bg-green-50" role="alert">
+                    <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="t-sr-only">Info</span>
+                    <div>
+                        <span class="t-font-medium">@message</span>
                     </div>
                 </div>
+            }
+            else
+            {
+                <div class="t-flex t-justify-center t-items-center t-p-4 t-mt-4 t-text-sm t-text-red-800 t-border t-border-red-300 t-rounded-lg t-bg-red-50" role="alert">
+                    <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="t-sr-only">Info</span>
+                    <div>
+                        <span class="t-font-medium">@message</span>
+                    </div>
+                </div>
+            }
+        }
+
+        <div class="t-mt-8 t-flex t-flex-row t-justify-center t-gap-4">
+            <button @onclick="AddQuiz" type="button" disabled="@QuizExists" class="t-text-white disabled:t-cursor-not-allowed disabled:t-opacity-50 t-mx-auto t-bg-gradient-to-r t-from-green-400 t-via-green-500 t-to-green-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-green-300 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">+ Add Quiz</button>
+            <button @onclick="AddAssignment" type="button" disabled="@AssignmentExists" class="t-text-white disabled:t-cursor-not-allowed disabled:t-opacity-50 t-mx-auto t-bg-gradient-to-r t-from-green-400 t-via-green-500 t-to-green-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-green-300 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">+ Add Assignment</button>
+        </div>
+
+        <Modal @ref="deleteModal" IsVerticallyCentered="true" />
+        <div class="t-mt-8 t-mx-3">
+            <EditForm Model="Input" FormName="editlesson" OnValidSubmit="UpdateLesson" method="post">
+                <DataAnnotationsValidator />
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="Input.LessonOrder" class="form-control" placeholder="Lesson order." readonly />
+                    <label for="order" class="form-label">Lesson Order Number</label>
+                    <ValidationMessage For="() => Input.LessonOrder" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.LessonTitle" class="form-control" placeholder="Please enter lesson title." />
+                    <label for="title" class="form-label">Lesson Title</label>
+                    <ValidationMessage For="() => Input.LessonTitle" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="Input.LessonDescription" class="form-control" placeholder="Please enter lesson description." />
+                    <label for="description" class="form-label">Lesson Description</label>
+                    <ValidationMessage For="() => Input.LessonDescription" class="text-danger" />
+                </div>
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="form-floating mb-3">
+                            <InputText @bind-Value="Input.LessonVideoUrl" class="form-control" placeholder="Please add course video." />
+                            <label for="video-url" class="form-label">Lesson Video</label>
+                            <ValidationMessage For="() => Input.LessonVideoUrl" class="text-danger" />
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" @onclick="SearchVideo" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5">Search</button>
+                    </div>
+                </div>
+                @if (lessonVideo != null)
+                {
+                    <div class="t-mb-6 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-xl">
+                        <img class="t-object-cover t-w-full t-rounded-t-lg t-h-96 md:t-h-auto md:t-w-48 md:t-rounded-none md:rounded-s-lg" src="@lessonVideo.thumbnail" alt="Video Thumbnail">
+                        <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
+                            <h5 class="t-mb-2 t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">Video Title: @lessonVideo.title</h5>
+                            <p class="t-mb-3 t-font-normal t-text-gray-700 dark:t-text-gray-400">Published At: @lessonVideo.publishedAt</p>
+                        </div>
+                    </div>
+                }
+                <div class="form-floating mb-3">
+                    <InputFile OnChange="HandleFileSelected" class="t-block t-w-full t-text-sm t-text-gray-900 t-border t-border-gray-300 t-rounded-lg t-cursor-pointer t-bg-gray-50 dark:t-text-gray-400 focus:t-outline-none dark:t-bg-gray-700 dark:t-border-gray-600 dark:t-placeholder-gray-400" />
+                </div>
+                @if (!string.IsNullOrWhiteSpace(updatedLesson?.LessonImageUrl))
+                {
+                    <div class="t-flex t-justify-center t-mt-2 t-mb-3">
+                        <img class="t-w-full t-max-w-[600px] t-min-w-[300px]" src="@updatedLesson.LessonImageUrl" alt="Lesson Image" />
+                    </div>
+                }
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="Input.LessonContent" class="form-control" placeholder="Please add course video." />
+                    <label for="content" class="form-label">Lesson Content</label>
+                    <ValidationMessage For="() => Input.LessonContent" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <Switch @bind-Value="Input.IsAutograded" Label="Make Quiz Visible" Disabled="@(!QuizExists)" />
+                </div>
+                <div class="mb-3">
+                    <Switch @bind-Value="Input.IsAssessed" Label="Make Assignment Visible" Disabled="@(!AssignmentExists)" />
+                </div>
+                <div class="t-mx-4 md:t-mx-10 t-mt-4 md:t-mt-8 t-mb-8 t-flex t-justify-center">
+                    <button type="submit" disabled="@IsCoursePublished" class="t-text-white t-mx-auto disabled:t-cursor-not-allowed disabled:t-opacity-50 t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Save</button>
+                </div>
+            </EditForm>
+
+            <div class="t-mx-4 md:t-mx-10 t-mt-4 md:t-mt-8 t-mb-8 t-flex t-justify-center">
+                <button type="button" @onclick="ShowDelete" disabled="@IsCoursePublished" class="t-text-white disabled:t-cursor-not-allowed disabled:t-opacity-50 t-mx-auto t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Delete Lesson</button>
             </div>
         </div>
-        <br/>
-    }
-    <div class="form-floating mb-3">
-        <InputFile OnChange="HandleFileSelected" />
     </div>
-    @if (!string.IsNullOrWhiteSpace(updatedLesson?.LessonImageUrl))
-    {
-        <br />
-        <p>Image: </p>
-        <img style="max-width: 400px;" src="@updatedLesson.LessonImageUrl" alt="Lesson Image"/>
-        <br />
-    }
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.LessonContent" class="form-control" placeholder="Please add course video." />
-        <label for="content" class="form-label">Lesson Content</label>
-        <ValidationMessage For="() => Input.LessonContent" class="text-danger" />
-    </div>
-    <div class="mb-3">
-        <Switch @bind-Value="Input.IsAutograded" Label="Make Quiz Visible" Disabled="@(!QuizExists)" />
-    </div>
-    <div class="mb-3">
-        <Switch @bind-Value="Input.IsAssessed" Label="Make Assignment Visible" Disabled="@(!AssignmentExists)" />
-    </div>
-    <button type="submit" class="w-100 btn btn-lg btn-primary" disabled="@IsCoursePublished">Save</button>
-</EditForm>
-
-<Button Color="ButtonColor.Success" @onclick="AddQuiz" Disabled="@QuizExists">Add Quiz</Button>
-<Button Color="ButtonColor.Success" @onclick="AddAssignment" Disabled="@AssignmentExists">Add Assignment</Button>
-
-<Button Color="ButtonColor.Danger" @onclick="ShowDelete" disabled="@IsCoursePublished">Delete Lesson</Button>
+</div>
 
 @code {
     [Parameter]

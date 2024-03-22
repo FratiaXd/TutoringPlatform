@@ -12,49 +12,60 @@
 <Modal @ref="publishModal" IsVerticallyCentered="true" />
 <Modal @ref="unpublishModal" IsVerticallyCentered="true" />
 
-@if (BuilderState.IsActive)
-{
-    <Button Color="ButtonColor.Danger" @onclick="ShowUnpublish">Unpublish Course</Button>
-}
-else
-{
-    <Button Color="ButtonColor.Success" @onclick="ShowPublish">Publish Course</Button>
-}
-
-<br />
-
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item">
-        <Button Color="ButtonColor.Success" @onclick="AddLesson" disabled="@BuilderState.IsActive"> + Add Lesson </Button>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/{BuilderState.CourseId}")" Match="NavLinkMatch.All">@BuilderState.CourseTitle</NavLink>
-    </li>
-    @foreach (var lesson in lessons)
+<div class="t-flex t-justify-center t-mt-3 t-mb-6">
+    @if (BuilderState.IsActive)
     {
-        var currentLesson = BuilderState.GetLesson(lesson.LessonId);
-        if (currentLesson != null)
+        <button type="button" @onclick="ShowUnpublish" class="t-text-white t-mx-auto t-bg-gray-400 hover:t-bg-gray-700 focus:t-outline-none focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Unpublish Course</button>
+    }
+    else
+    {
+        <button type="button" @onclick="ShowPublish" class="t-text-white t-mx-auto t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Publish Course</button>
+    }
+</div>
+
+<div class="t-flex t-justify-center t-mb-3">
+    <button type="button" @onclick="AddLesson" disabled="@BuilderState.IsActive" class="t-text-white disabled:t-cursor-not-allowed disabled:t-opacity-50 t-mx-auto t-bg-gradient-to-r t-from-green-400 t-via-green-500 t-to-green-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-green-300 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">+ Add Lesson</button>
+</div>
+
+<div class="t-flex t-flex-col lg:t-flex">
+    <ul class="t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 t-p-2 t-font-semibold lg:t-mb-4">
+        <li>
+            <a href="@($"/admin/adminpages/coursebuilder/{BuilderState.CourseId}")" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                @BuilderState.CourseTitle
+            </a>
+        </li>
+        @foreach (var lesson in lessons)
         {
-            <li class="nav-item">
-                <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/lessondetailbuilder/{lesson.LessonId}")">@currentLesson.LessonTitle</NavLink>
+            var currentLesson = BuilderState.GetLesson(lesson.LessonId);
+            if (currentLesson != null)
+            {
+                <li>
+                    <a href="@($"/admin/adminpages/coursebuilder/lessondetailbuilder/{lesson.LessonId}")" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                        @currentLesson.LessonTitle
+                    </a>
                     <ul>
                         @if (currentLesson.Quiz != null)
-                    {
-                        <li>
-                            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/quizdetailbuilder/{currentLesson.Quiz.QuizId}")">@currentLesson.Quiz.QuizName</NavLink>
-                        </li>
-                    }
-                    @if (currentLesson.Assignment != null)
-                    {
-                        <li>
-                            <NavLink class="nav-link" href="@($"/admin/adminpages/coursebuilder/assignmentdetailbuilder/{currentLesson.Assignment.AssignmentId}")">@currentLesson.Assignment.TaskName</NavLink>
-                        </li>
-                    }
-                </ul>
-            </li>
+                        {
+                            <li>
+                                <a href="@($"/admin/adminpages/coursebuilder/quizdetailbuilder/{currentLesson.Quiz.QuizId}")" class="t-block t-py-2 t-ml-5 t-pl-4 t-pr-5 t-text-gray-900 t-rounded t-font-normal hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                                    @currentLesson.Quiz.QuizName
+                                </a>
+                            </li>
+                        }
+                        @if (currentLesson.Assignment != null)
+                        {
+                            <li>
+                                <a href="@($"/admin/adminpages/coursebuilder/assignmentdetailbuilder/{currentLesson.Assignment.AssignmentId}")" class="t-block t-py-2 t-ml-5 t-pl-4 t-pr-5 t-text-gray-900 t-rounded t-font-normal hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                                    @currentLesson.Assignment.TaskName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
         }
-    }
-</ul>
+    </ul>
+</div>
 
 @code {
     List<Lesson> lessons;

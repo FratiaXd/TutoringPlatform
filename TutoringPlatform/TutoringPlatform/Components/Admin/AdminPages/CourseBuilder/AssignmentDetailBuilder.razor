@@ -2,31 +2,64 @@
 @rendermode InteractiveServer
 @page "/admin/adminpages/coursebuilder/assignmentdetailbuilder/{AssignmentId:int}"
 
+<div class="t-border t-border-gray-100 t-rounded-lg">
+    <div class="t-py-4 t-px-8">
+        <h3 class="t-text-center t-mt-3 t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">Edit Assignment Details</h3>
+        <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+        @if (!string.IsNullOrEmpty(message))
+        {
+            if (message.Contains("success"))
+            {
+                <div class="t-flex t-justify-center t-items-center t-p-4 t-mt-4 t-text-sm t-text-green-800 t-border t-border-green-300 t-rounded-lg t-bg-green-50" role="alert">
+                    <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="t-sr-only">Info</span>
+                    <div>
+                        <span class="t-font-medium">@message</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="t-flex t-justify-center t-items-center t-p-4 t-mt-4 t-text-sm t-text-red-800 t-border t-border-red-300 t-rounded-lg t-bg-red-50" role="alert">
+                    <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="t-sr-only">Info</span>
+                    <div>
+                        <span class="t-font-medium">@message</span>
+                    </div>
+                </div>
+            }
+        }
 
-<h3>AssignmentDetailBuilder</h3>
-<p>@AssignmentId</p>
+        <Modal @ref="deleteModal" IsVerticallyCentered="true" />
 
-<Modal @ref="deleteModal" IsVerticallyCentered="true" />
-
-<h4>@message</h4>
-
-<EditForm Model="Input" FormName="editassignment" OnValidSubmit="UpdateAssignment" method="post">
-    <DataAnnotationsValidator />
-    <ValidationSummary class="text-danger" role="alert" />
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.TaskName" class="form-control" placeholder="Assignment title." />
-        <label for="title" class="form-label">Assignment Title</label>
-        <ValidationMessage For="() => Input.TaskName" class="text-danger" />
+        <div class="t-mt-8 t-mx-3">
+            <EditForm Model="Input" FormName="editassignment" OnValidSubmit="UpdateAssignment" method="post">
+                <DataAnnotationsValidator />
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.TaskName" class="form-control" placeholder="Assignment title." />
+                    <label for="title" class="form-label">Assignment Title</label>
+                    <ValidationMessage For="() => Input.TaskName" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="Input.TaskDescription" class="form-control" placeholder="Please enter assignment description." />
+                    <label for="description" class="form-label">Assignment Description</label>
+                    <ValidationMessage For="() => Input.TaskDescription" class="text-danger" />
+                </div>
+                <div class="t-mx-4 md:t-mx-10 t-mt-4 md:t-mt-8 t-mb-8 t-flex t-justify-center">
+                    <button type="submit" class="t-text-white t-mx-auto disabled:t-cursor-not-allowed disabled:t-opacity-50 t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Save</button>
+                </div>
+            </EditForm>
+            <div class="t-mx-4 md:t-mx-10 t-mt-4 md:t-mt-8 t-mb-8 t-flex t-justify-center">
+                <button type="button" @onclick="ShowDelete" class="t-text-white disabled:t-cursor-not-allowed disabled:t-opacity-50 t-mx-auto t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Delete Assignment</button>
+            </div>
+        </div>
     </div>
-    <div class="form-floating mb-3">
-        <InputText @bind-Value="Input.TaskDescription" class="form-control" placeholder="Please enter assignment description." />
-        <label for="description" class="form-label">Assignment Description</label>
-        <ValidationMessage For="() => Input.TaskDescription" class="text-danger" />
-    </div>
-    <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-</EditForm>
+</div>
 
-<Button Color="ButtonColor.Danger" @onclick="ShowDelete">Delete Assignment</Button>
 
 @code {
     [Parameter]

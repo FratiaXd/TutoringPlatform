@@ -6,13 +6,17 @@
 @inject BuilderStateService BuilderState
 
 <div>
-    <h2>Course Builder</h2>
+    <div class="t-flex t-p-2 t-flex-row t-justify-between t-items-center">
+        <div class="">
+            <h2 class="text-2xl t-font-semibold t-leading-none t-tracking-tight t-text-gray-900 md:t-text-3xl">Course Builder</h2>
+        </div>
+    </div>
     <hr />
-    <div class="row">
-        <div class="col-md-3">
+    <div class="t-flex t-flex-col lg:t-flex-row t-flex-wrap lg:t-gap-6">
+        <div class="t-basis-1/4">
             <CourseBuilderSidebar />
         </div>
-        <div class="col-md-9">
+        <div class="t-basis-[calc(75%-1.5rem)] t-my-4">
             @Body
         </div>
     </div>
