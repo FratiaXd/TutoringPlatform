@@ -10,50 +10,92 @@
 }
 else
 {
-    <h3>Cart</h3>
+    <div class="t-flex t-flex-col text-center t-mt-8">
+        <h3 class="t-text-4xl t-font-extrabold">Cart</h3>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Course Title</th>
-                <th>Image</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-                <th>Remove</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (MyCartOrders is not null)
-            {
-                var listData = MyCartOrders.Skip(SkipValue).Take(TakeValue).ToList();
-                int count = 1;
-                foreach (var item in listData)
+    <div class="t-mt-8 t-relative t-overflow-x-auto t-shadow-md t-rounded-lg">
+        <table class="t-w-full t-text-sm t-text-left rtl:t-text-right t-text-gray-500 dark:t-text-gray-400">
+            <thead class="t-text-sm t-text-white t-uppercase t-bg-gradient-to-br t-from-green-400 t-to-blue-600 t-font-medium">
+                <tr>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Product name
+                    </th>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Image
+                    </th>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Quantity
+                    </th>
+                    <th scope="col" class="t-px-6 t-py-3">
+                        Price
+                    </th>
+                    <th scope="col" class="t-px-6 t-py-3">
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (MyCartOrders is not null)
                 {
-                    <tr>
-                        <td>@count</td>
-                        <td>@item.Name</td>
-                        <td>@item.Image</td>
-                        <td>@item.Price</td>
-                        <td>@item.Quantity</td>
-                        <td>@item.SubTotal</td>
-                        <td>
-                            <Button Color="ButtonColor.Danger" @onclick="async () => await DeleteCart(item)">Delete</Button>
-                        </td>
-                    </tr>
-                    count++;
+                    var listData = MyCartOrders.Skip(SkipValue).Take(TakeValue).ToList();
+                    int count = 1;
+                    foreach (var item in listData)
+                    {
+                        <tr class="t-bg-white t-border-b dark:t-bg-gray-800 hover:t-bg-gray-50">
+                            <th scope="row" class="t-px-6 t-py-4 t-text-base t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
+                                @item.Name
+                            </th>
+                            <th scope="row" class="t-px-6 t-py-4 t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
+                                <img src="@item.Image" class="t-rounded-lg t-object-contain t-max-w-full t-h-auto md:t-w-64 md:t-h-48" />
+                            </th>
+                            <td class="t-px-6 t-py-4">
+                                @item.Quantity
+                            </td>
+                            <td class="t-px-6 t-py-4">
+                                £@decimal.Round(item.Price, 2)
+                            </td>
+                            <th scope="row" class="t-px-6 t-py-4 t-font-medium t-text-gray-900 t-whitespace-nowrap dark:t-text-white">
+                                <button @onclick="async () => await DeleteCart(item)" class="t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="t-w-3.5 t-h-3.5" fill="currentColor" viewBox="0 0 448 512">
+                                        <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                    </svg>
+                                </button>
+                            </th>
+                        </tr>
+                        count++;
+                    }
                 }
-            }
-        </tbody>
-    </table>
-    <br />
-    @if (MyCartOrders is not null)
-    {
-        <p>Total Items: @MyCartOrders!.Count</p>
-        <p>Total Price: @MyCartOrders.Sum(c => c.SubTotal).ToString("#.##")</p>
-    }
-    <Button Color="ButtonColor.Success" @onclick="Checkout">Proceed To Checkout</Button>
+            </tbody>
+            <tfoot>
+                @if (MyCartOrders is not null)
+                {
+                    <tr class="t-font-semibold t-border t-border-t-3 t-bg-gray-100 t-text-gray-900 dark:t-text-white">
+                        <th scope="row" class="t-px-6 t-py-3 t-text-base">Total</th>
+                        <td class="t-px-6 t-py-3"></td>
+                        <td class="t-px-6 t-py-3">@MyCartOrders!.Count</td>
+                        <td class="t-px-6 t-py-3">£@decimal.Round(MyCartOrders.Sum(c => c.SubTotal), 2)</td>
+                        <td class="t-px-6 t-py-3"></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr class="t-font-semibold t-border t-border-t-3 t-bg-gray-100 t-text-gray-900 dark:t-text-white">
+                        <th scope="row" class="t-px-6 t-py-3 t-text-base">Total</th>
+                        <td class="t-px-6 t-py-3"></td>
+                        <td class="t-px-6 t-py-3">0</td>
+                        <td class="t-px-6 t-py-3">£0</td>
+                        <td class="t-px-6 t-py-3"></td>
+                    </tr>
+                }
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="t-flex t-flex-row t-justify-end t-mt-8 t-mb-8">
+        <button class="t-text-white t-bg-gradient-to-r t-from-green-400 t-via-green-500 t-to-green-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-green-300 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center" @onclick="Checkout">
+            Proceed to Checkout
+        </button>
+    </div>
 }
 
 @code {
