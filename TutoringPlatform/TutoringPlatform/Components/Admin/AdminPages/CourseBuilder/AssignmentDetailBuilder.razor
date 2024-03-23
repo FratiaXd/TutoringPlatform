@@ -102,6 +102,6 @@
         var parameters = new Dictionary<string, object>();
         parameters.Add("RecordId", AssignmentId);
         parameters.Add("RecordType", "Assignment");
-        await deleteModal.ShowAsync<AdminDelete>(title: "Delete Quiz", parameters: parameters);
+        await deleteModal.ShowAsync<AdminDelete>(title: "Delete Assignment", parameters: parameters);
     }
 }

@@ -55,36 +55,68 @@
                 </div>
             </EditForm>
 
-
             @if (questions != null)
             {
+                <h3 class="t-text-center t-mt-3 t-mb-3 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-xl t-font-bold t-leading-none t-tracking-tight md:t-text-2xl">Quiz Questions</h3>
+                <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
                 @foreach (var question in questions)
                 {
-                    <Card Style="width:50rem">
-                        <CardBody>
-                            <CardTitle>@question.Question</CardTitle>
-                            </CardBody>
-                            <ul class="list-group list-group-flush">
-                                @if (question.QuizOptions != null)
-                            {
-                                @foreach (var option in question.QuizOptions)
-                                {
-                                    <li class="list-group-item">
-                                        <Switch @bind-Value="option.IsCorrect" Label="Correct" Disabled="true" />
-                                        @option.Option
-                                        <Button Color="ButtonColor.Danger" @onclick="() => DeleteOption(question, option)">Delete Question</Button>
-                                    </li>
-                                }
-                            }
-                        </ul>
-                        <br />
-                        <Button Color="ButtonColor.Primary" @onclick="() => EditClicked(question)">Edit</Button>
-                        <br />
-                        <Button Color="ButtonColor.Success" @onclick="() => AddOption(question)">+ Add Option</Button>
-                        <br />
-                        <Button Color="ButtonColor.Danger" @onclick="() => DeleteQuestion(question)">Delete Question</Button>
-                    </Card>
-                    <br />
+                    <div class="t-flex t-mt-6 t-mb-6 t-justify-center">
+                        <div class="t-w-full t-max-w-md t-p-4 t-bg-gray-50 t-border t-border-gray-200 t-rounded-lg t-shadow sm:t-p-8 dark:t-bg-gray-800 dark:t-border-gray-700">
+                            <div class="t-flex t-items-center t-justify-between t-mb-4">
+                                <h5 class="t-text-xl t-font-bold t-leading-none t-text-gray-900 dark:t-text-white">@question.Question</h5>
+                            </div>
+                            <div class="t-flow-root">
+                                <ul role="list" class="t-divide-y t-divide-gray-200 dark:t-divide-gray-700">
+                                    @if (question.QuizOptions != null)
+                                    {
+                                        @foreach (var option in question.QuizOptions)
+                                        {
+                                            <li class="t-py-3 sm:t-py-4">
+                                                <div class="t-flex t-items-center t-justify-between">
+                                                    <div class="t-flex-1 t-min-w-0 ms-4">
+                                                        <p class="t-text-sm t-font-medium t-text-gray-900 t-truncate dark:t-text-white">
+                                                            @option.Option
+                                                        </p>
+                                                        @if (option.IsCorrect)
+                                                        {
+                                                            <p class="t-text-sm t-inline-flex t-items-center t-text-green-600 t-truncate dark:t-text-gray-400">
+                                                                <svg class="t-w-3.5 t-h-3.5 me-1.5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                                                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" />
+                                                                </svg>
+                                                                Correct
+                                                            </p>
+                                                        }
+                                                        else
+                                                        {
+                                                            <p class="t-text-sm t-inline-flex t-items-center t-text-gray-500 t-truncate dark:t-text-gray-400">
+                                                                <svg class="t-w-3.5 t-h-3.5 me-1.5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 512 512">
+                                                                    <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                                                                </svg>
+                                                                Incorrect
+                                                            </p>
+                                                        }
+                                                    </div>
+                                                    <div class="t-inline-flex t-items-center t-text-base t-font-semibold t-text-gray-900 dark:t-text-white">
+                                                        <button @onclick="() => DeleteOption(question, option)" type="button" class="t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="t-w-3.5 t-h-3.5" fill="currentColor" viewBox="0 0 448 512">
+                                                                <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
+                                                            </svg>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                            <div class="t-flex t-flex-row t-justify-between t-mt-4 t-mx-3">
+                                <button type="button" @onclick="() => AddOption(question)" class="t-text-white t-bg-gradient-to-r t-from-green-400 t-via-green-500 t-to-green-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-green-300 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">+ Add</button>
+                                <button type="button" @onclick="() => EditClicked(question)" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2">Edit</button>
+                                <button type="button" @onclick="() => DeleteQuestion(question)" class="t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">Delete</button>
+                            </div>
+                        </div>
+                    </div>
                 }
             }
         </div>

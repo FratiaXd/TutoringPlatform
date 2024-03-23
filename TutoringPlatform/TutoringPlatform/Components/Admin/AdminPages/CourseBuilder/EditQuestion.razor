@@ -1,30 +1,42 @@
-﻿<p>@message</p>
+﻿@if (!string.IsNullOrEmpty(message))
+{
+    <div class="t-flex t-justify-center t-items-center t-p-4 t-mb-3 t-text-sm t-text-red-800 t-border t-border-red-300 t-rounded-lg t-bg-red-50" role="alert">
+        <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span class="t-sr-only">Info</span>
+        <div>
+            <span class="t-font-medium">@message</span> Change a few things up and try submitting again.
+        </div>
+    </div>
+}
 
 <EditForm Model="Input" FormName="delete-record" OnValidSubmit="OnEditQuestion" method="post">
     <DataAnnotationsValidator />
-    <ValidationSummary class="text-danger" role="alert" />
-    <div class="form-floating mb-3">
-        <InputText type="question" @bind-Value="Input.Question" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter question." />
-        <label for="question" class="form-label">Question</label>
+    <div class="t-mb-3">
+        <label for="question" class="t-block t-mb-1 t-ml-1 t-text-base t-font-medium t-text-gray-600 dark:t-text-white">Question</label>
+        <InputText type="text" @bind-Value="Input.Question" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full md:t-min-w-112 t-p-3" autocomplete="current-password" aria-required="true" placeholder="Please enter question." />
         <ValidationMessage For="() => Input.Question" class="text-danger" />
     </div>
     @foreach (var option in Input.Options)
     {
         <div class="row align-items-center">
             <div class="col-md-2">
-                <Switch @bind-Value="option.IsCorrect"/>
-                <label class="form-check-label">Correct</label>
+                <div class="t-items-center">
+                    <label class="form-check-label">Correct</label>
+                    <Switch @bind-Value="option.IsCorrect" />
+                </div>
             </div>
             <div class="col-md-10">
-                <div class="form-floating mb-3">
-                    <InputText type="option" @bind-Value="option.Option" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter option." Required="true" />
-                    <label for="option" class="form-label">Option</label>
+                <div class="t-mb-3">
+                    <label for="option" class="t-block t-mb-1 t-ml-1 t-text-base t-font-medium t-text-gray-600 dark:t-text-white">Option</label>
+                    <InputText type="option" @bind-Value="option.Option" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full md:t-min-w-80 t-p-3" autocomplete="current-password" aria-required="true" placeholder="Please enter option." Required="true" />
                     <ValidationMessage For="() => option.Option" class="text-danger" />
                 </div>
             </div>
         </div>
     }
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Save</button>
+    <button class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mt-2 t-mb-2" type="submit">Save</button>
 </EditForm>
 
 @code {
