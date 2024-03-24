@@ -318,7 +318,7 @@
     {
         var addQuiz = new Quiz
         {
-            QuizName = "Quiz",
+            QuizName = "Lesson " + updatedLesson.LessonOrder + ": Quiz",
             LessonId = LessonId.Value
         };
         var addedQuiz = await QuizService.AddQuizAsync(addQuiz);
@@ -334,7 +334,7 @@
     {
         var addAssignment = new Assignment
         {
-            TaskName = "Assignment",
+            TaskName = "Lesson " + updatedLesson.LessonOrder + ": Assignment",
             TaskDescription = "Enter description",
             LessonId = LessonId.Value
         };
