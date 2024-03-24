@@ -90,10 +90,19 @@
                 Status = "Draft initialized"
             };
 
+        var updateResult = await CourseService.AddCourseAsync(newCourse);
+
+        if (updateResult == null)
+        {
+            message = "Unexpected error. Please try again.";
+            return;
+        }
+
         await UploadBlobFile();
 
-        var updateResult = await CourseService.AddCourseAsync(newCourse);
-        if (updateResult == null)
+        var uploadImg = await CourseService.UpdateCourseAsync(newCourse);
+
+        if (uploadImg == null)
         {
             message = "Unexpected error. Please try again.";
             return;
