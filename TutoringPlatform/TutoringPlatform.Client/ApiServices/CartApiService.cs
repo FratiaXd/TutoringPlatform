@@ -44,6 +44,11 @@ namespace TutoringPlatform.Client.ApiServices
             this.courseService = courseService;
         }
 
+        public bool OnClient()
+        {
+            return true;
+        }
+
         public async Task<ServiceResponse> AddToCart(Course course, int updQuantity = 1)
         {
             //throw new NotImplementedException();

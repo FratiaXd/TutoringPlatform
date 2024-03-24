@@ -10,6 +10,7 @@ namespace TutoringPlatform.Shared.Interfaces
 {
     public interface ICartService
     {
+        public bool OnClient();
         public Action? CartAction { get; set; }
         public int CartCount { get; set; }
         Task GetCartCount();

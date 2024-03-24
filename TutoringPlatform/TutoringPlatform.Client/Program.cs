@@ -5,6 +5,8 @@ using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Client.ApiServices;
 using Blazored.LocalStorage;
 using TutoringPlatform.Client.PrivateInterfaces;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 

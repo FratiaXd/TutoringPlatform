@@ -1,6 +1,8 @@
 ﻿@page "/feedback"
 @using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveAuto
+@* @implements IDisposable *@
+@inject PersistentComponentState ApplicationState
 @attribute [Authorize]
 
 <div class="t-flex t-flex-col text-center t-mt-8">
@@ -13,53 +15,99 @@
     <h4 class="t-text-2xl t-font-bold t-text-gray-500">New feedback:</h4>
 </div>
 
-<div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
-    @foreach (var record in UserLessonProgressesReviewed)
-    {
-        <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
-            <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
-            <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
-            <p class="t-font-medium t-text-green-600 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
-        </a>
-    }
-</div>
-
+@if (UserLessonProgressesReviewed.Count > 0)
+{
+    <div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
+        @foreach (var record in UserLessonProgressesReviewed)
+        {
+            <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
+                <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
+                <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
+                <p class="t-font-medium t-text-green-600 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
+            </a>
+        }
+    </div>
+}
+else
+{
+    <p class="t-mt-6 t-mb-10 t-text-center t-text-lg t-text-gray-400 t-font-normal">Empty</p>
+}
 
 <div class="t-flex t-flex-col text-center t-mt-3">
     <h4 class="t-text-2xl t-font-bold t-text-gray-500">Awaiting feedback:</h4>
 </div>
 
-<div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
-    @foreach (var record in UserLessonProgressesAwait)
-    {
-        <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
-            <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
-            <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
-            <p class="t-font-medium t-text-amber-600 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
-        </a>
-    }
-</div>
+@if (UserLessonProgressesAwait.Count > 0)
+{
+    <div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
+        @foreach (var record in UserLessonProgressesAwait)
+        {
+            <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
+                <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
+                <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
+                <p class="t-font-medium t-text-amber-600 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
+            </a>
+        }
+    </div>
+}
+else
+{
+    <p class="t-mt-6 t-mb-10 t-text-center t-text-lg t-text-gray-400 t-font-normal">Empty</p>
+}
 
 <div class="t-flex t-flex-col text-center t-mt-3">
     <h4 class="t-text-2xl t-font-bold t-text-gray-500">History:</h4>
 </div>
 
-<div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
-    @foreach (var record in UserLessonProgressesRest)
-    {
-        <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
-            <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
-            <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
-            <p class="t-font-medium t-text-gray-700 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
-        </a>
-    }
-</div>
+@if (UserLessonProgressesRest.Count > 0)
+{
+    <div class="t-flex t-flex-col t-mt-4 t-mb-1 t-justify-center">
+        @foreach (var record in UserLessonProgressesRest)
+        {
+            <a @onclick="(e => OpenReadFeedback(record))" class="t-flex t-flex-col t-items-center md:t-flex-row md:t-justify-between md:t-mx-40 md:t-items-center t-mb-3 t-p-6 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow hover:t-bg-gray-100">
+                <h5 class="t-mb-1 t-text-xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@record.Lesson.Course.Title</h5>
+                <p class="t-mb-1 md:t-mb-0 t-font-normal t-text-gray-700 dark:t-text-gray-400">@record.Lesson.LessonTitle</p>
+                <p class="t-font-medium t-text-gray-700 dark:t-text-gray-400">Status: @record.FeedbackStatus</p>
+            </a>
+        }
+    </div>
+}
+else
+{
+    <p class="t-mt-6 t-mb-10 t-text-center t-text-lg t-text-gray-400 t-font-normal">Empty</p>
+}
+
 
 @code {
+    private PersistingComponentStateSubscription persistentSubscription;
+
     private string CurUserId { get; set; }
     private List<LessonProgress> UserLessonProgressesReviewed { get; set; } = new List<LessonProgress>();
     private List<LessonProgress> UserLessonProgressesAwait { get; set; } = new List<LessonProgress>();
     private List<LessonProgress> UserLessonProgressesRest { get; set; } = new List<LessonProgress>();
+
+    // private Task persistReviewed()
+    // {
+    //     ApplicationState.PersistAsJson("reviewed", UserLessonProgressesReviewed);
+    //     return Task.CompletedTask;
+    // }
+
+    // private Task persistAwaiting()
+    // {
+    //     ApplicationState.PersistAsJson("awaiting", UserLessonProgressesAwait);
+    //     return Task.CompletedTask;
+    // }
+
+    // private Task persistSeen()
+    // {
+    //     ApplicationState.PersistAsJson("seen", UserLessonProgressesRest);
+    //     return Task.CompletedTask;
+    // }
+
+    // void IDisposable.Dispose()
+    // {
+    //     persistentSubscription.Dispose();
+    // }
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,6 +115,24 @@
         var user = authState.User;
 
         CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        // persistentSubscription = ApplicationState.RegisterOnPersisting(persistReviewed);
+        // persistentSubscription = ApplicationState.RegisterOnPersisting(persistAwaiting);
+        // persistentSubscription = ApplicationState.RegisterOnPersisting(persistSeen);
+
+        // if (!ApplicationState.TryTakeFromJson<List<LessonProgress>>(
+        //         "reviewed", out var restoredReviewed) || !ApplicationState.TryTakeFromJson<List<LessonProgress>>(
+        //         "awaiting", out var restoredAwaiting) || !ApplicationState.TryTakeFromJson<List<LessonProgress>>(
+        //         "seen", out var restoredSeen))
+        // {
+        //     await LoadProgresses();
+        // }
+        // else
+        // {
+        //     UserLessonProgressesReviewed = restoredReviewed!;
+        //     UserLessonProgressesAwait = restoredAwaiting!;
+        //     UserLessonProgressesRest = restoredSeen!;
+        // }
 
         await LoadProgresses();
     }

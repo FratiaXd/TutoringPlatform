@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TutoringPlatform.Data;
 using TutoringPlatform.Shared.Interfaces;
 using TutoringPlatform.Shared.Models;
+using System.Text.Json;
 
 namespace TutoringPlatform.Services
 {
@@ -139,7 +140,8 @@ namespace TutoringPlatform.Services
                             .OrderByDescending(lp => lp.FeedbackTimeStamp)
                             .ToListAsync();
 
-            if (lessonProgresses == null) return null; 
+            if (lessonProgresses == null) return null;
+            
             return lessonProgresses;
         }
 

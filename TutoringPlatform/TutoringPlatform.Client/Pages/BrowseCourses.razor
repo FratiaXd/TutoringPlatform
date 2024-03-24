@@ -3,6 +3,8 @@
 @* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false)) *@
 @* @inject ICartService CartService *@
 @rendermode InteractiveAuto
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
 
 
 <div class="t-flex t-flex-col text-center t-mt-8">
@@ -11,7 +13,37 @@
     <hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
 </div>
 
-@if (isClientSide)
+<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+
+@if (Courses.Count > 0)
+{
+    <div class="t-mt-5">
+        @foreach (var course in Courses)
+        {
+            <div @onclick="() => OpenCourse(course)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
+                <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-60 md:t-rounded-none md:t-rounded-l-lg" src="@course.ImageUrl" alt="">
+                <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
+                    <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@course.Title</h5>
+                    @if (course.Price > 0)
+                    {
+                        <p class="t-mb-2 t-text-gray-500 t-italic t-font-bold">£@decimal.Round(course.Price, 2)</p>
+                    }
+                    else
+                    {
+                        <p class="t-mb-2 t-text-gray-500 t-italic t-font-bold">Free</p>
+                    }
+                    <p class="t-line-clamp-2 t-mb-3 t-font-normal t-text-gray-700 dark:t-text-gray-400">@course.Description</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    
+}
+
+@* @if (isClientSide)
 {
 
     <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
@@ -40,7 +72,7 @@
         </div>
     }
 
-@*     @if (user.Identity.IsAuthenticated)
+    @if (user.Identity.IsAuthenticated)
     {
         if (course.Price > 0 && !IsCoursePurchased(course.CourseId))
         {
@@ -54,7 +86,7 @@
     else if (course.Price > 0)
     {
         <Button Color="ButtonColor.Success" @onclick="() => AddToCart(course)">Add to cart</Button>
-    } *@
+    }
 }
 else
 {
@@ -79,9 +111,11 @@ else
             </div>
         }
     </div>
-}
+} *@
 
 @code {
+    private PersistingComponentStateSubscription persistentSubscription;
+
     private List<Course> Courses { get; set; } = new List<Course>();
     private List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     List<ToastMessage> messages = new List<ToastMessage>();
@@ -89,9 +123,32 @@ else
     private ClaimsPrincipal? user { get; set; }
     private bool isClientSide = false;
 
+    private Task persistCourses()
+    {
+        ApplicationState.PersistAsJson("courses", Courses);
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistentSubscription.Dispose();
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadCourses();
+        persistentSubscription = ApplicationState.RegisterOnPersisting(persistCourses);
+
+        if(!ApplicationState.TryTakeFromJson<List<Course>>(
+                "courses", out var restoredCourses))
+        {
+            await LoadCourses();
+        }
+        else
+        {
+            Courses = restoredCourses!;
+        }
+
+        //await LoadCourses();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         user = authState.User;
         if (user.Identity?.IsAuthenticated == true)

@@ -10,6 +10,11 @@ namespace TutoringPlatform.Services
         int ICartService.CartCount { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         bool ICartService.IsCartLoaderVisible { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
+        public bool OnClient()
+        {
+            return false;
+        }
+
         Task<ServiceResponse> ICartService.AddToCart(Course course, int updQuantity)
         {
             return Task.FromResult(new ServiceResponse(false, "Operation not supported server-side"));

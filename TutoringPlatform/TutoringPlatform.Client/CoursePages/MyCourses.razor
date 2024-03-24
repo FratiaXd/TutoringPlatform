@@ -1,6 +1,7 @@
 ﻿@page "/mycourses"
 @rendermode InteractiveAuto
-
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
 
 <div class="t-flex t-flex-col text-center t-mt-8 t-mb-3 ">
     <h3 class="t-text-2xl t-font-extrabold t-leading-none t-tracking-tight md:t-text-4xl">My Courses</h3>
@@ -77,9 +78,28 @@ else
 }
  *@
 @code {
+    private PersistingComponentStateSubscription persistentSubscription;
+
     private string CurUserId { get; set; }
     private List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
     private List<Enrollment> EnrollmentsCompleted { get; set; } = new List<Enrollment>();
+
+    private Task persistEnrollments()
+    {
+        ApplicationState.PersistAsJson("enrollments", Enrollments);
+        return Task.CompletedTask;
+    }
+
+    private Task persistEnrollmentsCompl()
+    {
+        ApplicationState.PersistAsJson("enrollmentsComp", EnrollmentsCompleted);
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        persistentSubscription.Dispose();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,7 +108,20 @@ else
 
         CurUserId = user.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        await LoadEnrollments();
+        persistentSubscription = ApplicationState.RegisterOnPersisting(persistEnrollments);
+        persistentSubscription = ApplicationState.RegisterOnPersisting(persistEnrollmentsCompl);
+
+        if (!ApplicationState.TryTakeFromJson<List<Enrollment>>(
+                "enrollments", out var restoredEnrollments) || !ApplicationState.TryTakeFromJson<List<Enrollment>>(
+                "enrollmentsComp", out var restoredEnrollmentsCompl))
+        {
+            await LoadEnrollments();
+        }
+        else
+        {
+            Enrollments = restoredEnrollments!;
+            EnrollmentsCompleted = restoredEnrollmentsCompl!;
+        }
     }
 
     private async Task LoadEnrollments()
