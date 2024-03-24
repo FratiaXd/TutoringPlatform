@@ -3,7 +3,7 @@
 @* @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false)) *@
 @rendermode InteractiveWebAssembly
 
-<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+<Toasts class="t-p-3 t-rounded-lg t-font-medium t-text-white" AutoHide="true" Delay="2000" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
 @if (!load)
 {
@@ -68,7 +68,7 @@ else
                 }
                 else
                 {
-                    <tr class="t-bg-white t-border-b">
+                    <tr class=@Spinner>
                         <td colspan="5" class="t-py-4 t-text-center t-content-center">
                             <div role="status" class="flex items-center justify-center">
                                 <svg aria-hidden="true" class="w-8 h-20 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -120,6 +120,7 @@ else
     List<ToastMessage> messages = new List<ToastMessage>();
     List<Order> MyCartOrders = new();
     public bool load = true;
+    public string Spinner;
 
     protected override async Task OnInitializedAsync()
     {
@@ -132,7 +133,12 @@ else
         if (onClient)
         {
             MyCartOrders = await CartService.MyOrders(CurUserId);
-        }    
+            Spinner = "t-hidden t-bg-white t-border-b";
+        }
+        else
+        {
+            Spinner = "t-bg-white t-border-b";
+        }
     }
 
     public async Task DeleteCart(Order cart)

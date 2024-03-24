@@ -3,7 +3,7 @@
 @rendermode InteractiveAuto
 @inherits LayoutComponentBase
 
-<Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+<Toasts class="t-p-3 t-rounded-lg t-font-medium t-text-white" AutoHide="true" Delay="2000" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
 <div>
     <div class="t-flex t-p-2 t-flex-row t-justify-between t-items-center">
@@ -18,7 +18,7 @@
     <hr />
     <div class="t-flex t-flex-col lg:t-flex-row t-flex-wrap lg:t-gap-6">
         <div class="t-basis-1/4">
-            <LearningSidebar CourseId="@CourseId" CurUserId="@CurUserId" Lessons="@lessons"
+            <LearningSidebar @ref="sidebarRef" CourseId="@CourseId" CurUserId="@CurUserId" Lessons="@lessons"
                 OnLessonClicked="HandleLessonClicked"
                 OnQuizClicked="HandleQuizClicked"
                 OnAssignmentClicked="HandleAssignmentClicked" />
@@ -62,6 +62,7 @@
     public bool QuizCompleted { get; set; }
     public string? QuizScore { get; set; }
     List<ToastMessage> messages = new List<ToastMessage>();
+    private LearningSidebar sidebarRef;
 
     private async Task HandleLessonClicked(Lesson lesson)
     {
@@ -69,6 +70,10 @@
         selectedQuiz = null; // Reset other selections
         selectedAssignment = null;
         currentLessonOpen = lesson;
+        if (selectedLesson is not null)
+        {
+            sidebarRef.ToggleSidebarOpt(selectedLesson.LessonTitle, selectedLesson.LessonTitle);
+        }
     }
 
     private async Task HandleQuizClicked(Lesson lesson)

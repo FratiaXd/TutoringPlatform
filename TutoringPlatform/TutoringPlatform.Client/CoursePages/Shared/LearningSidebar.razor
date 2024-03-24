@@ -18,14 +18,14 @@
             if (lesson != null && lesson.LessonProgresses.Count != 0)
             {
                 <li>
-                    <div @onclick="() => HandleLessonClick(lesson)" class="t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                    <div @onclick="() => HandleLessonClick(lesson)" class=@GetSidebarOptLessonClass(lesson.LessonTitle)>
                         <p>@lesson.LessonTitle</p>
                     </div>
                     <ul>
                         @if (lesson.Quiz.QuizName != null)
                         {
                             <li>
-                                <div @onclick="() => HandleQuizClick(lesson)" class="t-py-2 t-ml-5 t-pl-4 t-pr-5 t-text-gray-900 t-rounded t-font-normal hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                                <div @onclick="() => HandleQuizClick(lesson)" class=@GetSidebarOptClass(lesson.LessonTitle, lesson.Quiz.QuizName)>
                                     <p>@lesson.Quiz.QuizName</p>
                                 </div>
                             </li>
@@ -33,7 +33,7 @@
                         @if (lesson.Assignment.TaskName != null)
                         {
                             <li>
-                                <div @onclick="() => HandleAssignmentClick(lesson)" class="t-py-2 t-ml-5 t-pl-4 t-pr-5 t-text-gray-900 t-rounded t-font-normal hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer">
+                                <div @onclick="() => HandleAssignmentClick(lesson)" class=@GetSidebarOptClass(lesson.LessonTitle, lesson.Assignment.TaskName)>
                                     <p>@lesson.Assignment.TaskName</p>
                                 </div>
                             </li>
@@ -94,6 +94,9 @@
 
     private bool isSidebarCollapsed = true;
 
+    private string? OptionName = string.Empty;
+    private string? LessonName = string.Empty;
+
     private void ToggleSidebar()
     {
         isSidebarCollapsed = !isSidebarCollapsed;
@@ -112,9 +115,43 @@
         }
     }
 
+    public void ToggleSidebarOpt(string lesson, string name)
+    {
+        LessonName = lesson;
+        OptionName = name;
+    }
+
+    private string GetSidebarOptLessonClass(string option)
+    {
+        if (option.Equals(OptionName))
+        {
+            return "t-block t-py-2 t-px-3 t-rounded t-bg-gray-200 t-text-blue-700 t-cursor-pointer";
+        }
+        else
+        {
+            return "t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer";
+        }
+    }
+
+    private string GetSidebarOptClass(string lesson, string option)
+    {
+        if (option.Equals(OptionName) && lesson.Equals(LessonName))
+        {
+            return "t-py-2 t-ml-5 t-pl-4 t-pr-5 t-rounded t-font-normal t-bg-gray-200 t-text-blue-700 t-cursor-pointer";
+        }
+        else
+        {
+            return "t-py-2 t-ml-5 t-pl-4 t-pr-5 t-text-gray-900 t-rounded t-font-normal hover:t-bg-gray-100 hover:t-text-blue-700 t-cursor-pointer";
+        }
+    }
+
     private async Task HandleLessonClick(Lesson lesson)
     {
         await OnLessonClicked.InvokeAsync(lesson);
+        if (lesson is not null)
+        {
+            ToggleSidebarOpt(lesson.LessonTitle, lesson.LessonTitle);
+        }
     }
 
     private async Task HandleQuizClick(Lesson lesson)
@@ -122,11 +159,19 @@
         var quizInfo = await QuizService.GetQuizWithQandOAsync(lesson.Quiz.QuizId);
         lesson.Quiz = quizInfo;
         await OnQuizClicked.InvokeAsync(lesson);
+        if (lesson is not null)
+        {
+            ToggleSidebarOpt(lesson.LessonTitle, quizInfo.QuizName);
+        }
     }
 
     private async Task HandleAssignmentClick(Lesson lesson)
     {
         await OnAssignmentClicked.InvokeAsync(lesson);
+        if (lesson is not null)
+        {
+            ToggleSidebarOpt(lesson.LessonTitle, lesson.Assignment.TaskName);
+        }
     }
 
     protected override async Task OnInitializedAsync()

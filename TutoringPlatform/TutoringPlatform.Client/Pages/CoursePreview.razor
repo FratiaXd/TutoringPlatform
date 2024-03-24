@@ -6,7 +6,7 @@
 
 @if (isClientSide)
 {
-    <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" />
+    <Toasts class="t-p-3 t-rounded-lg t-font-medium t-text-white" AutoHide="true" Delay="2000" Messages="messages" Placement="ToastsPlacement.TopRight" />
 
     <div class="t-relative t-text-center t-group">
         <img class="t-opacity-85 t-w-full md:t-h-112 t-object-cover group-hover:t-blur" src="@displayCourse.ImageUrl" />
@@ -127,7 +127,6 @@ else
         {
             IsEnrolled = false;
         }
-
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
