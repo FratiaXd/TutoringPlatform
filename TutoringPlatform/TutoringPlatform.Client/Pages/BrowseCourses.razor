@@ -21,7 +21,7 @@
         @foreach (var course in Courses)
         {
             <div @onclick="() => OpenCourse(course)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
-                <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-60 md:t-rounded-none md:t-rounded-l-lg" src="@course.ImageUrl" alt="">
+                <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-60 md:t-rounded-none md:t-rounded-l-lg" src="@course.ImageUrl" alt="Course Cover Image">
                 <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
                     <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@course.Title</h5>
                     @if (course.Price > 0)
