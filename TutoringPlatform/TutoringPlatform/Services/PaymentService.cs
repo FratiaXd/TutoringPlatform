@@ -26,8 +26,7 @@ namespace TutoringPlatform.Services
                     Currency = "gbp",
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
-                        Name = ci.Name,
-                        Description = ci.CourseId.ToString()
+                        Name = ci.Name
                     }                   
                 },
                 Quantity = ci.Quantity

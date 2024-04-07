@@ -135,7 +135,7 @@
         var uniqueId = Guid.NewGuid().ToString();
         var originalExtension = Path.GetExtension(selectedFile.Name);
         var fileName = $"course{newCourse.CourseId}img{uniqueId}{originalExtension}";
-        using (var stream = selectedFile.OpenReadStream())
+        using (var stream = selectedFile.OpenReadStream(maxFileSize))
         {
             var fileUrl = await BlobRepositoryService.UploadBlobFileAsync(fileName, stream);
             newCourse.ImageUrl = fileUrl;

@@ -10,8 +10,18 @@
 
 <PageTitle>Confirm email</PageTitle>
 
-<h1>Confirm email</h1>
-<StatusMessage Message="@statusMessage" />
+<h3 class="t-text-center t-mt-3 t-mt-8 md:t-mb-4 t-text-gray-600 t-mx-4 md:t-mx-20 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">Confirm email</h3>
+<p class="t-text-center t-mb-4 t-mt-1 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400">Head back to the Log In page to start using application services.</p>
+<hr class="t-h-1 t-mx-4 md:t-mx-20 t-my-4 t-bg-gray-800 t-border-4 t-rounded md:t-my-2">
+<div class="t-flex t-justify-center t-items-center t-p-4 t-mt-4 t-text-sm t-text-green-800 t-border t-border-green-300 t-rounded-lg t-bg-green-50" role="alert">
+    <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+    </svg>
+    <span class="t-sr-only">Info</span>
+    <div>
+        <span class="t-font-medium">@statusMessage</span>
+    </div>
+</div>
 
 @code {
     private string? statusMessage;

@@ -130,7 +130,7 @@ namespace TutoringPlatform.Client.ApiServices
             IsCartLoaderVisible = true;
             var cartList = new List<Order>();
             string myCartString = await GetCartFromLocalStorage();
-            if (string.IsNullOrEmpty(myCartString)) return null;
+            if (string.IsNullOrEmpty(myCartString)) return cartList;
 
             var myCartList = DeserializeJsonStringList<StorageCart>(myCartString);
             var publishedCoursesEn = await courseService.GetPublishedCoursesAsync();

@@ -25,17 +25,32 @@
     {
         foreach (var order in MyCartOrders)
         {
+            var firstLessonId = await CourseService.GetLessonIdForCourseAsync(order.CourseId, 1);
             order.OrderTime = DateTime.Now;
 
             var enrollment = new Enrollment()
             {
                 UserId = CurUserId,
                 CourseId = order.CourseId,
+                LatestLessonId = firstLessonId,
                 EnrollmentStatus = "In Progress"
             };
 
             await EnrollmentService.EnrollUserAsync(enrollment);
+            await CreateProgressRecord(firstLessonId);
             await OrderService.AddOrderAsync(order);
         }
+    }
+
+    private async Task<LessonProgress> CreateProgressRecord(int lessonId)
+    {
+        var newProgress = new LessonProgress
+            {
+                UserId = CurUserId,
+                LessonId = lessonId,
+                LessonStatus = "In Progress"
+            };
+
+        return await LessonProgressService.AddLessonProgressRecordAsync(newProgress);
     }
 }
