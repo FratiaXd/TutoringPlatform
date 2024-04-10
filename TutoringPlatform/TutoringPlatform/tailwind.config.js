@@ -4,7 +4,15 @@ module.exports = {
     content: ["./../**/*.{razor,html,cshtml}",
         "./node_modules/flowbite/**/*.js"
     ],
-  theme: {
+    theme: {
+        colors: {
+            'prim': '#0A122A',
+            'sec': '#FBAF00',
+            'wh': '#FDFDFF',
+            'lightbl': '#4669d3',
+            'atten': '#E4572E',
+            'lyel': '#eaa300'
+        },
       extend: {
           spacing: {
               '1': '0.25rem',

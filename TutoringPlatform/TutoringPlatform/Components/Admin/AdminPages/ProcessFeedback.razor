@@ -2,7 +2,7 @@
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 <div class="t-flex t-flex-col text-center t-mt-8">
-    <h3 class="t-text-gray-600 t-text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-4xl">Process Feedback</h3>
+    <h3 class="t-text-prim t-text-2xl t-font-bold md:t-text-4xl">Process Feedback</h3>
     <p class="t-mb-4 t-mt-1 t-text-lg t-font-normal t-text-gray-500 dark:t-text-gray-400">Submitted by
         @if (lessonProgress.User != null)
         {
@@ -41,7 +41,7 @@
                 <ValidationMessage For="() => Input.Feedback" class="text-danger" />
             </div>
             <div class="t-mx-4 md:t-mx-20 t-mt-4 md:t-mt-8 t-mb-8 t-flex t-justify-center">
-                <button type="submit" class="t-text-white t-mx-auto t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Submit Feedback</button>
+                <button type="submit" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Submit Feedback</button>
             </div>
         </EditForm>
 
@@ -55,7 +55,7 @@
         <div class="t-mt-4 md:t-mt-6 t-w-full t-max-w-2xl t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow t-shadow-green-500 dark:t-bg-gray-800 dark:t-border-gray-700">
             <p class="t-p-6">@lessonProgress.TutorFeedback</p>
         </div>
-        <button type="submit" @onclick="EditFeedback" class="t-mt-8 t-mb-8 t-text-white t-mx-auto t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Edit Feedback</button>
+        <button type="submit" @onclick="EditFeedback" class="t-mt-8 t-mb-8 t-mx-auto t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Edit Feedback</button>
     }
 </div>
 

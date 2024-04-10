@@ -4,7 +4,7 @@
 @attribute [Authorize]
 
 <div class="t-flex t-flex-col t-items-center">
-    <h3 class="t-text-gray-600 t-text-center text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-3xl">Student Details</h3>
+    <h3 class="t-text-prim t-text-center text-2xl t-font-bold t-leading-none t-tracking-tight md:t-text-3xl">Student Details</h3>
 
 
     <div class="t-mt-6 md:t-mt-10 t-w-full t-max-w-md t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow dark:t-bg-gray-800 dark:t-border-gray-700">
@@ -13,9 +13,9 @@
             <span class="t-mb-1 t-text-sm t-text-gray-500 dark:t-text-gray-400">@user?.Email</span>
             <span class="t-text-sm t-text-gray-500 dark:t-text-gray-400">@user?.RoleName</span>
             <div class="t-flex t-flex-col t-mt-4 md:t-mt-6">
-                <button type="button" @onclick="ShowStudentDetails" class="t-mb-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-8 t-py-2.5 t-text-center">Edit Details</button>
-                <button type="button" @onclick="ShowStudentEmail" class="t-mb-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-8 t-py-2.5 t-text-center">Update Email</button>
-                <button type="button" @onclick="ShowStudentPassword" class="t-mb-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-8 t-py-2.5 t-text-center">Change Password</button>
+                <button type="button" @onclick="ShowStudentDetails" class="t-mb-2 t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-8 t-py-2.5 t-text-center">Edit Details</button>
+                <button type="button" @onclick="ShowStudentEmail" class="t-mb-2 t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-8 t-py-2.5 t-text-center">Update Email</button>
+                <button type="button" @onclick="ShowStudentPassword" class="t-mb-2 t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-8 t-py-2.5 t-text-center">Change Password</button>
                 <button type="button" @onclick="ShowStudentDelete" class="t-mb-2 t-mt-6 t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center">Delete Account</button>
             </div>
         </div>

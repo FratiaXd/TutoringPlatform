@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 
-<nav class="t-bg-white dark:t-bg-gray-900 t-fixed t-w-full t-z-20 t-top-0 start-0 t-border-b t-border-gray-200 dark:t-border-gray-600">
+<nav class="t-bg-wh t-fixed t-w-full t-z-20 t-top-0 start-0 t-border-b t-border-gray-200 dark:t-border-gray-600">
     <div class="t-max-w-screen-xl t-flex t-flex-wrap t-items-center t-justify-between t-mx-auto t-p-4">
         <a href="#" class="t-flex t-items-center t-space-x-3 rtl:t-space-x-reverse">
             <img src="https://sttutoringuksouth001.blob.core.windows.net/blobcourses/Logo.svg" class="t-h-5" alt="Word show logo">
@@ -13,19 +13,19 @@
                 <Authorized>
                     <form>
                         <input type="hidden" />
-                        <a href="Profile/ProfilePages/info" class="t-text-gray-800 dark:t-text-white hover:t-bg-gray-50 focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:hover:t-bg-gray-700 focus:t-outline-none dark:focus:t-ring-gray-800">My Profile</a>
+                        <a href="Profile/ProfilePages/info" class="hover:t-bg-gray-50 hover:t-text-lightbl focus:t-ring-4 focus:t-ring-gray-300 t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 focus:t-outline-none">My Profile</a>
                     </form>
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />
                         <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="t-text-gray-800 dark:t-text-white hover:t-bg-gray-50 focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:hover:t-bg-gray-700 focus:t-outline-none dark:focus:t-ring-gray-800 inline-flex items-center justify-center gap-2">
-                             Logout
+                        <button type="submit" class="hover:t-bg-gray-50 hover:t-text-lightbl focus:t-ring-4 focus:t-ring-gray-300 t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 focus:t-outline-none inline-flex items-center justify-center gap-2">
+                             LOGOUT
                         </button>
                     </form>
                 </Authorized>
                 <NotAuthorized>
-                    <a href="Account/Login" class="t-text-gray-800 dark:t-text-white hover:t-bg-gray-50 focus:t-ring-4 focus:t-ring-gray-300 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 dark:hover:t-bg-gray-700 focus:t-outline-none dark:focus:t-ring-gray-800">Login</a>
-                    <a href="Account/Register" class="t-text-white hover:t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 focus:t-outline-none">Sign up</a>
+                    <a href="Account/Login" class="hover:t-bg-gray-50 hover:t-text-lightbl focus:t-ring-4 focus:t-ring-gray-300 t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 focus:t-outline-none dark:focus:t-ring-gray-800">Login</a>
+                    <a href="Account/Register" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 focus:t-outline-none">Sign up</a>
                 </NotAuthorized>
             </AuthorizeView>
             <button @onclick="ToggleNavbar" data-collapse-toggle="navbar-sticky" type="button" class="t-inline-flex t-items-center t-p-2 t-w-10 t-h-10 t-justify-center t-text-sm t-text-gray-500 t-rounded-lg lg:t-hidden hover:t-bg-gray-100 focus:t-outline-none focus:t-ring-2 focus:t-ring-gray-200 dark:t-text-gray-400 dark:hover:t-bg-gray-700 dark:focus:t-ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
@@ -36,7 +36,7 @@
             </button>
         </div>
         <div class="@GetNavbarClass()" id="navbar-sticky">
-            <ul class="t-flex t-flex-col t-p-4 lg:t-p-0 t-mt-4 t-font-medium t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 lg:t-space-x-8 rtl:t-space-x-reverse lg:t-flex-row lg:t-mt-0 lg:t-border-0 lg:t-bg-white dark:t-bg-gray-800 lg:dark:t-bg-gray-900 dark:t-border-gray-700">
+            <ul class="t-flex t-flex-col t-p-4 lg:t-p-0 t-mt-4 t-text-sm t-border t-border-gray-100 t-rounded-lg t-bg-gray-50 lg:t-space-x-8 rtl:t-space-x-reverse lg:t-flex-row lg:t-mt-0 lg:t-border-0 lg:t-bg-white">
                 <li>
                     <a href="#" class="@GetNavLinkClass("#")">Home</a>
                 </li>
@@ -98,8 +98,8 @@
     private string GetNavLinkClass(string href)
     {
         return currentUrl.Contains(href, StringComparison.OrdinalIgnoreCase) ? 
-        "t-block t-py-2 t-px-3 t-text-white t-bg-blue-700 t-rounded lg:t-bg-transparent lg:t-text-blue-700 lg:t-p-0 lg:dark:t-text-blue-500" : 
-        "t-block t-py-2 t-px-3 t-text-gray-900 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-blue-700 lg:t-p-0 lg:dark:hover:t-text-blue-500 dark:t-text-white dark:hover:t-bg-gray-700 dark:hover:t-text-white lg:dark:hover:t-bg-transparent dark:t-border-gray-700";
+        "t-block t-py-2 t-px-3 t-text-white md:hover:t-text-white hover:t-text-white t-bg-lightbl t-rounded lg:t-bg-transparent lg:t-text-lightbl lg:hover:t-text-lightbl lg:t-p-0" :
+        "t-block t-py-2 t-px-3 t-rounded hover:t-bg-gray-100 lg:hover:t-bg-transparent lg:hover:t-text-lightbl lg:t-p-0";
     }
 
     protected override void OnInitialized()

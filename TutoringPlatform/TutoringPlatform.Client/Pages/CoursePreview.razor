@@ -16,52 +16,52 @@
             <h1 class="t-font-extrabold t-text-white t-text-5xl lg:t-text-6xl mb-4">@displayCourse.Title</h1>
             @if (IsEnrolled)
             {
-                <button type="button" @onclick="OpenCourse" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center me-2 t-mb-2">Continue Course</button>
+                <button type="button" @onclick="OpenCourse" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center me-2 t-mb-2">Continue Course</button>
             }
             else if (displayCourse.AccessLevel == "Paid")
             {
-                <button type="button" @onclick="() => AddToCart(displayCourse)" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center me-2 t-mb-2">Buy now</button>
+                <button type="button" @onclick="() => AddToCart(displayCourse)" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center me-2 t-mb-2">Buy now</button>
             }
             else if (displayCourse.AccessLevel == "Free")
             {
-                <button type="button" @onclick="EnrollStudent" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center me-2 t-mb-2">Enroll</button>
+                <button type="button" @onclick="EnrollStudent" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-text-center me-2 t-mb-2">Enroll</button>
             }
         </div>
     </div>
 
     <div class="t-mt-8 t-mb-8 md:flex md:flex-row md:justify-between t-space-y-4 md:t-gap-6 md:t-mt-4 md:t-space-y-0">
         <div class="t-basis-[calc(66.666667%-1.5rem)] t-mb-10 t-mx-4 t-flex-grow md:t-mt-10 md:t-ml-16 md:t-mr-16 md:t-mb-6">
-            <h3 class="t-mb-2 t-text-2xl t-font-medium t-text-gray-700 dark:t-text-gray-400">About Course:</h3>
-            <p class="t-mb-2 t-text-gray-500 dark:t-text-gray-400">@displayCourse.Description</p>
+            <h3 class="t-mb-4 t-text-2xl t-font-medium t-text-prim">About Course:</h3>
+            <p class="t-mb-2 t-text-prim">@displayCourse.Description</p>
         </div>
         <div class="t-basis-2/6 t-mb-8 t-mx-auto t-w-full t-max-w-lg t-p-4 t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow sm:t-p-8 dark:t-bg-gray-800 dark:t-border-gray-700 md:t-w-1/2 md:t-mt-0">
             <h5 class="t-mb-2 t-text-xl t-font-medium t-text-gray-500 dark:t-text-gray-400">Price</h5>
             <div class="t-flex t-items-baseline t-text-gray-900 dark:t-text-white">
                 @if (displayCourse.Price > 0)
                 {
-                    <span class="t-text-3xl t-font-bold t-text-gray-700">£</span>
-                    <span class="t-text-5xl t-font-bold t-tracking-tight t-text-gray-700">@decimal.Round(displayCourse.Price, 2)</span>
+                    <span class="t-text-3xl t-font-bold t-text-gray-800">£</span>
+                    <span class="t-text-5xl t-font-bold t-tracking-tight t-text-gray-800">@decimal.Round(displayCourse.Price, 2)</span>
                 }
                 else
                 {
-                    <span class="t-text-5xl t-font-bold t-tracking-tight t-text-gray-700">Free</span>
+                    <span class="t-text-5xl t-font-bold t-tracking-tight t-text-gray-800">Free</span>
                 }
             </div>
             <ul role="list" class="t-space-y-5 t-my-7">
                 <li class="t-flex t-items-center">
-                    <svg class="t-flex-shrink-0 t-w-4 t-h-4 t-text-blue-700 dark:t-text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="t-flex-shrink-0 t-w-4 t-h-4 t-text-lightbl" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                     </svg>
                     <span class="t-text-base t-font-normal t-leading-tight t-text-gray-500 dark:t-text-gray-400 ms-3">@displayCourse.Duration lessons</span>
                 </li>
                 <li class="t-flex">
-                    <svg class="t-flex-shrink-0 t-w-4 t-h-4 t-text-blue-700 dark:t-text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="t-flex-shrink-0 t-w-4 t-h-4 t-text-lightbl" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                     </svg>
                     <span class="t-text-base t-font-normal t-leading-tight t-text-gray-500 dark:t-text-gray-400 ms-3">Instant feedback quizzes</span>
                 </li>
                 <li class="t-flex">
-                    <svg class="t-flex-shrink-0 t-w-4 t-h-4 t-text-blue-700 dark:t-text-blue-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="t-flex-shrink-0 t-w-4 t-h-4 t-text-lightbl" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                     </svg>
                     <span class="t-text-base t-font-normal t-leading-tight t-text-gray-500 dark:t-text-gray-400 ms-3">Personal feedback assignments</span>
@@ -69,15 +69,15 @@
             </ul>
             @if (IsEnrolled)
             {
-                <button type="button" @onclick="OpenCourse" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:t-bg-blue-600 dark:hover:t-bg-blue-700 dark:focus:t-ring-blue-900 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-inline-flex t-justify-center t-w-full t-text-center">Continue Course</button>
+                <button type="button" @onclick="OpenCourse" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-inline-flex t-justify-center t-w-full t-text-center">Continue Course</button>
             }
             else if (displayCourse.AccessLevel == "Paid")
             {
-                <button type="button" @onclick="() => AddToCart(displayCourse)" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:t-bg-blue-600 dark:hover:t-bg-blue-700 dark:focus:t-ring-blue-900 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-inline-flex t-justify-center t-w-full t-text-center">Buy now</button>
+                <button type="button" @onclick="() => AddToCart(displayCourse)" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-inline-flex t-justify-center t-w-full t-text-center">Buy now</button>
             }
             else if (displayCourse.AccessLevel == "Free")
             {
-                <button type="button" @onclick="EnrollStudent" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:t-bg-blue-600 dark:hover:t-bg-blue-700 dark:focus:t-ring-blue-900 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-inline-flex t-justify-center t-w-full t-text-center">Enroll</button>
+                <button type="button" @onclick="EnrollStudent" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2.5 t-inline-flex t-justify-center t-w-full t-text-center">Enroll</button>
             }
         </div>
     </div>
