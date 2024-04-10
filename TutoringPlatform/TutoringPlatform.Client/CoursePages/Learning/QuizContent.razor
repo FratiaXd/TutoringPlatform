@@ -23,16 +23,16 @@
                         </div>
                     }
                     <div class="t-mt-4 t-flex t-flex-col md:t-grid md:t-grid-cols-6 t-gap-1">
-                        <button type="button" disabled="@answersChecked" @onclick="CheckAnswer" class="disabled:t-cursor-not-allowed md:t-col-start-3 md:t-col-span-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-mb-3 md:t-mb-0 t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Check Answer</button>
+                        <button type="button" disabled="@answersChecked" @onclick="CheckAnswer" class="disabled:t-cursor-not-allowed md:t-col-start-3 md:t-col-span-2 t-text-white t-bg-grn hover:t-bg-drkgrn focus:t-ring-4 focus:t-outline-none focus:t-ring-lgrn dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-mb-3 md:t-mb-0 t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Check Answer</button>
                         @if (showNextButton)
                         {
                             @if (currentQuestionIndex == Quiz.QuizQuestions.Count - 1)
                             {
-                                <button type="button" @onclick="SubmitQuiz" class="md:t-col-start-6 md:t-col-span-1 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Submit Quiz</button>
+                                <button type="button" @onclick="SubmitQuiz" class="md:t-col-start-6 md:t-col-span-1 t-text-white  t-bg-grn hover:t-bg-drkgrn focus:t-ring-4 focus:t-outline-none focus:t-ring-lgrn dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Submit Quiz</button>
                             }
                             else
                             {
-                                <button type="button" @onclick="NextQuestion" class="md:t-col-start-6 md:t-col-span-1 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Next</button>
+                                <button type="button" @onclick="NextQuestion" class="md:t-col-start-6 md:t-col-span-1 t-text-white  t-bg-grn hover:t-bg-drkgrn focus:t-ring-4 focus:t-outline-none focus:t-ring-lgrn dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-4 t-py-2 md:t-px-5 md:t-py-2.5 t-text-center">Next</button>
                             }
                         }
                     </div>
@@ -78,13 +78,13 @@
         {
             <p class="t-text-center t-mb-1 t-text-gray-600 t-text-xl md:t-text-2xl t-font-semibold">Quiz Completed</p>
             <p class="t-text-center t-mb-4 t-text-gray-600 t-text-xl md:t-text-2xl t-font-semibold">Your score is:</p>
-            <p class="t-mt-6 t-mb-3 md:t-mb-10 t-text-center t-text-3xl t-font-extrabold t-leading-none t-tracking-tight t-text-gray-900 lg:t-text-4xl dark:t-text-white"><mark class="t-px-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 t-rounded dark:t-bg-blue-500">@QuizScore</mark></p>
+            <p class="t-mt-6 t-mb-3 md:t-mb-10 t-text-center t-text-3xl t-font-extrabold t-leading-none t-tracking-tight t-text-gray-900 lg:t-text-4xl dark:t-text-white"><mark class="t-px-2 t-text-white t-bg-grn t-rounded dark:t-bg-blue-500">@QuizScore</mark></p>
         }
         else if (displScore is not null)
         {
             <p class="t-text-center t-mb-1 t-text-gray-600 t-text-xl md:t-text-2xl t-font-semibold">Quiz Completed</p>
             <p class="t-text-center t-mb-4 t-text-gray-600 t-text-xl md:t-text-2xl t-font-semibold">Your score is:</p>
-            <p class="t-mt-6 t-mb-3 md:t-mb-10 t-text-center t-text-3xl t-font-extrabold t-leading-none t-tracking-tight t-text-gray-900 lg:t-text-4xl dark:t-text-white"><mark class="t-px-2 t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 t-rounded dark:t-bg-blue-500">@displScore</mark></p>
+            <p class="t-mt-6 t-mb-3 md:t-mb-10 t-text-center t-text-3xl t-font-extrabold t-leading-none t-tracking-tight t-text-gray-900 lg:t-text-4xl dark:t-text-white"><mark class="t-px-2 t-text-white t-bg-grn t-rounded dark:t-bg-blue-500">@displScore</mark></p>
         }
     }
 </div>

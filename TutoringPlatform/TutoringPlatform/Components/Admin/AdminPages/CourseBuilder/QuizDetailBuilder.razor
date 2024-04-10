@@ -35,8 +35,8 @@
         }
 
         <div class="t-mt-8 t-flex t-flex-row t-justify-center t-gap-4">
-            <button @onclick="AddQuestion" type="button" class="t-text-white t-mx-auto t-bg-gradient-to-r t-from-green-400 t-via-green-500 t-to-green-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-green-300 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">+ Add Question</button>
-            <button @onclick="ShowDelete" type="button" class="t-text-white t-mx-auto t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Delete Quiz</button>
+            <button @onclick="AddQuestion" type="button" class="t-text-white t-mx-auto t-bg-grn hover:t-bg-drkgrn focus:t-ring-4 focus:t-outline-none focus:t-ring-lgrn t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">+ Add Question</button>
+            <button @onclick="ShowDelete" type="button" class="t-mx-auto t-text-white t-bg-attenm hover:t-bg-atten focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Delete Quiz</button>
         </div>
 
         <Modal @ref="deleteModal" IsVerticallyCentered="true" />
@@ -51,7 +51,7 @@
                     <ValidationMessage For="() => Input.QuizName" class="text-danger" />
                 </div>
                 <div class="t-mx-4 md:t-mx-10 t-mt-4 md:t-mt-8 t-mb-8 t-flex t-justify-center">
-                    <button type="submit" class="t-text-white t-mx-auto t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Save</button>
+                    <button type="submit" class="t-text-white t-mx-auto t-bg-grn hover:t-bg-drkgrn focus:t-ring-4 focus:t-outline-none focus:t-ring-lgrn t-font-medium t-rounded-lg t-text-sm t-w-64 t-px-5 t-py-2.5">Save</button>
                 </div>
             </EditForm>
 
@@ -98,7 +98,7 @@
                                                         }
                                                     </div>
                                                     <div class="t-inline-flex t-items-center t-text-base t-font-semibold t-text-gray-900 dark:t-text-white">
-                                                        <button @onclick="() => DeleteOption(question, option)" type="button" class="t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">
+                                                        <button @onclick="() => DeleteOption(question, option)" type="button" class="t-text-white t-bg-attenm hover:t-bg-atten focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="t-w-3.5 t-h-3.5" fill="currentColor" viewBox="0 0 448 512">
                                                                 <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z" />
                                                             </svg>
@@ -111,9 +111,9 @@
                                 </ul>
                             </div>
                             <div class="t-flex t-flex-row t-justify-between t-mt-4 t-mx-3">
-                                <button type="button" @onclick="() => AddOption(question)" class="t-text-white t-bg-gradient-to-r t-from-green-400 t-via-green-500 t-to-green-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-green-300 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">+ Add</button>
-                                <button type="button" @onclick="() => EditClicked(question)" class="t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2">Edit</button>
-                                <button type="button" @onclick="() => DeleteQuestion(question)" class="t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">Delete</button>
+                                <button type="button" @onclick="() => AddOption(question)" class="t-text-white t-bg-grn hover:t-bg-drkgrn focus:t-ring-4 focus:t-outline-none focus:t-ring-lgrn t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">+ Add</button>
+                                <button type="button" @onclick="() => EditClicked(question)" class="t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-py-2">Edit</button>
+                                <button type="button" @onclick="() => DeleteQuestion(question)" class="t-text-white t-bg-attenm hover:t-bg-atten focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 t-font-medium t-rounded-lg t-text-sm t-px-3 t-py-2">Delete</button>
                             </div>
                         </div>
                     </div>

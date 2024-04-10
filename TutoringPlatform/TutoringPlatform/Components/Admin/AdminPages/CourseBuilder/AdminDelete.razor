@@ -45,17 +45,17 @@
         if (RecordType == "CoursePublish")
         {
             buttonText = "Publish Course";
-            buttonColor = "t-text-white t-bg-gradient-to-br t-from-green-400 t-to-blue-600 hover:t-bg-gradient-to-bl focus:t-ring-4 focus:t-outline-none focus:t-ring-green-200 dark:focus:t-ring-green-800 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2";
+            buttonColor = "t-text-prim t-text-prim t-bg-sec focus:t-ring-4 focus:t-ring-yellow-200 hover:t-text-prim hover:t-bg-lyel t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2";
         }
         else if (RecordType == "CourseUnpublish")
         {
             buttonText = "Unpublish Course";
-            buttonColor = "t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2";
+            buttonColor = "t-text-white t-bg-attenm hover:t-bg-atten focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2";
         }
         else
         {
             buttonText = "Delete " + RecordType;
-            buttonColor = "t-text-white t-bg-gradient-to-r t-from-red-400 t-via-red-500 t-to-red-600 hover:t-bg-gradient-to-br focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 dark:focus:t-ring-red-800 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2";
+            buttonColor = "t-text-white t-bg-attenm hover:t-bg-atten focus:t-ring-4 focus:t-outline-none focus:t-ring-red-300 t-shadow-lg shadow-red-500/50 dark:t-shadow-lg dark:shadow-red-800/80 t-font-medium t-rounded-lg t-text-sm t-px-5 t-w-full t-py-2.5 t-text-center me-2 t-mb-2";
         }
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var userPrincipal = authState.User;

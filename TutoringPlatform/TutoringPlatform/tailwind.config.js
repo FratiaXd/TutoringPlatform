@@ -10,8 +10,12 @@ module.exports = {
             'sec': '#FBAF00',
             'wh': '#FDFDFF',
             'lightbl': '#4669d3',
-            'atten': '#E4572E',
-            'lyel': '#eaa300'
+            'attenm': '#C34832',
+            'atten': '#A23C2A',
+            'lyel': '#eaa300',
+            'grn': '#697D3B',
+            'drkgrn': '#3A4521',
+            'lgrn': '#B0C383'
         },
       extend: {
           spacing: {
