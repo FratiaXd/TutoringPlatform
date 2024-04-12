@@ -15,7 +15,61 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
+@rendermode InteractiveServer
+
 <PageTitle>Register</PageTitle>
+
+<Modal @ref="terms" title="Terms & Conditions" IsScrollable="true" Size="ModalSize.Large">
+    <BodyTemplate>
+        <p class="t-font-bold t-mb-2">Terms and Conditions</p>
+        <p>
+            These terms and conditions outline the rules and regulations for the use of WordShow's Website.
+
+            By accessing this website, we assume you accept these terms and conditions. Do not continue to use WordShow if you do not agree to take all of the terms and conditions stated on this page.
+        </p>
+        <p class="t-font-bold t-mt-4 t-mb-2">Data Consent</p>
+        <p>
+            By using our website, you hereby consent to our privacy policy and agree to its terms.
+
+            We collect and use personal information for the following purposes:
+        </p>
+        <ul>
+            <li>To provide and maintain our Service</li>
+            <li>To notify you about changes to our Service</li>
+            <li>To allow you to participate in interactive features of our Service when you choose to do so</li>
+            <li>To provide customer support</li>
+            <li>To gather analysis or valuable information so that we can improve our Service</li>
+            <li>To monitor the usage of our Service</li>
+            <li>To detect, prevent and address technical issues</li>
+        </ul>
+        <p class="t-font-bold t-mt-4 t-mb-2">Intellectual Property</p>
+        <p>
+            All content, trademarks, logos, and intellectual property displayed on this website are the property of 
+            WordShow unless otherwise stated. You may not copy, distribute, reproduce, republish, upload, post,
+            or transmit any material on this website without prior written consent from WordShow.
+        </p>
+        <p class="t-font-bold t-mt-4 t-mb-2">License</p>
+        <p>
+            Unless otherwise stated, WordShow and/or its licensors own the intellectual property
+            rights for all material on WordShow. All intellectual property rights are reserved.
+            You may access this from WordShow for your own personal use subjected to restrictions set in these terms and conditions.
+        </p>
+        <p class="t-font-bold t-mt-4 t-mb-2">Variation of Terms</p>
+        <p>WordShow is permitted to revise these terms at any time as it sees fit, 
+            and by using this website you are expected to review these terms regularly.
+        </p>
+        <p>Entire Agreement</p>
+        <p>
+            These terms constitute the entire agreement between WordShow and 
+            you in relation to your use of this website and supersede all prior agreements and understandings.
+        </p>
+        <p class="t-font-bold t-mt-4 t-mb-2">Governing Law & Jurisdiction</p>
+        <p>
+            These terms will be governed by and interpreted in accordance with the laws of England and Wales, 
+            and you submit to the exclusive jurisdiction of the courts of England and Wales for the resolution of any disputes.
+        </p>
+    </BodyTemplate>
+</Modal>
 
 <h2 class="t-mt-8 t-text-4xl t-font-bold t-text-prim text-center">Sign up</h2>
 
@@ -34,6 +88,18 @@
                     <span class="t-sr-only">Info</span>
                     <div>
                         <span class="t-font-medium">@Message</span> Change a few things up and try submitting again.
+                    </div>
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <div class="t-flex t-justify-center t-items-center t-p-4 t-mt-4 t-text-sm t-text-red-800 t-border t-border-red-300 t-rounded-lg t-bg-red-50" role="alert">
+                    <svg class="t-flex-shrink-0 t-inline t-w-4 t-h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                    </svg>
+                    <span class="t-sr-only">Info</span>
+                    <div>
+                        <span class="t-font-medium">@message</span>
                     </div>
                 </div>
             }
@@ -66,10 +132,16 @@
                 </div>
             </div>
             <div class="t-flex t-justify-center">
-                <div class="t-mb-3">
+                <div class="t-mb-4">
                     <label for="last-name" class="t-block t-mb-2 t-text-sm t-font-medium t-text-gray-900 dark:t-text-white">Last Name</label>
                     <InputText type="text" @bind-Value="Input.LastName" class="t-bg-gray-50 t-border t-border-gray-300 t-text-gray-900 t-text-sm t-rounded-lg focus:t-ring-blue-500 focus:t-border-blue-500 t-block t-w-full t-min-w-112 t-p-3" autocomplete="last-name" aria-required="true" placeholder="last name" />
                     <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                </div>
+            </div>
+            <div class="t-flex t-justify-center t-items-center">
+                <div class="t-mb-1">
+                    <InputCheckbox type="checkbox" @bind-Value="Input.Terms" class="t-w-4 t-h-4 t-text-blue-600 t-rounded focus:t-ring-blue-500 focus:t-ring-2"/>
+                    <label class="t-text-gray-500">I agree to the <a @onclick="ShowTerms" class="t-text-prim t-text-underline hover:t-cursor-pointer">terms & conditions.</a></label>
                 </div>
             </div>
             <div class="t-flex t-justify-center">
@@ -92,8 +164,18 @@
 
     private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
 
+    private string? message;
+
+    private Modal terms = default!;
+
     public async Task RegisterUser(EditContext editContext)
     {
+        if (!Input.Terms)
+        {
+            message = "Please read and accept terms & conditions.";
+            return;
+        }
+
         var user = CreateUser();
 
         user.FirstName = Input.FirstName;
@@ -182,6 +264,11 @@
         }
     }
 
+    private async Task ShowTerms()
+    {
+        await terms.ShowAsync();
+    }
+
     private sealed class InputModel
     {
         [Required]
@@ -207,5 +294,8 @@
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; } = "";
+
+        [Required]
+        public bool Terms { get; set; }
     }
 }
