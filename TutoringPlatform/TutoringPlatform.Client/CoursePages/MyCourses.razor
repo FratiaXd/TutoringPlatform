@@ -15,7 +15,7 @@
     {
         @foreach (var enrollment in Enrollments)
         {
-            <div @onclick="() => OpenCourse(enrollment)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
+            <div @onclick="() => OpenCourse(enrollment)" class="t-min-h-40 hover:t-cursor-pointer t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
                 <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-64 md:t-rounded-none md:t-rounded-l-lg" src="@enrollment.Course.ImageUrl" alt="">
                 <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
                     <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@enrollment.Course.Title</h5>
@@ -46,7 +46,7 @@
     {
         @foreach (var enrollment in EnrollmentsCompleted)
         {
-            <div @onclick="() => OpenCourse(enrollment)" class="t-min-h-40 t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
+            <div @onclick="() => OpenCourse(enrollment)" class="t-min-h-40 hover:t-cursor-pointer t-mb-5 t-flex t-flex-col t-items-center t-bg-white t-border t-border-gray-200 t-rounded-lg t-shadow md:t-flex-row md:t-max-w-5xl md:t-h-auto t-mx-auto hover:t-bg-gray-100">
                 <img class="t-object-cover t-w-full t-rounded-t-lg t-h-48 md:t-h-40 md:t-w-64 md:t-rounded-none md:t-rounded-l-lg" src="@enrollment.Course.ImageUrl" alt="">
                 <div class="t-flex t-flex-col t-justify-between t-p-4 t-leading-normal">
                     <h5 class="t-text-2xl t-font-bold t-tracking-tight t-text-gray-900 dark:t-text-white">@enrollment.Course.Title</h5>
